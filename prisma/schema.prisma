@@ -1,0 +1,491 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client"
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  SUPERVISOR
+  TEAM_LEADER
+  AGENT
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  ARCHIVED
+}
+
+enum ContractServiceType {
+  STATIC_GUARDING
+  MOBILE_PATROL
+  EVENT_SECURITY
+  VIP_PROTECTION
+  DOG_HANDLER
+}
+
+enum ContractStatus {
+  ACTIVE
+  EXPIRED
+  TERMINATED
+}
+
+enum ShiftType {
+  DAY
+  NIGHT
+  WEEKEND
+  REINFORCEMENT
+  DOG_PATROL
+}
+
+enum ShiftStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+  REPLACED
+}
+
+enum AttendanceStatus {
+  ON_TIME
+  LATE
+  ABSENT
+  EARLY_DEPARTURE
+  VERIFIED
+}
+
+enum ClockMethod {
+  QR_SCAN
+  GPS_GEOFENCE
+  SUPERVISOR_OVERRIDE
+}
+
+enum PatrolStatus {
+  IN_PROGRESS
+  COMPLETED
+  INCOMPLETE
+  ABORTED
+}
+
+enum ScanStatus {
+  OK
+  ANOMALY_DETECTED
+  MISSED
+}
+
+enum IncidentCategory {
+  INTRUSION
+  FIRE_ALARM
+  THEFT
+  VANDALISM
+  AGGRESSION
+  TECHNICAL_FAILURE
+  MEDICAL_EMERGENCY
+  ACCESS_DENIAL
+  SUSPICIOUS_PERSON
+  OTHER
+}
+
+enum IncidentSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum IncidentStatus {
+  NEW
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum EquipmentCategory {
+  RADIO_COMMUNICATION
+  LIGHTING
+  DEFENSE_AND_PPE
+  DETECTION
+  KEYS_AND_BADGES
+  PTI_DEVICE
+  VEHICLE
+}
+
+enum EquipmentStatus {
+  AVAILABLE
+  ASSIGNED
+  UNDER_MAINTENANCE
+  DAMAGED
+  LOST
+  RETIRED
+}
+
+enum EquipmentCondition {
+  EXCELLENT
+  GOOD
+  FAIR
+  DAMAGED
+}
+
+enum InstructionType {
+  PERMANENT
+  TEMPORARY
+  EMERGENCY_PROCEDURE
+  ACCESS_CONTROL
+}
+
+enum PriorityLevel {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+enum NotificationType {
+  SOS_ALERT
+  LATE_CLOCK_IN
+  PATROL_MISSED
+  INCIDENT_CRITICAL
+  SHIFT_ASSIGNED
+  SYSTEM
+}
+
+model User {
+  id                    Int                   @id @default(autoincrement())
+  email                 String                @unique
+  passwordHash          String
+  firstName             String
+  lastName              String
+  phone                 String?
+  matricule             String                @unique
+  role                  Role                  @default(AGENT)
+  status                UserStatus            @default(ACTIVE)
+  adminLock             String?               @unique // Enforces single ADMIN (e.g. 'GLOBAL_ADMIN')
+  mustChangePassword    Boolean               @default(false)
+  cnapsNumber           String?               // Carte professionnelle de sécurité
+  cnapsExpiration       DateTime?
+  supervisorId          Int?
+  teamLeaderId          Int?
+  supervisor            User?                 @relation("SupervisorAgents", fields: [supervisorId], references: [id])
+  supervisedAgents      User[]                @relation("SupervisorAgents")
+  teamLeader            User?                 @relation("TeamLeaderAgents", fields: [teamLeaderId], references: [id])
+  teamAgents            User[]                @relation("TeamLeaderAgents")
+  managedSites          Site[]                @relation("SiteManager")
+  supervisedSites       Site[]                @relation("SiteSupervisor")
+  shifts                Shift[]               @relation("AgentShifts")
+  supervisedShifts      Shift[]               @relation("SupervisorShifts")
+  teamLeaderShifts      Shift[]               @relation("TeamLeaderShifts")
+  attendances           Attendance[]          @relation("AgentAttendances")
+  verifiedAttendances   Attendance[]          @relation("SupervisorVerifiedAttendances")
+  patrols               Patrol[]              @relation("AgentPatrols")
+  patrolScans           PatrolScan[]          @relation("AgentPatrolScans")
+  reportedIncidents     Incident[]            @relation("ReportedIncidents")
+  assignedIncidents     Incident[]            @relation("AssignedIncidents")
+  incidentComments      IncidentComment[]     @relation("AuthorComments")
+  authoredInstructions  SiteInstruction[]     @relation("AuthorInstructions")
+  equipmentAssignments  EquipmentAssignment[]  @relation("AgentEquipmentAssignments")
+  notifications         Notification[]        @relation("UserNotifications")
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @default(now()) @updatedAt
+}
+
+model Client {
+  id             Int              @id @default(autoincrement())
+  name           String
+  code           String           @unique
+  contactName    String
+  contactEmail   String
+  contactPhone   String
+  billingAddress String
+  city           String
+  postalCode     String
+  isActive       Boolean          @default(true)
+  sites          Site[]
+  contracts      ClientContract[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @default(now()) @updatedAt
+}
+
+model ClientContract {
+  id             Int                 @id @default(autoincrement())
+  clientId       Int
+  client         Client              @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  contractNumber String              @unique
+  startDate      DateTime
+  endDate        DateTime?
+  serviceType    ContractServiceType
+  status         ContractStatus      @default(ACTIVE)
+  hourlyRate     Decimal?            @db.Decimal(10, 2)
+  notes          String?
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @default(now()) @updatedAt
+}
+
+model Site {
+  id                  Int               @id @default(autoincrement())
+  clientId            Int
+  client              Client            @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  managerId           Int?
+  manager             User?             @relation("SiteManager", fields: [managerId], references: [id])
+  supervisorId        Int?
+  supervisor          User?             @relation("SiteSupervisor", fields: [supervisorId], references: [id])
+  name                String
+  code                String            @unique
+  address             String
+  city                String
+  postalCode          String
+  latitude            Float?
+  longitude           Float?
+  geofenceRadius      Int               @default(100) // Rayon geofencing en metres
+  emergencyPhone      String?
+  accessCode          String?
+  generalInstructions String?
+  isActive            Boolean           @default(true)
+  checkpoints         Checkpoint[]
+  shifts              Shift[]
+  patrols             Patrol[]
+  incidents           Incident[]
+  siteInstructions    SiteInstruction[]
+  siteEquipments      SiteEquipment[]
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @default(now()) @updatedAt
+}
+
+model Checkpoint {
+  id                  Int          @id @default(autoincrement())
+  siteId              Int
+  site                Site         @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  name                String
+  code                String
+  qrCodeData          String       @unique
+  nfcTagId            String?
+  floorLocation       String?
+  latitude            Float?
+  longitude           Float?
+  orderIndex          Int          @default(0)
+  isRequired          Boolean      @default(true)
+  scans               PatrolScan[]
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @default(now()) @updatedAt
+}
+
+model Shift {
+  id                   Int                   @id @default(autoincrement())
+  siteId               Int
+  site                 Site                  @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  agentId              Int
+  agent                User                  @relation("AgentShifts", fields: [agentId], references: [id])
+  teamLeaderId         Int?
+  teamLeader           User?                 @relation("TeamLeaderShifts", fields: [teamLeaderId], references: [id])
+  supervisorId         Int?
+  supervisor           User?                 @relation("SupervisorShifts", fields: [supervisorId], references: [id])
+  title                String
+  shiftType            ShiftType
+  startTime            DateTime
+  endTime              DateTime
+  status               ShiftStatus           @default(SCHEDULED)
+  hourlyRate           Decimal?              @db.Decimal(10, 2)
+  notes                String?
+  attendance           Attendance?
+  patrols              Patrol[]
+  incidents            Incident[]
+  equipmentAssignments EquipmentAssignment[]
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @default(now()) @updatedAt
+}
+
+model Attendance {
+  id                 Int              @id @default(autoincrement())
+  shiftId            Int              @unique
+  shift              Shift            @relation(fields: [shiftId], references: [id], onDelete: Cascade)
+  agentId            Int
+  agent              User             @relation("AgentAttendances", fields: [agentId], references: [id])
+  clockInTime        DateTime
+  clockInLatitude    Float?
+  clockInLongitude   Float?
+  clockInMethod      ClockMethod      @default(QR_SCAN)
+  clockOutTime       DateTime?
+  clockOutLatitude   Float?
+  clockOutLongitude  Float?
+  status             AttendanceStatus @default(ON_TIME)
+  lateMinutes        Int              @default(0)
+  verifiedById       Int?
+  verifiedBy         User?            @relation("SupervisorVerifiedAttendances", fields: [verifiedById], references: [id])
+  verificationNotes  String?
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @default(now()) @updatedAt
+}
+
+model Patrol {
+  id                   Int          @id @default(autoincrement())
+  siteId               Int
+  site                 Site         @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  agentId              Int
+  agent                User         @relation("AgentPatrols", fields: [agentId], references: [id])
+  shiftId              Int?
+  shift                Shift?       @relation(fields: [shiftId], references: [id])
+  title                String
+  scheduledStartTime   DateTime?
+  startedAt            DateTime     @default(now())
+  completedAt          DateTime?
+  status               PatrolStatus @default(IN_PROGRESS)
+  totalCheckpoints     Int          @default(0)
+  scannedCheckpoints   Int          @default(0)
+  notes                String?
+  scans                PatrolScan[]
+  incidents            Incident[]
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @default(now()) @updatedAt
+}
+
+model PatrolScan {
+  id                 Int        @id @default(autoincrement())
+  patrolId           Int
+  patrol             Patrol     @relation(fields: [patrolId], references: [id], onDelete: Cascade)
+  checkpointId       Int
+  checkpoint         Checkpoint @relation(fields: [checkpointId], references: [id], onDelete: Cascade)
+  agentId            Int
+  agent              User       @relation("AgentPatrolScans", fields: [agentId], references: [id])
+  scannedAt          DateTime   @default(now())
+  latitude           Float?
+  longitude          Float?
+  scanMethod         String     @default("QR") // QR, NFC, MANUAL
+  status             ScanStatus @default(OK)
+  anomalyDescription String?
+  createdAt          DateTime   @default(now())
+}
+
+model Incident {
+  id                Int                  @id @default(autoincrement())
+  siteId            Int
+  site              Site                 @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  shiftId           Int?
+  shift             Shift?               @relation(fields: [shiftId], references: [id])
+  patrolId          Int?
+  patrol            Patrol?              @relation(fields: [patrolId], references: [id])
+  reportedById      Int
+  reportedBy        User                 @relation("ReportedIncidents", fields: [reportedById], references: [id])
+  assignedToId      Int?
+  assignedTo        User?                @relation("AssignedIncidents", fields: [assignedToId], references: [id])
+  incidentNumber    String               @unique
+  title             String
+  category          IncidentCategory
+  severity          IncidentSeverity     @default(MEDIUM)
+  status            IncidentStatus       @default(NEW)
+  occurredAt        DateTime
+  reportedAt        DateTime             @default(now())
+  locationDetail    String?
+  description       String
+  actionTaken       String?
+  policeCalled      Boolean              @default(false)
+  clientNotified    Boolean              @default(false)
+  resolutionSummary String?
+  resolvedAt        DateTime?
+  attachments       IncidentAttachment[]
+  comments          IncidentComment[]
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @default(now()) @updatedAt
+}
+
+model IncidentAttachment {
+  id         Int      @id @default(autoincrement())
+  incidentId Int
+  incident   Incident @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+  fileUrl    String
+  fileName   String
+  fileType   String
+  fileSize   Int?
+  caption    String?
+  uploadedAt DateTime @default(now())
+}
+
+model IncidentComment {
+  id         Int      @id @default(autoincrement())
+  incidentId Int
+  incident   Incident @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+  authorId   Int
+  author     User     @relation("AuthorComments", fields: [authorId], references: [id])
+  comment    String
+  createdAt  DateTime @default(now())
+}
+
+model Equipment {
+  id                 Int                   @id @default(autoincrement())
+  name               String
+  code               String                @unique
+  serialNumber       String?               @unique
+  category           EquipmentCategory
+  status             EquipmentStatus       @default(AVAILABLE)
+  purchaseDate       DateTime?
+  lastInspectionDate DateTime?
+  assignments        EquipmentAssignment[]
+  siteEquipments     SiteEquipment[]
+  createdAt          DateTime              @default(now())
+  updatedAt          DateTime              @default(now()) @updatedAt
+}
+
+model EquipmentAssignment {
+  id                    Int                @id @default(autoincrement())
+  equipmentId           Int
+  equipment             Equipment          @relation(fields: [equipmentId], references: [id], onDelete: Cascade)
+  agentId               Int
+  agent                 User               @relation("AgentEquipmentAssignments", fields: [agentId], references: [id])
+  shiftId               Int?
+  shift                 Shift?             @relation(fields: [shiftId], references: [id])
+  assignedAt            DateTime           @default(now())
+  returnedAt            DateTime?
+  conditionOnAssignment EquipmentCondition @default(GOOD)
+  conditionOnReturn     EquipmentCondition?
+  anomalyReported       Boolean            @default(false)
+  notes                 String?
+  createdAt             DateTime           @default(now())
+  updatedAt             DateTime           @default(now()) @updatedAt
+}
+
+model SiteInstruction {
+  id             Int             @id @default(autoincrement())
+  siteId         Int
+  site           Site            @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  authorId       Int
+  author         User            @relation("AuthorInstructions", fields: [authorId], references: [id])
+  title          String
+  content        String
+  type           InstructionType @default(PERMANENT)
+  priority       PriorityLevel   @default(NORMAL)
+  effectiveFrom  DateTime        @default(now())
+  effectiveUntil DateTime?
+  isActive       Boolean         @default(true)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @default(now()) @updatedAt
+}
+
+model SiteEquipment {
+  id          Int       @id @default(autoincrement())
+  siteId      Int
+  site        Site      @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  equipmentId Int
+  equipment   Equipment @relation(fields: [equipmentId], references: [id], onDelete: Cascade)
+  installedAt DateTime  @default(now())
+  notes       String?
+  createdAt   DateTime  @default(now())
+
+  @@unique([siteId, equipmentId])
+}
+
+model Notification {
+  id        Int              @id @default(autoincrement())
+  userId    Int
+  user      User             @relation("UserNotifications", fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  type      NotificationType @default(SYSTEM)
+  isRead    Boolean          @default(false)
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+}
+

@@ -27,7 +27,7 @@
     "eslint-config-next": "16.4.3",
     "prisma": "^8.0.0-rc.22",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5.9.3"
   },
   "overrides": {
     "@prisma/orm-toolchain": "8.0.0-rc.22"

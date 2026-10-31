@@ -7,89 +7,14 @@ generator client {
   provider = "prisma-client"
 }
 
-enum Role {
-  ADMIN
-  MANAGER
-  SUPERVISOR
-  TEAM_LEADER
-  AGENT
-}
-
-enum UserStatus {
-  ACTIVE
-  SUSPENDED
-  ARCHIVED
-}
-
-enum ContractServiceType {
-  STATIC_GUARDING
-  MOBILE_PATROL
-  EVENT_SECURITY
-  VIP_PROTECTION
-  DOG_HANDLER
-}
+// ==========================================
+// 1. ENUMS Stables (Cycles de vie)
+// ==========================================
 
 enum ContractStatus {
   ACTIVE
   EXPIRED
   TERMINATED
-}
-
-enum ShiftType {
-  DAY
-  NIGHT
-  WEEKEND
-  REINFORCEMENT
-  DOG_PATROL
-}
-
-enum ShiftStatus {
-  SCHEDULED
-  IN_PROGRESS
-  COMPLETED
-  CANCELLED
-  NO_SHOW
-  REPLACED
-}
-
-enum AttendanceStatus {
-  ON_TIME
-  LATE
-  ABSENT
-  EARLY_DEPARTURE
-  VERIFIED
-}
-
-enum ClockMethod {
-  QR_SCAN
-  GPS_GEOFENCE
-  SUPERVISOR_OVERRIDE
-}
-
-enum PatrolStatus {
-  IN_PROGRESS
-  COMPLETED
-  INCOMPLETE
-  ABORTED
-}
-
-enum ScanStatus {
-  OK
-  ANOMALY_DETECTED
-  MISSED
-}
-
-enum IncidentCategory {
-  INTRUSION
-  FIRE_ALARM
-  THEFT
-  VANDALISM
-  AGGRESSION
-  TECHNICAL_FAILURE
-  MEDICAL_EMERGENCY
-  ACCESS_DENIAL
-  SUSPICIOUS_PERSON
-  OTHER
 }
 
 enum IncidentSeverity {
@@ -104,16 +29,6 @@ enum IncidentStatus {
   IN_PROGRESS
   RESOLVED
   CLOSED
-}
-
-enum EquipmentCategory {
-  RADIO_COMMUNICATION
-  LIGHTING
-  DEFENSE_AND_PPE
-  DETECTION
-  KEYS_AND_BADGES
-  PTI_DEVICE
-  VEHICLE
 }
 
 enum EquipmentStatus {
@@ -132,27 +47,82 @@ enum EquipmentCondition {
   DAMAGED
 }
 
-enum InstructionType {
-  PERMANENT
-  TEMPORARY
-  EMERGENCY_PROCEDURE
-  ACCESS_CONTROL
+// ==========================================
+// 2. TABLES DE RÉFÉRENCE (Évolutives / Maîtres)
+// ==========================================
+
+model ContractServiceType {
+  id          String     @id @db.Text
+  name        String     @db.Text
+  description String?    @db.Text
+  isActive    Boolean    @default(true) @map("is_active")
+  createdAt   DateTime   @default(now()) @map("created_at") @db.Timestamptz
+  contracts   Contract[]
+
+  @@map("contract_service_types")
 }
 
-enum PriorityLevel {
-  LOW
-  NORMAL
-  HIGH
-  URGENT
+model IncidentCategory {
+  id          String     @id @db.Text
+  name        String     @db.Text
+  description String?    @db.Text
+  isActive    Boolean    @default(true) @map("is_active")
+  createdAt   DateTime   @default(now()) @map("created_at") @db.Timestamptz
+  incidents   Incident[]
+
+  @@map("incident_categories")
 }
 
-enum NotificationType {
-  SOS_ALERT
-  LATE_CLOCK_IN
-  PATROL_MISSED
-  INCIDENT_CRITICAL
-  SHIFT_ASSIGNED
-  SYSTEM
+model EquipmentCategory {
+  id          String      @id @db.Text
+  name        String      @db.Text
+  description String?     @db.Text
+  isActive    Boolean     @default(true) @map("is_active")
+  createdAt   DateTime    @default(now()) @map("created_at") @db.Timestamptz
+  equipment   Equipment[]
+
+  @@map("equipment_categories")
+}
+
+// ==========================================
+// 3. TABLES MÉTIERS PRINCIPALES
+// ==========================================
+
+model Contract {
+  id            String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  serviceTypeId String              @map("service_type_id")
+  serviceType   ContractServiceType @relation(fields: [serviceTypeId], references: [id])
+  status        ContractStatus      @default(ACTIVE)
+  clientName    String              @map("client_name") @db.Text
+  startDate     DateTime            @map("start_date") @db.Timestamptz
+  endDate       DateTime?           @map("end_date") @db.Timestamptz
+  createdAt     DateTime            @default(now()) @map("created_at") @db.Timestamptz
+
+  @@map("contracts")
+}
+
+model Incident {
+  id          String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  categoryId  String           @map("category_id")
+  category    IncidentCategory @relation(fields: [categoryId], references: [id])
+  severity    IncidentSeverity
+  status      IncidentStatus   @default(NEW)
+  description String           @db.Text
+  reportedAt  DateTime         @default(now()) @map("reported_at") @db.Timestamptz
+
+  @@map("incidents")
+}
+
+model Equipment {
+  id           String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  categoryId   String             @map("category_id")
+  category     EquipmentCategory  @relation(fields: [categoryId], references: [id])
+  status       EquipmentStatus    @default(AVAILABLE)
+  condition    EquipmentCondition @default(EXCELLENT)
+  serialNumber String?            @unique @map("serial_number") @db.Text
+  createdAt    DateTime           @default(now()) @map("created_at") @db.Timestamptz
+
+  @@map("equipment")
 }
 
 model User {

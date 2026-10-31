@@ -9,6 +9,164 @@ enum Role {
   AGENT      = "AGENT"
 }
 
+enum UserStatus {
+  @@type("pg/text@1")
+  ACTIVE    = "ACTIVE"
+  SUSPENDED = "SUSPENDED"
+  ARCHIVED  = "ARCHIVED"
+}
+
+enum ContractServiceType {
+  @@type("pg/text@1")
+  STATIC_GUARDING = "STATIC_GUARDING"
+  MOBILE_PATROL   = "MOBILE_PATROL"
+  EVENT_SECURITY  = "EVENT_SECURITY"
+  VIP_PROTECTION  = "VIP_PROTECTION"
+  DOG_HANDLER     = "DOG_HANDLER"
+}
+
+enum ContractStatus {
+  @@type("pg/text@1")
+  ACTIVE     = "ACTIVE"
+  EXPIRED    = "EXPIRED"
+  TERMINATED = "TERMINATED"
+}
+
+enum ShiftType {
+  @@type("pg/text@1")
+  DAY           = "DAY"
+  NIGHT         = "NIGHT"
+  WEEKEND       = "WEEKEND"
+  REINFORCEMENT = "REINFORCEMENT"
+  DOG_PATROL    = "DOG_PATROL"
+}
+
+enum ShiftStatus {
+  @@type("pg/text@1")
+  SCHEDULED   = "SCHEDULED"
+  IN_PROGRESS = "IN_PROGRESS"
+  COMPLETED   = "COMPLETED"
+  CANCELLED   = "CANCELLED"
+  NO_SHOW     = "NO_SHOW"
+  REPLACED    = "REPLACED"
+}
+
+enum AttendanceStatus {
+  @@type("pg/text@1")
+  ON_TIME         = "ON_TIME"
+  LATE            = "LATE"
+  ABSENT          = "ABSENT"
+  EARLY_DEPARTURE = "EARLY_DEPARTURE"
+  VERIFIED        = "VERIFIED"
+}
+
+enum ClockMethod {
+  @@type("pg/text@1")
+  QR_SCAN             = "QR_SCAN"
+  GPS_GEOFENCE        = "GPS_GEOFENCE"
+  SUPERVISOR_OVERRIDE = "SUPERVISOR_OVERRIDE"
+}
+
+enum PatrolStatus {
+  @@type("pg/text@1")
+  IN_PROGRESS = "IN_PROGRESS"
+  COMPLETED   = "COMPLETED"
+  INCOMPLETE  = "INCOMPLETE"
+  ABORTED     = "ABORTED"
+}
+
+enum ScanStatus {
+  @@type("pg/text@1")
+  OK               = "OK"
+  ANOMALY_DETECTED = "ANOMALY_DETECTED"
+  MISSED           = "MISSED"
+}
+
+enum IncidentCategory {
+  @@type("pg/text@1")
+  INTRUSION         = "INTRUSION"
+  FIRE_ALARM        = "FIRE_ALARM"
+  THEFT             = "THEFT"
+  VANDALISM         = "VANDALISM"
+  AGGRESSION        = "AGGRESSION"
+  TECHNICAL_FAILURE = "TECHNICAL_FAILURE"
+  MEDICAL_EMERGENCY = "MEDICAL_EMERGENCY"
+  ACCESS_DENIAL     = "ACCESS_DENIAL"
+  SUSPICIOUS_PERSON = "SUSPICIOUS_PERSON"
+  OTHER             = "OTHER"
+}
+
+enum IncidentSeverity {
+  @@type("pg/text@1")
+  LOW      = "LOW"
+  MEDIUM   = "MEDIUM"
+  HIGH     = "HIGH"
+  CRITICAL = "CRITICAL"
+}
+
+enum IncidentStatus {
+  @@type("pg/text@1")
+  NEW         = "NEW"
+  IN_PROGRESS = "IN_PROGRESS"
+  RESOLVED    = "RESOLVED"
+  CLOSED      = "CLOSED"
+}
+
+enum EquipmentCategory {
+  @@type("pg/text@1")
+  RADIO_COMMUNICATION = "RADIO_COMMUNICATION"
+  LIGHTING            = "LIGHTING"
+  DEFENSE_AND_PPE     = "DEFENSE_AND_PPE"
+  DETECTION           = "DETECTION"
+  KEYS_AND_BADGES     = "KEYS_AND_BADGES"
+  PTI_DEVICE          = "PTI_DEVICE"
+  VEHICLE             = "VEHICLE"
+}
+
+enum EquipmentStatus {
+  @@type("pg/text@1")
+  AVAILABLE         = "AVAILABLE"
+  ASSIGNED          = "ASSIGNED"
+  UNDER_MAINTENANCE = "UNDER_MAINTENANCE"
+  DAMAGED           = "DAMAGED"
+  LOST              = "LOST"
+  RETIRED            = "RETIRED"
+}
+
+enum EquipmentCondition {
+  @@type("pg/text@1")
+  EXCELLENT = "EXCELLENT"
+  GOOD      = "GOOD"
+  FAIR      = "FAIR"
+  DAMAGED   = "DAMAGED"
+}
+
+enum InstructionType {
+  @@type("pg/text@1")
+  PERMANENT           = "PERMANENT"
+  TEMPORARY           = "TEMPORARY"
+  EMERGENCY_PROCEDURE = "EMERGENCY_PROCEDURE"
+  ACCESS_CONTROL      = "ACCESS_CONTROL"
+}
+
+enum PriorityLevel {
+  @@type("pg/text@1")
+  LOW    = "LOW"
+  NORMAL = "NORMAL"
+  HIGH   = "HIGH"
+  URGENT = "URGENT"
+}
+
+enum NotificationType {
+  @@type("pg/text@1")
+  SOS_ALERT         = "SOS_ALERT"
+  LATE_CLOCK_IN     = "LATE_CLOCK_IN"
+  PATROL_MISSED     = "PATROL_MISSED"
+  INCIDENT_CRITICAL = "INCIDENT_CRITICAL"
+  SHIFT_ASSIGNED    = "SHIFT_ASSIGNED"
+  SYSTEM            = "SYSTEM"
+}
+
 model User {
   id                  Int                   @id @default(autoincrement())
   email               String                @unique
@@ -18,7 +176,7 @@ model User {
   phone               String?
   matricule           String                @unique
   role                Role
-  status              String                @default("ACTIVE") // ACTIVE, SUSPENDED, ARCHIVED
+  status              UserStatus            @default(ACTIVE)
   adminLock           String?               @unique // Enforces single ADMIN (e.g. 'GLOBAL_ADMIN' only on the sole admin)
   mustChangePassword  Boolean               @default(false)
   cnapsNumber         String?               // Carte professionnelle de sécurité
@@ -89,8 +247,8 @@ model ClientContract {
   contractNumber String    @unique
   startDate      DateTime
   endDate        DateTime?
-  serviceType    String    // STATIC_GUARDING, MOBILE_PATROL, EVENT_SECURITY, VIP_PROTECTION, DOG_HANDLER
-  status         String    @default("ACTIVE") // ACTIVE, EXPIRED, TERMINATED
+  serviceType    ContractServiceType
+  status         ContractStatus      @default(ACTIVE)
   hourlyRate     Decimal?
   notes          String?
   createdAt      DateTime  @default(now())
@@ -162,10 +320,10 @@ model Shift {
   supervisorId         Int?
   supervisor           User?                 @relation("SupervisorShifts", fields: [supervisorId], references: [id])
   title                String
-  shiftType            String                // DAY, NIGHT, WEEKEND, REINFORCEMENT, DOG_PATROL
+  shiftType            ShiftType
   startTime            DateTime
   endTime              DateTime
-  status               String                @default("SCHEDULED") // SCHEDULED, IN_PROGRESS, COMPLETED, CANCELLED, NO_SHOW, REPLACED
+  status               ShiftStatus           @default(SCHEDULED)
   hourlyRate           Decimal?
   notes                String?
   attendance           Attendance?
@@ -187,11 +345,11 @@ model Attendance {
   clockInTime        DateTime
   clockInLatitude    Float?
   clockInLongitude   Float?
-  clockInMethod      String    @default("QR_SCAN") // QR_SCAN, GPS_GEOFENCE, SUPERVISOR_OVERRIDE
+  clockInMethod      ClockMethod       @default(QR_SCAN)
   clockOutTime       DateTime?
   clockOutLatitude   Float?
   clockOutLongitude  Float?
-  status             String    @default("ON_TIME") // ON_TIME, LATE, ABSENT, EARLY_DEPARTURE, VERIFIED
+  status             AttendanceStatus @default(ON_TIME)
   lateMinutes        Int       @default(0)
   verifiedById       Int?
   verifiedBy         User?     @relation("SupervisorVerifiedAttendances", fields: [verifiedById], references: [id])
@@ -214,7 +372,7 @@ model Patrol {
   scheduledStartTime   DateTime?
   startedAt            DateTime     @default(now())
   completedAt          DateTime?
-  status               String       @default("IN_PROGRESS") // IN_PROGRESS, COMPLETED, INCOMPLETE, ABORTED
+  status               PatrolStatus @default(IN_PROGRESS)
   totalCheckpoints     Int          @default(0)
   scannedCheckpoints   Int          @default(0)
   notes                String?
@@ -238,7 +396,7 @@ model PatrolScan {
   latitude           Float?
   longitude          Float?
   scanMethod         String     @default("QR") // QR, NFC, MANUAL
-  status             String     @default("OK") // OK, ANOMALY_DETECTED, MISSED
+  status             ScanStatus  @default(OK)
   anomalyDescription String?
   createdAt          DateTime   @default(now())
 
@@ -259,9 +417,9 @@ model Incident {
   assignedTo        User?                @relation("AssignedIncidents", fields: [assignedToId], references: [id])
   incidentNumber    String               @unique
   title             String
-  category          String               // INTRUSION, FIRE_ALARM, THEFT, VANDALISM, AGGRESSION, TECHNICAL_FAILURE, MEDICAL_EMERGENCY, ACCESS_DENIAL, SUSPICIOUS_PERSON, OTHER
-  severity          String               @default("MEDIUM") // LOW, MEDIUM, HIGH, CRITICAL
-  status            String               @default("NEW") // NEW, IN_PROGRESS, RESOLVED, CLOSED
+  category          IncidentCategory
+  severity          IncidentSeverity     @default(MEDIUM)
+  status            IncidentStatus       @default(NEW)
   occurredAt        DateTime
   reportedAt        DateTime             @default(now())
   locationDetail    String?
@@ -310,8 +468,8 @@ model Equipment {
   name               String
   code               String                @unique
   serialNumber       String?               @unique
-  category           String                // RADIO_COMMUNICATION, LIGHTING, DEFENSE_AND_PPE, DETECTION, KEYS_AND_BADGES, PTI_DEVICE, VEHICLE
-  status             String                @default("AVAILABLE") // AVAILABLE, ASSIGNED, UNDER_MAINTENANCE, DAMAGED, LOST, RETIRED
+  category           EquipmentCategory
+  status             EquipmentStatus       @default(AVAILABLE)
   purchaseDate       DateTime?
   lastInspectionDate DateTime?
   assignments        EquipmentAssignment[]
@@ -332,8 +490,8 @@ model EquipmentAssignment {
   shift                Shift?    @relation(fields: [shiftId], references: [id])
   assignedAt           DateTime  @default(now())
   returnedAt           DateTime?
-  conditionOnAssignment String   @default("GOOD") // EXCELLENT, GOOD, FAIR
-  conditionOnReturn    String?   // EXCELLENT, GOOD, FAIR, DAMAGED
+  conditionOnAssignment EquipmentCondition  @default(GOOD)
+  conditionOnReturn    EquipmentCondition?
   anomalyReported      Boolean   @default(false)
   notes                String?
   createdAt            DateTime  @default(now())
@@ -350,8 +508,8 @@ model SiteInstruction {
   author         User      @relation("AuthorInstructions", fields: [authorId], references: [id])
   title          String
   content        String
-  type           String    @default("PERMANENT") // PERMANENT, TEMPORARY, EMERGENCY_PROCEDURE, ACCESS_CONTROL
-  priority       String    @default("NORMAL") // LOW, NORMAL, HIGH, URGENT
+  type           InstructionType @default(PERMANENT)
+  priority       PriorityLevel   @default(NORMAL)
   effectiveFrom  DateTime  @default(now())
   effectiveUntil DateTime?
   isActive       Boolean   @default(true)
@@ -381,7 +539,7 @@ model Notification {
   user      User      @relation("UserNotifications", fields: [userId], references: [id], onDelete: Cascade)
   title     String
   message   String
-  type      String    @default("SYSTEM") // SOS_ALERT, LATE_CLOCK_IN, PATROL_MISSED, INCIDENT_CRITICAL, SHIFT_ASSIGNED, SYSTEM
+  type      NotificationType @default(SYSTEM)
   isRead    Boolean   @default(false)
   readAt    DateTime?
   createdAt DateTime  @default(now())

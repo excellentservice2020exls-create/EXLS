@@ -1,5 +1,14 @@
 // use prisma-8
 
+enum Role {
+  @@type("pg/text@1")
+  ADMIN      = "ADMIN"
+  MANAGER    = "MANAGER"
+  DIRECTOR   = "DIRECTOR"
+  SUPERVISOR = "SUPERVISOR"
+  AGENT      = "AGENT"
+}
+
 model User {
   id                  Int                   @id @default(autoincrement())
   email               String                @unique
@@ -8,7 +17,7 @@ model User {
   lastName            String
   phone               String?
   matricule           String                @unique
-  role                String                // ADMIN, MANAGER, SUPERVISOR, TEAM_LEADER, AGENT
+  role                Role
   status              String                @default("ACTIVE") // ACTIVE, SUSPENDED, ARCHIVED
   adminLock           String?               @unique // Enforces single ADMIN (e.g. 'GLOBAL_ADMIN' only on the sole admin)
   mustChangePassword  Boolean               @default(false)
@@ -35,8 +44,19 @@ model User {
   authoredInstructions SiteInstruction[]    @relation("AuthorInstructions")
   equipmentAssignments EquipmentAssignment[] @relation("AgentEquipmentAssignments")
   notifications       Notification[]        @relation("UserNotifications")
+  roleAssignments     RoleAssignment[]
   createdAt           DateTime              @default(now())
   updatedAt           DateTime              @default(now())
+}
+
+model RoleAssignment {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role       Role
+  assignedAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
 }
 
 model Client {
@@ -333,4 +353,3 @@ model Notification {
   readAt    DateTime?
   createdAt DateTime  @default(now())
 }
-

@@ -52,6 +52,10 @@
       "model": "PatrolScan",
       "namespace": "public"
     },
+    "RoleAssignment": {
+      "model": "RoleAssignment",
+      "namespace": "public"
+    },
     "Shift": {
       "model": "Shift",
       "namespace": "public"
@@ -76,6 +80,33 @@
   "domain": {
     "namespaces": {
       "public": {
+        "enum": {
+          "Role": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "ADMIN",
+                "value": "ADMIN"
+              },
+              {
+                "name": "MANAGER",
+                "value": "MANAGER"
+              },
+              {
+                "name": "DIRECTOR",
+                "value": "DIRECTOR"
+              },
+              {
+                "name": "SUPERVISOR",
+                "value": "SUPERVISOR"
+              },
+              {
+                "name": "AGENT",
+                "value": "AGENT"
+              }
+            ]
+          }
+        },
         "models": {
           "Attendance": {
             "fields": {
@@ -2252,6 +2283,109 @@
               "table": "PatrolScan"
             }
           },
+          "RoleAssignment": {
+            "fields": {
+              "assignedAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "createdAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "role": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "Role",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "updatedAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "userId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "user": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "userId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "User",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "assignedAt": {
+                  "column": "assignedAt"
+                },
+                "createdAt": {
+                  "column": "createdAt"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "role": {
+                  "column": "role"
+                },
+                "updatedAt": {
+                  "column": "updatedAt"
+                },
+                "userId": {
+                  "column": "userId"
+                }
+              },
+              "namespaceId": "public",
+              "table": "RoleAssignment"
+            }
+          },
           "Shift": {
             "fields": {
               "agentId": {
@@ -3260,6 +3394,12 @@
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "Role",
+                  "namespaceId": "public",
+                  "plane": "domain"
                 }
               },
               "status": {
@@ -3442,6 +3582,21 @@
                 },
                 "to": {
                   "model": "Incident",
+                  "namespace": "public"
+                }
+              },
+              "roleAssignments": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "userId"
+                  ]
+                },
+                "to": {
+                  "model": "RoleAssignment",
                   "namespace": "public"
                 }
               },
@@ -5527,6 +5682,116 @@
               },
               "uniques": []
             },
+            "RoleAssignment": {
+              "checks": [
+                {
+                  "expression": "\"role\" IN ('ADMIN', 'MANAGER', 'DIRECTOR', 'SUPERVISOR', 'AGENT')",
+                  "name": "RoleAssignment_role_check_3b8a4a49",
+                  "prefix": "RoleAssignment_role_check"
+                }
+              ],
+              "columns": {
+                "assignedAt": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "createdAt": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nullable": false
+                },
+                "role": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "Role",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "updatedAt": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "userId": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "index": {
+                    "name": "RoleAssignment_userId_idx_a489d58a"
+                  },
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "userId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "RoleAssignment"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "User"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "userId"
+                  ],
+                  "name": "RoleAssignment_userId_idx_a489d58a",
+                  "prefix": "RoleAssignment_userId_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
+            },
             "Shift": {
               "columns": {
                 "agentId": {
@@ -6261,6 +6526,13 @@
               "uniques": []
             },
             "User": {
+              "checks": [
+                {
+                  "expression": "\"role\" IN ('ADMIN', 'MANAGER', 'DIRECTOR', 'SUPERVISOR', 'AGENT')",
+                  "name": "User_role_check_3b8a4a49",
+                  "prefix": "User_role_check"
+                }
+              ],
               "columns": {
                 "adminLock": {
                   "codecId": "pg/text@1",
@@ -6343,7 +6615,13 @@
                 "role": {
                   "codecId": "pg/text@1",
                   "dataType": "pg/text",
-                  "nullable": false
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "Role",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
                 },
                 "status": {
                   "codecId": "pg/text@1",
@@ -6458,13 +6736,25 @@
                 }
               ]
             }
+          },
+          "valueSet": {
+            "Role": {
+              "kind": "valueSet",
+              "values": [
+                "ADMIN",
+                "MANAGER",
+                "DIRECTOR",
+                "SUPERVISOR",
+                "AGENT"
+              ]
+            }
           }
         },
         "id": "public",
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "457b3ee1dacfe19a135f23ad02973c476456e5a313861412c94978d1833ada82"
+    "storageHash": "7b8805860bdf841d6797463065eb7e7ebc276508d7b1238db7bb7dd43c4b452e"
   },
   "capabilities": {
     "postgres": {

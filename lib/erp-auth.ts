@@ -14,13 +14,21 @@ export async function requireAppUser() {
     redirect("/auth/sign-in");
   }
 
-  const user = await db.orm.public.User
-    .where({ email: authUser.email })
+  const email = authUser.email.trim();
+  const escapedEmail = email.replace(/[\\%_]/g, "\\$&");
+  const matches = await db.orm.public.User
+    .where((user) => user.email.ilike(escapedEmail))
     .select("id", "email", "role", "status")
-    .first();
+    .limit(2)
+    .all();
 
-  if (!user || String(user.status) !== "ACTIVE") {
-    notFound();
+  if (matches.length !== 1) {
+    redirect(`/account?erpAccess=${matches.length === 0 ? "not-provisioned" : "ambiguous"}`);
+  }
+
+  const user = matches[0];
+  if (String(user.status) !== "ACTIVE") {
+    redirect("/account?erpAccess=inactive");
   }
 
   return user;

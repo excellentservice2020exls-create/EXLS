@@ -26,7 +26,17 @@ export default async function AccountPage({
     redirect("/auth/mfa");
   }
 
-  const { password } = await searchParams;
+  const { password, erpAccess } = await searchParams;
+  const erpAccessMessage: Record<string, string> = {
+    "not-provisioned":
+      "Votre compte de connexion est prêt, mais aucun profil employé EXLS ne correspond à cette adresse. Vérifiez que vous utilisez l’adresse fournie à votre responsable, qui pourra créer votre profil.",
+    inactive:
+      "Votre profil EXLS existe mais n’est pas actif. Contactez un administrateur EXLS pour vérifier votre accès.",
+    ambiguous:
+      "Plusieurs profils EXLS correspondent à cette adresse. Contactez un administrateur afin de corriger les profils avant de réessayer.",
+  };
+  const accessMessage =
+    typeof erpAccess === "string" ? erpAccessMessage[erpAccess] : undefined;
 
   return (
     <main className="min-h-screen bg-slate-950 px-4 py-10 text-slate-100 sm:px-8">
@@ -43,6 +53,15 @@ export default async function AccountPage({
           <h2 className="font-semibold">Adresse e-mail</h2>
           <p className="mt-2 text-sm text-slate-300">{user.email ?? "Adresse non disponible"}</p>
         </section>
+
+        {accessMessage && (
+          <p
+            className="mt-5 rounded-lg border border-amber-800 bg-amber-950/50 px-3.5 py-3 text-sm text-amber-200"
+            role="status"
+          >
+            {accessMessage}
+          </p>
+        )}
 
         {password === "updated" && (
           <p

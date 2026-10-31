@@ -9,6 +9,7 @@ import {
   FormMessage,
   inputClassName,
 } from "./auth-shell";
+import { PasswordInput } from "./password-input";
 
 type AuthMode = "sign-in" | "sign-up" | "forgot-password" | "reset-password";
 
@@ -147,7 +148,7 @@ export function AuthForm({
         {needsPassword && (
           <label className="block text-sm font-medium text-slate-200">
             {mode === "reset-password" ? "Nouveau mot de passe" : "Mot de passe"}
-            <input
+            <PasswordInput
               autoComplete={
                 mode === "sign-in"
                   ? "current-password"
@@ -155,11 +156,9 @@ export function AuthForm({
                     ? "new-password"
                     : "new-password"
               }
-              className={inputClassName}
               minLength={8}
               onChange={(event) => setPassword(event.target.value)}
               required
-              type="password"
               value={password}
             />
           </label>
@@ -167,13 +166,11 @@ export function AuthForm({
         {needsConfirmation && (
           <label className="block text-sm font-medium text-slate-200">
             Confirmer le mot de passe
-            <input
+            <PasswordInput
               autoComplete="new-password"
-              className={inputClassName}
               minLength={8}
               onChange={(event) => setConfirmPassword(event.target.value)}
               required
-              type="password"
               value={confirmPassword}
             />
           </label>

@@ -16,7 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "EXLS | Authentification",
+  metadataBase: new URL("https://localhost:3000"),
+  title: "EXLS | EXCELLENT SERVICE",
   description: "Accès sécurisé à EXLS",
 };
 

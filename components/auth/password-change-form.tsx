@@ -2,11 +2,8 @@
 
 import { useState, type FormEvent } from "react";
 import { createClient } from "@/lib/supabase/client";
-import {
-  buttonClassName,
-  FormMessage,
-  inputClassName,
-} from "./auth-shell";
+import { buttonClassName, FormMessage } from "./auth-shell";
+import { PasswordInput } from "./password-input";
 
 export function PasswordChangeForm() {
   const [password, setPassword] = useState("");
@@ -63,25 +60,21 @@ export function PasswordChangeForm() {
       <form className="mt-4 max-w-md space-y-4" onSubmit={onSubmit}>
         <label className="block text-sm font-medium text-slate-200">
           Nouveau mot de passe
-          <input
+          <PasswordInput
             autoComplete="new-password"
-            className={inputClassName}
             minLength={8}
             onChange={(event) => setPassword(event.target.value)}
             required
-            type="password"
             value={password}
           />
         </label>
         <label className="block text-sm font-medium text-slate-200">
           Confirmer le nouveau mot de passe
-          <input
+          <PasswordInput
             autoComplete="new-password"
-            className={inputClassName}
             minLength={8}
             onChange={(event) => setConfirmation(event.target.value)}
             required
-            type="password"
             value={confirmation}
           />
         </label>

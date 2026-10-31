@@ -6,7 +6,7 @@ const messages: Record<string, string> = {
   callback: "Le lien n’a pas pu être vérifié ou a expiré. Demandez-en un nouveau.",
 };
 
-export const instant = false;
+export const dynamic = "force-dynamic";
 
 export default async function SignInPage({
   searchParams,

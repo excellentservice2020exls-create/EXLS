@@ -3,7 +3,7 @@ import { AuthShell } from "@/components/auth/auth-shell";
 import { getAuthenticatedUser } from "@/lib/supabase/auth";
 import { redirect } from "next/navigation";
 
-export const instant = false;
+export const dynamic = "force-dynamic";
 
 export default async function ResetPasswordPage() {
   const user = await getAuthenticatedUser();

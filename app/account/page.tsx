@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-export const instant = false;
+export const dynamic = "force-dynamic";
 
 export default async function AccountPage({
   searchParams,

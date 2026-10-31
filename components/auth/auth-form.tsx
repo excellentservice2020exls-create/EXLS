@@ -11,7 +11,7 @@ import {
 } from "./auth-shell";
 import { PasswordInput } from "./password-input";
 
-type AuthMode = "sign-in" | "sign-up" | "forgot-password" | "reset-password";
+type AuthMode = "sign-in" | "forgot-password" | "reset-password";
 
 function getCallbackUrl(next: string) {
   const callbackUrl = new URL("/auth/callback", window.location.origin);
@@ -35,7 +35,7 @@ export function AuthForm({
   const [pending, setPending] = useState(false);
   const needsPassword = mode !== "forgot-password";
   const needsEmail = mode !== "reset-password";
-  const needsConfirmation = mode === "sign-up" || mode === "reset-password";
+  const needsConfirmation = mode === "reset-password";
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -78,29 +78,11 @@ export function AuthForm({
         return;
       }
 
-      if (mode === "sign-up") {
-        const { data, error: signUpError } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            emailRedirectTo: getCallbackUrl("/auth/sign-in?status=confirmed"),
-          },
-        });
-        if (signUpError) throw signUpError;
-
-        if (!data.session) {
-          setMessage(
-            "Vérifiez votre boîte e-mail pour confirmer votre adresse et terminer l'inscription.",
-          );
-          return;
-        }
-      } else {
-        const { error: signInError } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-        if (signInError) throw signInError;
-      }
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (signInError) throw signInError;
 
       const { data: assurance, error: assuranceError } =
         await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
@@ -180,11 +162,9 @@ export function AuthForm({
             ? "Veuillez patienter…"
             : mode === "sign-in"
               ? "Se connecter"
-              : mode === "sign-up"
-                ? "Créer mon compte"
-                : mode === "forgot-password"
-                  ? "Envoyer le lien"
-                  : "Enregistrer le mot de passe"}
+              : mode === "forgot-password"
+                ? "Envoyer le lien"
+                : "Enregistrer le mot de passe"}
         </button>
       </form>
 
@@ -194,21 +174,7 @@ export function AuthForm({
             <Link className="text-cyan-300 hover:text-cyan-200" href="/auth/forgot-password">
               Mot de passe oublié ?
             </Link>
-            <p className="text-slate-400">
-              Pas encore de compte ?{" "}
-              <Link className="font-medium text-cyan-300 hover:text-cyan-200" href="/auth/sign-up">
-                Créer un compte
-              </Link>
-            </p>
           </>
-        )}
-        {mode === "sign-up" && (
-          <p className="text-slate-400">
-            Vous avez déjà un compte ?{" "}
-            <Link className="font-medium text-cyan-300 hover:text-cyan-200" href="/auth/sign-in">
-              Se connecter
-            </Link>
-          </p>
         )}
         {(mode === "forgot-password" || mode === "reset-password") && (
           <Link className="text-cyan-300 hover:text-cyan-200" href="/auth/sign-in">

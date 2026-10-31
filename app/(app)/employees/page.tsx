@@ -5,10 +5,19 @@ import { MANAGEMENT_ROLES, requireRole } from "@/lib/erp-auth";
 
 export const dynamic = "force-dynamic";
 
-export default async function EmployeesPage() {
+export default async function EmployeesPage({
+  searchParams,
+}: PageProps<"/employees">) {
   await requireRole(MANAGEMENT_ROLES);
   noStore();
   const employees = await getEmployees();
+  const { status } = await searchParams;
+  const statusMessages: Record<string, string> = {
+    invited: "Profil créé. Une invitation de connexion a été envoyée à l’employé.",
+    linked: "Profil créé et associé au compte de connexion existant. En cas de besoin, l’employé peut réinitialiser son mot de passe.",
+  };
+  const statusMessage =
+    typeof status === "string" ? statusMessages[status] : undefined;
 
   return (
     <div className="space-y-6">
@@ -21,6 +30,12 @@ export default async function EmployeesPage() {
           + Ajouter un employé
         </Link>
       </header>
+
+      {statusMessage && (
+        <p role="status" className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+          {statusMessage}
+        </p>
+      )}
 
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
         <table className="min-w-full text-left text-sm">

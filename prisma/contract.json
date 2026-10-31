@@ -4,75 +4,75 @@
   "target": "postgres",
   "profileHash": "3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2",
   "roots": {
-    "Attendance": {
+    "attendances": {
       "model": "Attendance",
       "namespace": "public"
     },
-    "Checkpoint": {
+    "checkpoints": {
       "model": "Checkpoint",
       "namespace": "public"
     },
-    "Client": {
-      "model": "Client",
-      "namespace": "public"
-    },
-    "ClientContract": {
+    "client_contracts": {
       "model": "ClientContract",
       "namespace": "public"
     },
-    "Equipment": {
+    "clients": {
+      "model": "Client",
+      "namespace": "public"
+    },
+    "equipment": {
       "model": "Equipment",
       "namespace": "public"
     },
-    "EquipmentAssignment": {
+    "equipment_assignments": {
       "model": "EquipmentAssignment",
       "namespace": "public"
     },
-    "Incident": {
-      "model": "Incident",
-      "namespace": "public"
-    },
-    "IncidentAttachment": {
+    "incident_attachments": {
       "model": "IncidentAttachment",
       "namespace": "public"
     },
-    "IncidentComment": {
+    "incident_comments": {
       "model": "IncidentComment",
       "namespace": "public"
     },
-    "Notification": {
+    "incidents": {
+      "model": "Incident",
+      "namespace": "public"
+    },
+    "notifications": {
       "model": "Notification",
       "namespace": "public"
     },
-    "Patrol": {
-      "model": "Patrol",
-      "namespace": "public"
-    },
-    "PatrolScan": {
+    "patrol_scans": {
       "model": "PatrolScan",
       "namespace": "public"
     },
-    "RoleAssignment": {
+    "patrols": {
+      "model": "Patrol",
+      "namespace": "public"
+    },
+    "role_assignments": {
       "model": "RoleAssignment",
       "namespace": "public"
     },
-    "Shift": {
+    "shifts": {
       "model": "Shift",
       "namespace": "public"
     },
-    "Site": {
-      "model": "Site",
-      "namespace": "public"
-    },
-    "SiteEquipment": {
+    "site_equipments": {
       "model": "SiteEquipment",
       "namespace": "public"
     },
-    "SiteInstruction": {
+    "site_instructions": {
       "model": "SiteInstruction",
       "namespace": "public"
     },
-    "User": {
+    "sites": {
+      "model": "Site",
+      "namespace": "public"
+    },
+    "users": {
       "model": "User",
       "namespace": "public"
     }
@@ -337,7 +337,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "Attendance"
+              "table": "attendances"
             }
           },
           "Checkpoint": {
@@ -516,7 +516,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "Checkpoint"
+              "table": "checkpoints"
             }
           },
           "Client": {
@@ -684,7 +684,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "Client"
+              "table": "clients"
             }
           },
           "ClientContract": {
@@ -834,7 +834,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "ClientContract"
+              "table": "client_contracts"
             }
           },
           "Equipment": {
@@ -988,7 +988,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "Equipment"
+              "table": "equipment"
             }
           },
           "EquipmentAssignment": {
@@ -1180,7 +1180,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "EquipmentAssignment"
+              "table": "equipment_assignments"
             }
           },
           "Incident": {
@@ -1537,7 +1537,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "Incident"
+              "table": "incidents"
             }
           },
           "IncidentAttachment": {
@@ -1648,7 +1648,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "IncidentAttachment"
+              "table": "incident_attachments"
             }
           },
           "IncidentComment": {
@@ -1745,7 +1745,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "IncidentComment"
+              "table": "incident_comments"
             }
           },
           "Notification": {
@@ -1859,7 +1859,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "Notification"
+              "table": "notifications"
             }
           },
           "Patrol": {
@@ -2104,7 +2104,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "Patrol"
+              "table": "patrols"
             }
           },
           "PatrolScan": {
@@ -2280,7 +2280,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "PatrolScan"
+              "table": "patrol_scans"
             }
           },
           "RoleAssignment": {
@@ -2383,7 +2383,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "RoleAssignment"
+              "table": "role_assignments"
             }
           },
           "Shift": {
@@ -2672,7 +2672,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "Shift"
+              "table": "shifts"
             }
           },
           "Site": {
@@ -3008,7 +3008,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "Site"
+              "table": "sites"
             }
           },
           "SiteEquipment": {
@@ -3118,7 +3118,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "SiteEquipment"
+              "table": "site_equipments"
             }
           },
           "SiteInstruction": {
@@ -3294,7 +3294,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "SiteInstruction"
+              "table": "site_instructions"
             }
           },
           "User": {
@@ -3793,7 +3793,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "User"
+              "table": "users"
             }
           }
         }
@@ -3805,7 +3805,7 @@
       "public": {
         "entries": {
           "table": {
-            "Attendance": {
+            "attendances": {
               "columns": {
                 "agentId": {
                   "codecId": "pg/int4@1",
@@ -3937,52 +3937,52 @@
                       "shiftId"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Attendance"
+                    "tableName": "attendances"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Shift"
+                    "tableName": "shifts"
                   }
                 },
                 {
                   "index": {
-                    "name": "Attendance_agentId_idx_8d0ba4f0"
+                    "name": "attendances_agentId_idx_8d0ba4f0"
                   },
                   "source": {
                     "columns": [
                       "agentId"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Attendance"
+                    "tableName": "attendances"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "User"
+                    "tableName": "users"
                   }
                 },
                 {
                   "index": {
-                    "name": "Attendance_verifiedById_idx_dfd74b37"
+                    "name": "attendances_verifiedById_idx_dfd74b37"
                   },
                   "source": {
                     "columns": [
                       "verifiedById"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Attendance"
+                    "tableName": "attendances"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "User"
+                    "tableName": "users"
                   }
                 }
               ],
@@ -3991,16 +3991,16 @@
                   "columns": [
                     "agentId"
                   ],
-                  "name": "Attendance_agentId_idx_8d0ba4f0",
-                  "prefix": "Attendance_agentId_idx",
+                  "name": "attendances_agentId_idx_8d0ba4f0",
+                  "prefix": "attendances_agentId_idx",
                   "unique": false
                 },
                 {
                   "columns": [
                     "verifiedById"
                   ],
-                  "name": "Attendance_verifiedById_idx_dfd74b37",
-                  "prefix": "Attendance_verifiedById_idx",
+                  "name": "attendances_verifiedById_idx_dfd74b37",
+                  "prefix": "attendances_verifiedById_idx",
                   "unique": false
                 }
               ],
@@ -4017,7 +4017,7 @@
                 }
               ]
             },
-            "Checkpoint": {
+            "checkpoints": {
               "columns": {
                 "code": {
                   "codecId": "pg/text@1",
@@ -4114,7 +4114,7 @@
               "foreignKeys": [
                 {
                   "index": {
-                    "name": "Checkpoint_siteId_idx_cabdc5ab"
+                    "name": "checkpoints_siteId_idx_cabdc5ab"
                   },
                   "onDelete": "cascade",
                   "source": {
@@ -4122,14 +4122,14 @@
                       "siteId"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Checkpoint"
+                    "tableName": "checkpoints"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Site"
+                    "tableName": "sites"
                   }
                 }
               ],
@@ -4138,8 +4138,8 @@
                   "columns": [
                     "siteId"
                   ],
-                  "name": "Checkpoint_siteId_idx_cabdc5ab",
-                  "prefix": "Checkpoint_siteId_idx",
+                  "name": "checkpoints_siteId_idx_cabdc5ab",
+                  "prefix": "checkpoints_siteId_idx",
                   "unique": false
                 }
               ],
@@ -4156,7 +4156,138 @@
                 }
               ]
             },
-            "Client": {
+            "client_contracts": {
+              "columns": {
+                "clientId": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "nullable": false
+                },
+                "contractNumber": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "createdAt": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "endDate": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "nullable": true,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "hourlyRate": {
+                  "codecId": "pg/numeric@1",
+                  "dataType": "pg/numeric",
+                  "nullable": true
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nullable": false
+                },
+                "notes": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                },
+                "serviceType": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "startDate": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "status": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "default": {
+                    "kind": "literal",
+                    "value": "ACTIVE"
+                  },
+                  "nullable": false
+                },
+                "updatedAt": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "foreignKeys": [
+                {
+                  "index": {
+                    "name": "client_contracts_clientId_idx_153a9a49"
+                  },
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "clientId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "client_contracts"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "clients"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "clientId"
+                  ],
+                  "name": "client_contracts_clientId_idx_153a9a49",
+                  "prefix": "client_contracts_clientId_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "contractNumber"
+                  ]
+                }
+              ]
+            },
+            "clients": {
               "columns": {
                 "billingAddress": {
                   "codecId": "pg/text@1",
@@ -4256,138 +4387,7 @@
                 }
               ]
             },
-            "ClientContract": {
-              "columns": {
-                "clientId": {
-                  "codecId": "pg/int4@1",
-                  "dataType": "pg/int4",
-                  "nullable": false
-                },
-                "contractNumber": {
-                  "codecId": "pg/text@1",
-                  "dataType": "pg/text",
-                  "nullable": false
-                },
-                "createdAt": {
-                  "codecId": "pg/timestamptz-date@1",
-                  "dataType": "pg/timestamptz",
-                  "default": {
-                    "expression": "now()",
-                    "kind": "function"
-                  },
-                  "nullable": false,
-                  "typeParams": {
-                    "precision": 3
-                  }
-                },
-                "endDate": {
-                  "codecId": "pg/timestamptz-date@1",
-                  "dataType": "pg/timestamptz",
-                  "nullable": true,
-                  "typeParams": {
-                    "precision": 3
-                  }
-                },
-                "hourlyRate": {
-                  "codecId": "pg/numeric@1",
-                  "dataType": "pg/numeric",
-                  "nullable": true
-                },
-                "id": {
-                  "codecId": "pg/int4@1",
-                  "dataType": "pg/int4",
-                  "default": {
-                    "expression": "autoincrement()",
-                    "kind": "function"
-                  },
-                  "nullable": false
-                },
-                "notes": {
-                  "codecId": "pg/text@1",
-                  "dataType": "pg/text",
-                  "nullable": true
-                },
-                "serviceType": {
-                  "codecId": "pg/text@1",
-                  "dataType": "pg/text",
-                  "nullable": false
-                },
-                "startDate": {
-                  "codecId": "pg/timestamptz-date@1",
-                  "dataType": "pg/timestamptz",
-                  "nullable": false,
-                  "typeParams": {
-                    "precision": 3
-                  }
-                },
-                "status": {
-                  "codecId": "pg/text@1",
-                  "dataType": "pg/text",
-                  "default": {
-                    "kind": "literal",
-                    "value": "ACTIVE"
-                  },
-                  "nullable": false
-                },
-                "updatedAt": {
-                  "codecId": "pg/timestamptz-date@1",
-                  "dataType": "pg/timestamptz",
-                  "default": {
-                    "expression": "now()",
-                    "kind": "function"
-                  },
-                  "nullable": false,
-                  "typeParams": {
-                    "precision": 3
-                  }
-                }
-              },
-              "foreignKeys": [
-                {
-                  "index": {
-                    "name": "ClientContract_clientId_idx_153a9a49"
-                  },
-                  "onDelete": "cascade",
-                  "source": {
-                    "columns": [
-                      "clientId"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "ClientContract"
-                  },
-                  "target": {
-                    "columns": [
-                      "id"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "Client"
-                  }
-                }
-              ],
-              "indexes": [
-                {
-                  "columns": [
-                    "clientId"
-                  ],
-                  "name": "ClientContract_clientId_idx_153a9a49",
-                  "prefix": "ClientContract_clientId_idx",
-                  "unique": false
-                }
-              ],
-              "primaryKey": {
-                "columns": [
-                  "id"
-                ]
-              },
-              "uniques": [
-                {
-                  "columns": [
-                    "contractNumber"
-                  ]
-                }
-              ]
-            },
-            "Equipment": {
+            "equipment": {
               "columns": {
                 "category": {
                   "codecId": "pg/text@1",
@@ -4488,7 +4488,7 @@
                 }
               ]
             },
-            "EquipmentAssignment": {
+            "equipment_assignments": {
               "columns": {
                 "agentId": {
                   "codecId": "pg/int4@1",
@@ -4590,7 +4590,7 @@
               "foreignKeys": [
                 {
                   "index": {
-                    "name": "EquipmentAssignment_equipmentId_idx_e1548594"
+                    "name": "equipment_assignments_equipmentId_idx_e1548594"
                   },
                   "onDelete": "cascade",
                   "source": {
@@ -4598,52 +4598,52 @@
                       "equipmentId"
                     ],
                     "namespaceId": "public",
-                    "tableName": "EquipmentAssignment"
+                    "tableName": "equipment_assignments"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Equipment"
+                    "tableName": "equipment"
                   }
                 },
                 {
                   "index": {
-                    "name": "EquipmentAssignment_agentId_idx_8d0ba4f0"
+                    "name": "equipment_assignments_agentId_idx_8d0ba4f0"
                   },
                   "source": {
                     "columns": [
                       "agentId"
                     ],
                     "namespaceId": "public",
-                    "tableName": "EquipmentAssignment"
+                    "tableName": "equipment_assignments"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "User"
+                    "tableName": "users"
                   }
                 },
                 {
                   "index": {
-                    "name": "EquipmentAssignment_shiftId_idx_fee8a58d"
+                    "name": "equipment_assignments_shiftId_idx_fee8a58d"
                   },
                   "source": {
                     "columns": [
                       "shiftId"
                     ],
                     "namespaceId": "public",
-                    "tableName": "EquipmentAssignment"
+                    "tableName": "equipment_assignments"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Shift"
+                    "tableName": "shifts"
                   }
                 }
               ],
@@ -4652,24 +4652,24 @@
                   "columns": [
                     "agentId"
                   ],
-                  "name": "EquipmentAssignment_agentId_idx_8d0ba4f0",
-                  "prefix": "EquipmentAssignment_agentId_idx",
+                  "name": "equipment_assignments_agentId_idx_8d0ba4f0",
+                  "prefix": "equipment_assignments_agentId_idx",
                   "unique": false
                 },
                 {
                   "columns": [
                     "equipmentId"
                   ],
-                  "name": "EquipmentAssignment_equipmentId_idx_e1548594",
-                  "prefix": "EquipmentAssignment_equipmentId_idx",
+                  "name": "equipment_assignments_equipmentId_idx_e1548594",
+                  "prefix": "equipment_assignments_equipmentId_idx",
                   "unique": false
                 },
                 {
                   "columns": [
                     "shiftId"
                   ],
-                  "name": "EquipmentAssignment_shiftId_idx_fee8a58d",
-                  "prefix": "EquipmentAssignment_shiftId_idx",
+                  "name": "equipment_assignments_shiftId_idx_fee8a58d",
+                  "prefix": "equipment_assignments_shiftId_idx",
                   "unique": false
                 }
               ],
@@ -4680,7 +4680,205 @@
               },
               "uniques": []
             },
-            "Incident": {
+            "incident_attachments": {
+              "columns": {
+                "caption": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                },
+                "fileName": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "fileSize": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "nullable": true
+                },
+                "fileType": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "fileUrl": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nullable": false
+                },
+                "incidentId": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "nullable": false
+                },
+                "uploadedAt": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "foreignKeys": [
+                {
+                  "index": {
+                    "name": "incident_attachments_incidentId_idx_20b6f3c9"
+                  },
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "incidentId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "incident_attachments"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "incidents"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "incidentId"
+                  ],
+                  "name": "incident_attachments_incidentId_idx_20b6f3c9",
+                  "prefix": "incident_attachments_incidentId_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
+            },
+            "incident_comments": {
+              "columns": {
+                "authorId": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "nullable": false
+                },
+                "comment": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "createdAt": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nullable": false
+                },
+                "incidentId": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "index": {
+                    "name": "incident_comments_incidentId_idx_20b6f3c9"
+                  },
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "incidentId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "incident_comments"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "incidents"
+                  }
+                },
+                {
+                  "index": {
+                    "name": "incident_comments_authorId_idx_e47547ed"
+                  },
+                  "source": {
+                    "columns": [
+                      "authorId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "incident_comments"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "users"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "authorId"
+                  ],
+                  "name": "incident_comments_authorId_idx_e47547ed",
+                  "prefix": "incident_comments_authorId_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "incidentId"
+                  ],
+                  "name": "incident_comments_incidentId_idx_20b6f3c9",
+                  "prefix": "incident_comments_incidentId_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
+            },
+            "incidents": {
               "columns": {
                 "actionTaken": {
                   "codecId": "pg/text@1",
@@ -4843,7 +5041,7 @@
               "foreignKeys": [
                 {
                   "index": {
-                    "name": "Incident_siteId_idx_cabdc5ab"
+                    "name": "incidents_siteId_idx_cabdc5ab"
                   },
                   "onDelete": "cascade",
                   "source": {
@@ -4851,90 +5049,90 @@
                       "siteId"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Incident"
+                    "tableName": "incidents"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Site"
+                    "tableName": "sites"
                   }
                 },
                 {
                   "index": {
-                    "name": "Incident_shiftId_idx_fee8a58d"
+                    "name": "incidents_shiftId_idx_fee8a58d"
                   },
                   "source": {
                     "columns": [
                       "shiftId"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Incident"
+                    "tableName": "incidents"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Shift"
+                    "tableName": "shifts"
                   }
                 },
                 {
                   "index": {
-                    "name": "Incident_patrolId_idx_d6f44378"
+                    "name": "incidents_patrolId_idx_d6f44378"
                   },
                   "source": {
                     "columns": [
                       "patrolId"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Incident"
+                    "tableName": "incidents"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Patrol"
+                    "tableName": "patrols"
                   }
                 },
                 {
                   "index": {
-                    "name": "Incident_reportedById_idx_4bd24876"
+                    "name": "incidents_reportedById_idx_4bd24876"
                   },
                   "source": {
                     "columns": [
                       "reportedById"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Incident"
+                    "tableName": "incidents"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "User"
+                    "tableName": "users"
                   }
                 },
                 {
                   "index": {
-                    "name": "Incident_assignedToId_idx_45a131c2"
+                    "name": "incidents_assignedToId_idx_45a131c2"
                   },
                   "source": {
                     "columns": [
                       "assignedToId"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Incident"
+                    "tableName": "incidents"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "User"
+                    "tableName": "users"
                   }
                 }
               ],
@@ -4943,40 +5141,40 @@
                   "columns": [
                     "assignedToId"
                   ],
-                  "name": "Incident_assignedToId_idx_45a131c2",
-                  "prefix": "Incident_assignedToId_idx",
+                  "name": "incidents_assignedToId_idx_45a131c2",
+                  "prefix": "incidents_assignedToId_idx",
                   "unique": false
                 },
                 {
                   "columns": [
                     "patrolId"
                   ],
-                  "name": "Incident_patrolId_idx_d6f44378",
-                  "prefix": "Incident_patrolId_idx",
+                  "name": "incidents_patrolId_idx_d6f44378",
+                  "prefix": "incidents_patrolId_idx",
                   "unique": false
                 },
                 {
                   "columns": [
                     "reportedById"
                   ],
-                  "name": "Incident_reportedById_idx_4bd24876",
-                  "prefix": "Incident_reportedById_idx",
+                  "name": "incidents_reportedById_idx_4bd24876",
+                  "prefix": "incidents_reportedById_idx",
                   "unique": false
                 },
                 {
                   "columns": [
                     "shiftId"
                   ],
-                  "name": "Incident_shiftId_idx_fee8a58d",
-                  "prefix": "Incident_shiftId_idx",
+                  "name": "incidents_shiftId_idx_fee8a58d",
+                  "prefix": "incidents_shiftId_idx",
                   "unique": false
                 },
                 {
                   "columns": [
                     "siteId"
                   ],
-                  "name": "Incident_siteId_idx_cabdc5ab",
-                  "prefix": "Incident_siteId_idx",
+                  "name": "incidents_siteId_idx_cabdc5ab",
+                  "prefix": "incidents_siteId_idx",
                   "unique": false
                 }
               ],
@@ -4993,205 +5191,7 @@
                 }
               ]
             },
-            "IncidentAttachment": {
-              "columns": {
-                "caption": {
-                  "codecId": "pg/text@1",
-                  "dataType": "pg/text",
-                  "nullable": true
-                },
-                "fileName": {
-                  "codecId": "pg/text@1",
-                  "dataType": "pg/text",
-                  "nullable": false
-                },
-                "fileSize": {
-                  "codecId": "pg/int4@1",
-                  "dataType": "pg/int4",
-                  "nullable": true
-                },
-                "fileType": {
-                  "codecId": "pg/text@1",
-                  "dataType": "pg/text",
-                  "nullable": false
-                },
-                "fileUrl": {
-                  "codecId": "pg/text@1",
-                  "dataType": "pg/text",
-                  "nullable": false
-                },
-                "id": {
-                  "codecId": "pg/int4@1",
-                  "dataType": "pg/int4",
-                  "default": {
-                    "expression": "autoincrement()",
-                    "kind": "function"
-                  },
-                  "nullable": false
-                },
-                "incidentId": {
-                  "codecId": "pg/int4@1",
-                  "dataType": "pg/int4",
-                  "nullable": false
-                },
-                "uploadedAt": {
-                  "codecId": "pg/timestamptz-date@1",
-                  "dataType": "pg/timestamptz",
-                  "default": {
-                    "expression": "now()",
-                    "kind": "function"
-                  },
-                  "nullable": false,
-                  "typeParams": {
-                    "precision": 3
-                  }
-                }
-              },
-              "foreignKeys": [
-                {
-                  "index": {
-                    "name": "IncidentAttachment_incidentId_idx_20b6f3c9"
-                  },
-                  "onDelete": "cascade",
-                  "source": {
-                    "columns": [
-                      "incidentId"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "IncidentAttachment"
-                  },
-                  "target": {
-                    "columns": [
-                      "id"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "Incident"
-                  }
-                }
-              ],
-              "indexes": [
-                {
-                  "columns": [
-                    "incidentId"
-                  ],
-                  "name": "IncidentAttachment_incidentId_idx_20b6f3c9",
-                  "prefix": "IncidentAttachment_incidentId_idx",
-                  "unique": false
-                }
-              ],
-              "primaryKey": {
-                "columns": [
-                  "id"
-                ]
-              },
-              "uniques": []
-            },
-            "IncidentComment": {
-              "columns": {
-                "authorId": {
-                  "codecId": "pg/int4@1",
-                  "dataType": "pg/int4",
-                  "nullable": false
-                },
-                "comment": {
-                  "codecId": "pg/text@1",
-                  "dataType": "pg/text",
-                  "nullable": false
-                },
-                "createdAt": {
-                  "codecId": "pg/timestamptz-date@1",
-                  "dataType": "pg/timestamptz",
-                  "default": {
-                    "expression": "now()",
-                    "kind": "function"
-                  },
-                  "nullable": false,
-                  "typeParams": {
-                    "precision": 3
-                  }
-                },
-                "id": {
-                  "codecId": "pg/int4@1",
-                  "dataType": "pg/int4",
-                  "default": {
-                    "expression": "autoincrement()",
-                    "kind": "function"
-                  },
-                  "nullable": false
-                },
-                "incidentId": {
-                  "codecId": "pg/int4@1",
-                  "dataType": "pg/int4",
-                  "nullable": false
-                }
-              },
-              "foreignKeys": [
-                {
-                  "index": {
-                    "name": "IncidentComment_incidentId_idx_20b6f3c9"
-                  },
-                  "onDelete": "cascade",
-                  "source": {
-                    "columns": [
-                      "incidentId"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "IncidentComment"
-                  },
-                  "target": {
-                    "columns": [
-                      "id"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "Incident"
-                  }
-                },
-                {
-                  "index": {
-                    "name": "IncidentComment_authorId_idx_e47547ed"
-                  },
-                  "source": {
-                    "columns": [
-                      "authorId"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "IncidentComment"
-                  },
-                  "target": {
-                    "columns": [
-                      "id"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "User"
-                  }
-                }
-              ],
-              "indexes": [
-                {
-                  "columns": [
-                    "authorId"
-                  ],
-                  "name": "IncidentComment_authorId_idx_e47547ed",
-                  "prefix": "IncidentComment_authorId_idx",
-                  "unique": false
-                },
-                {
-                  "columns": [
-                    "incidentId"
-                  ],
-                  "name": "IncidentComment_incidentId_idx_20b6f3c9",
-                  "prefix": "IncidentComment_incidentId_idx",
-                  "unique": false
-                }
-              ],
-              "primaryKey": {
-                "columns": [
-                  "id"
-                ]
-              },
-              "uniques": []
-            },
-            "Notification": {
+            "notifications": {
               "columns": {
                 "createdAt": {
                   "codecId": "pg/timestamptz-date@1",
@@ -5259,7 +5259,7 @@
               "foreignKeys": [
                 {
                   "index": {
-                    "name": "Notification_userId_idx_a489d58a"
+                    "name": "notifications_userId_idx_a489d58a"
                   },
                   "onDelete": "cascade",
                   "source": {
@@ -5267,14 +5267,14 @@
                       "userId"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Notification"
+                    "tableName": "notifications"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "User"
+                    "tableName": "users"
                   }
                 }
               ],
@@ -5283,8 +5283,8 @@
                   "columns": [
                     "userId"
                   ],
-                  "name": "Notification_userId_idx_a489d58a",
-                  "prefix": "Notification_userId_idx",
+                  "name": "notifications_userId_idx_a489d58a",
+                  "prefix": "notifications_userId_idx",
                   "unique": false
                 }
               ],
@@ -5295,7 +5295,185 @@
               },
               "uniques": []
             },
-            "Patrol": {
+            "patrol_scans": {
+              "columns": {
+                "agentId": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "nullable": false
+                },
+                "anomalyDescription": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                },
+                "checkpointId": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "nullable": false
+                },
+                "createdAt": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nullable": false
+                },
+                "latitude": {
+                  "codecId": "pg/float8@1",
+                  "dataType": "pg/float8",
+                  "nullable": true
+                },
+                "longitude": {
+                  "codecId": "pg/float8@1",
+                  "dataType": "pg/float8",
+                  "nullable": true
+                },
+                "patrolId": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "nullable": false
+                },
+                "scanMethod": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "default": {
+                    "kind": "literal",
+                    "value": "QR"
+                  },
+                  "nullable": false
+                },
+                "scannedAt": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "status": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "default": {
+                    "kind": "literal",
+                    "value": "OK"
+                  },
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "index": {
+                    "name": "patrol_scans_patrolId_idx_d6f44378"
+                  },
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "patrolId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "patrol_scans"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "patrols"
+                  }
+                },
+                {
+                  "index": {
+                    "name": "patrol_scans_checkpointId_idx_4eb4c383"
+                  },
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "checkpointId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "patrol_scans"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "checkpoints"
+                  }
+                },
+                {
+                  "index": {
+                    "name": "patrol_scans_agentId_idx_8d0ba4f0"
+                  },
+                  "source": {
+                    "columns": [
+                      "agentId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "patrol_scans"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "users"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "agentId"
+                  ],
+                  "name": "patrol_scans_agentId_idx_8d0ba4f0",
+                  "prefix": "patrol_scans_agentId_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "checkpointId"
+                  ],
+                  "name": "patrol_scans_checkpointId_idx_4eb4c383",
+                  "prefix": "patrol_scans_checkpointId_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "patrolId"
+                  ],
+                  "name": "patrol_scans_patrolId_idx_d6f44378",
+                  "prefix": "patrol_scans_patrolId_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
+            },
+            "patrols": {
               "columns": {
                 "agentId": {
                   "codecId": "pg/int4@1",
@@ -5414,7 +5592,7 @@
               "foreignKeys": [
                 {
                   "index": {
-                    "name": "Patrol_siteId_idx_cabdc5ab"
+                    "name": "patrols_siteId_idx_cabdc5ab"
                   },
                   "onDelete": "cascade",
                   "source": {
@@ -5422,52 +5600,52 @@
                       "siteId"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Patrol"
+                    "tableName": "patrols"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Site"
+                    "tableName": "sites"
                   }
                 },
                 {
                   "index": {
-                    "name": "Patrol_agentId_idx_8d0ba4f0"
+                    "name": "patrols_agentId_idx_8d0ba4f0"
                   },
                   "source": {
                     "columns": [
                       "agentId"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Patrol"
+                    "tableName": "patrols"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "User"
+                    "tableName": "users"
                   }
                 },
                 {
                   "index": {
-                    "name": "Patrol_shiftId_idx_fee8a58d"
+                    "name": "patrols_shiftId_idx_fee8a58d"
                   },
                   "source": {
                     "columns": [
                       "shiftId"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Patrol"
+                    "tableName": "patrols"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Shift"
+                    "tableName": "shifts"
                   }
                 }
               ],
@@ -5476,24 +5654,24 @@
                   "columns": [
                     "agentId"
                   ],
-                  "name": "Patrol_agentId_idx_8d0ba4f0",
-                  "prefix": "Patrol_agentId_idx",
+                  "name": "patrols_agentId_idx_8d0ba4f0",
+                  "prefix": "patrols_agentId_idx",
                   "unique": false
                 },
                 {
                   "columns": [
                     "shiftId"
                   ],
-                  "name": "Patrol_shiftId_idx_fee8a58d",
-                  "prefix": "Patrol_shiftId_idx",
+                  "name": "patrols_shiftId_idx_fee8a58d",
+                  "prefix": "patrols_shiftId_idx",
                   "unique": false
                 },
                 {
                   "columns": [
                     "siteId"
                   ],
-                  "name": "Patrol_siteId_idx_cabdc5ab",
-                  "prefix": "Patrol_siteId_idx",
+                  "name": "patrols_siteId_idx_cabdc5ab",
+                  "prefix": "patrols_siteId_idx",
                   "unique": false
                 }
               ],
@@ -5504,190 +5682,12 @@
               },
               "uniques": []
             },
-            "PatrolScan": {
-              "columns": {
-                "agentId": {
-                  "codecId": "pg/int4@1",
-                  "dataType": "pg/int4",
-                  "nullable": false
-                },
-                "anomalyDescription": {
-                  "codecId": "pg/text@1",
-                  "dataType": "pg/text",
-                  "nullable": true
-                },
-                "checkpointId": {
-                  "codecId": "pg/int4@1",
-                  "dataType": "pg/int4",
-                  "nullable": false
-                },
-                "createdAt": {
-                  "codecId": "pg/timestamptz-date@1",
-                  "dataType": "pg/timestamptz",
-                  "default": {
-                    "expression": "now()",
-                    "kind": "function"
-                  },
-                  "nullable": false,
-                  "typeParams": {
-                    "precision": 3
-                  }
-                },
-                "id": {
-                  "codecId": "pg/int4@1",
-                  "dataType": "pg/int4",
-                  "default": {
-                    "expression": "autoincrement()",
-                    "kind": "function"
-                  },
-                  "nullable": false
-                },
-                "latitude": {
-                  "codecId": "pg/float8@1",
-                  "dataType": "pg/float8",
-                  "nullable": true
-                },
-                "longitude": {
-                  "codecId": "pg/float8@1",
-                  "dataType": "pg/float8",
-                  "nullable": true
-                },
-                "patrolId": {
-                  "codecId": "pg/int4@1",
-                  "dataType": "pg/int4",
-                  "nullable": false
-                },
-                "scanMethod": {
-                  "codecId": "pg/text@1",
-                  "dataType": "pg/text",
-                  "default": {
-                    "kind": "literal",
-                    "value": "QR"
-                  },
-                  "nullable": false
-                },
-                "scannedAt": {
-                  "codecId": "pg/timestamptz-date@1",
-                  "dataType": "pg/timestamptz",
-                  "default": {
-                    "expression": "now()",
-                    "kind": "function"
-                  },
-                  "nullable": false,
-                  "typeParams": {
-                    "precision": 3
-                  }
-                },
-                "status": {
-                  "codecId": "pg/text@1",
-                  "dataType": "pg/text",
-                  "default": {
-                    "kind": "literal",
-                    "value": "OK"
-                  },
-                  "nullable": false
-                }
-              },
-              "foreignKeys": [
-                {
-                  "index": {
-                    "name": "PatrolScan_patrolId_idx_d6f44378"
-                  },
-                  "onDelete": "cascade",
-                  "source": {
-                    "columns": [
-                      "patrolId"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "PatrolScan"
-                  },
-                  "target": {
-                    "columns": [
-                      "id"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "Patrol"
-                  }
-                },
-                {
-                  "index": {
-                    "name": "PatrolScan_checkpointId_idx_4eb4c383"
-                  },
-                  "onDelete": "cascade",
-                  "source": {
-                    "columns": [
-                      "checkpointId"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "PatrolScan"
-                  },
-                  "target": {
-                    "columns": [
-                      "id"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "Checkpoint"
-                  }
-                },
-                {
-                  "index": {
-                    "name": "PatrolScan_agentId_idx_8d0ba4f0"
-                  },
-                  "source": {
-                    "columns": [
-                      "agentId"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "PatrolScan"
-                  },
-                  "target": {
-                    "columns": [
-                      "id"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "User"
-                  }
-                }
-              ],
-              "indexes": [
-                {
-                  "columns": [
-                    "agentId"
-                  ],
-                  "name": "PatrolScan_agentId_idx_8d0ba4f0",
-                  "prefix": "PatrolScan_agentId_idx",
-                  "unique": false
-                },
-                {
-                  "columns": [
-                    "checkpointId"
-                  ],
-                  "name": "PatrolScan_checkpointId_idx_4eb4c383",
-                  "prefix": "PatrolScan_checkpointId_idx",
-                  "unique": false
-                },
-                {
-                  "columns": [
-                    "patrolId"
-                  ],
-                  "name": "PatrolScan_patrolId_idx_d6f44378",
-                  "prefix": "PatrolScan_patrolId_idx",
-                  "unique": false
-                }
-              ],
-              "primaryKey": {
-                "columns": [
-                  "id"
-                ]
-              },
-              "uniques": []
-            },
-            "RoleAssignment": {
+            "role_assignments": {
               "checks": [
                 {
                   "expression": "\"role\" IN ('ADMIN', 'MANAGER', 'DIRECTOR', 'SUPERVISOR', 'AGENT')",
-                  "name": "RoleAssignment_role_check_3b8a4a49",
-                  "prefix": "RoleAssignment_role_check"
+                  "name": "role_assignments_role_check_3b8a4a49",
+                  "prefix": "role_assignments_role_check"
                 }
               ],
               "columns": {
@@ -5756,7 +5756,7 @@
               "foreignKeys": [
                 {
                   "index": {
-                    "name": "RoleAssignment_userId_idx_a489d58a"
+                    "name": "role_assignments_userId_idx_a489d58a"
                   },
                   "onDelete": "cascade",
                   "source": {
@@ -5764,14 +5764,14 @@
                       "userId"
                     ],
                     "namespaceId": "public",
-                    "tableName": "RoleAssignment"
+                    "tableName": "role_assignments"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "User"
+                    "tableName": "users"
                   }
                 }
               ],
@@ -5780,8 +5780,8 @@
                   "columns": [
                     "userId"
                   ],
-                  "name": "RoleAssignment_userId_idx_a489d58a",
-                  "prefix": "RoleAssignment_userId_idx",
+                  "name": "role_assignments_userId_idx_a489d58a",
+                  "prefix": "role_assignments_userId_idx",
                   "unique": false
                 }
               ],
@@ -5792,7 +5792,7 @@
               },
               "uniques": []
             },
-            "Shift": {
+            "shifts": {
               "columns": {
                 "agentId": {
                   "codecId": "pg/int4@1",
@@ -5896,7 +5896,7 @@
               "foreignKeys": [
                 {
                   "index": {
-                    "name": "Shift_siteId_idx_cabdc5ab"
+                    "name": "shifts_siteId_idx_cabdc5ab"
                   },
                   "onDelete": "cascade",
                   "source": {
@@ -5904,71 +5904,71 @@
                       "siteId"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Shift"
+                    "tableName": "shifts"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Site"
+                    "tableName": "sites"
                   }
                 },
                 {
                   "index": {
-                    "name": "Shift_agentId_idx_8d0ba4f0"
+                    "name": "shifts_agentId_idx_8d0ba4f0"
                   },
                   "source": {
                     "columns": [
                       "agentId"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Shift"
+                    "tableName": "shifts"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "User"
+                    "tableName": "users"
                   }
                 },
                 {
                   "index": {
-                    "name": "Shift_teamLeaderId_idx_1d5c7be0"
+                    "name": "shifts_teamLeaderId_idx_1d5c7be0"
                   },
                   "source": {
                     "columns": [
                       "teamLeaderId"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Shift"
+                    "tableName": "shifts"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "User"
+                    "tableName": "users"
                   }
                 },
                 {
                   "index": {
-                    "name": "Shift_supervisorId_idx_fe423ed5"
+                    "name": "shifts_supervisorId_idx_fe423ed5"
                   },
                   "source": {
                     "columns": [
                       "supervisorId"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Shift"
+                    "tableName": "shifts"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "User"
+                    "tableName": "users"
                   }
                 }
               ],
@@ -5977,32 +5977,32 @@
                   "columns": [
                     "agentId"
                   ],
-                  "name": "Shift_agentId_idx_8d0ba4f0",
-                  "prefix": "Shift_agentId_idx",
+                  "name": "shifts_agentId_idx_8d0ba4f0",
+                  "prefix": "shifts_agentId_idx",
                   "unique": false
                 },
                 {
                   "columns": [
                     "siteId"
                   ],
-                  "name": "Shift_siteId_idx_cabdc5ab",
-                  "prefix": "Shift_siteId_idx",
+                  "name": "shifts_siteId_idx_cabdc5ab",
+                  "prefix": "shifts_siteId_idx",
                   "unique": false
                 },
                 {
                   "columns": [
                     "supervisorId"
                   ],
-                  "name": "Shift_supervisorId_idx_fe423ed5",
-                  "prefix": "Shift_supervisorId_idx",
+                  "name": "shifts_supervisorId_idx_fe423ed5",
+                  "prefix": "shifts_supervisorId_idx",
                   "unique": false
                 },
                 {
                   "columns": [
                     "teamLeaderId"
                   ],
-                  "name": "Shift_teamLeaderId_idx_1d5c7be0",
-                  "prefix": "Shift_teamLeaderId_idx",
+                  "name": "shifts_teamLeaderId_idx_1d5c7be0",
+                  "prefix": "shifts_teamLeaderId_idx",
                   "unique": false
                 }
               ],
@@ -6013,7 +6013,301 @@
               },
               "uniques": []
             },
-            "Site": {
+            "site_equipments": {
+              "columns": {
+                "createdAt": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "equipmentId": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nullable": false
+                },
+                "installedAt": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "notes": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                },
+                "siteId": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "index": {
+                    "name": "site_equipments_siteId_idx_cabdc5ab"
+                  },
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "siteId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "site_equipments"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "sites"
+                  }
+                },
+                {
+                  "index": {
+                    "name": "site_equipments_equipmentId_idx_e1548594"
+                  },
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "equipmentId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "site_equipments"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "equipment"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "equipmentId"
+                  ],
+                  "name": "site_equipments_equipmentId_idx_e1548594",
+                  "prefix": "site_equipments_equipmentId_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "siteId"
+                  ],
+                  "name": "site_equipments_siteId_idx_cabdc5ab",
+                  "prefix": "site_equipments_siteId_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "siteId",
+                    "equipmentId"
+                  ]
+                }
+              ]
+            },
+            "site_instructions": {
+              "columns": {
+                "authorId": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "nullable": false
+                },
+                "content": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "createdAt": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "effectiveFrom": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "effectiveUntil": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "nullable": true,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nullable": false
+                },
+                "isActive": {
+                  "codecId": "pg/bool@1",
+                  "dataType": "pg/bool",
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
+                  "nullable": false
+                },
+                "priority": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "default": {
+                    "kind": "literal",
+                    "value": "NORMAL"
+                  },
+                  "nullable": false
+                },
+                "siteId": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "nullable": false
+                },
+                "title": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "type": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "default": {
+                    "kind": "literal",
+                    "value": "PERMANENT"
+                  },
+                  "nullable": false
+                },
+                "updatedAt": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "foreignKeys": [
+                {
+                  "index": {
+                    "name": "site_instructions_siteId_idx_cabdc5ab"
+                  },
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "siteId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "site_instructions"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "sites"
+                  }
+                },
+                {
+                  "index": {
+                    "name": "site_instructions_authorId_idx_e47547ed"
+                  },
+                  "source": {
+                    "columns": [
+                      "authorId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "site_instructions"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "users"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "authorId"
+                  ],
+                  "name": "site_instructions_authorId_idx_e47547ed",
+                  "prefix": "site_instructions_authorId_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "siteId"
+                  ],
+                  "name": "site_instructions_siteId_idx_cabdc5ab",
+                  "prefix": "site_instructions_siteId_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
+            },
+            "sites": {
               "columns": {
                 "accessCode": {
                   "codecId": "pg/text@1",
@@ -6135,7 +6429,7 @@
               "foreignKeys": [
                 {
                   "index": {
-                    "name": "Site_clientId_idx_153a9a49"
+                    "name": "sites_clientId_idx_153a9a49"
                   },
                   "onDelete": "cascade",
                   "source": {
@@ -6143,52 +6437,52 @@
                       "clientId"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Site"
+                    "tableName": "sites"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Client"
+                    "tableName": "clients"
                   }
                 },
                 {
                   "index": {
-                    "name": "Site_managerId_idx_f8369ba6"
+                    "name": "sites_managerId_idx_f8369ba6"
                   },
                   "source": {
                     "columns": [
                       "managerId"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Site"
+                    "tableName": "sites"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "User"
+                    "tableName": "users"
                   }
                 },
                 {
                   "index": {
-                    "name": "Site_supervisorId_idx_fe423ed5"
+                    "name": "sites_supervisorId_idx_fe423ed5"
                   },
                   "source": {
                     "columns": [
                       "supervisorId"
                     ],
                     "namespaceId": "public",
-                    "tableName": "Site"
+                    "tableName": "sites"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "User"
+                    "tableName": "users"
                   }
                 }
               ],
@@ -6197,24 +6491,24 @@
                   "columns": [
                     "clientId"
                   ],
-                  "name": "Site_clientId_idx_153a9a49",
-                  "prefix": "Site_clientId_idx",
+                  "name": "sites_clientId_idx_153a9a49",
+                  "prefix": "sites_clientId_idx",
                   "unique": false
                 },
                 {
                   "columns": [
                     "managerId"
                   ],
-                  "name": "Site_managerId_idx_f8369ba6",
-                  "prefix": "Site_managerId_idx",
+                  "name": "sites_managerId_idx_f8369ba6",
+                  "prefix": "sites_managerId_idx",
                   "unique": false
                 },
                 {
                   "columns": [
                     "supervisorId"
                   ],
-                  "name": "Site_supervisorId_idx_fe423ed5",
-                  "prefix": "Site_supervisorId_idx",
+                  "name": "sites_supervisorId_idx_fe423ed5",
+                  "prefix": "sites_supervisorId_idx",
                   "unique": false
                 }
               ],
@@ -6231,306 +6525,12 @@
                 }
               ]
             },
-            "SiteEquipment": {
-              "columns": {
-                "createdAt": {
-                  "codecId": "pg/timestamptz-date@1",
-                  "dataType": "pg/timestamptz",
-                  "default": {
-                    "expression": "now()",
-                    "kind": "function"
-                  },
-                  "nullable": false,
-                  "typeParams": {
-                    "precision": 3
-                  }
-                },
-                "equipmentId": {
-                  "codecId": "pg/int4@1",
-                  "dataType": "pg/int4",
-                  "nullable": false
-                },
-                "id": {
-                  "codecId": "pg/int4@1",
-                  "dataType": "pg/int4",
-                  "default": {
-                    "expression": "autoincrement()",
-                    "kind": "function"
-                  },
-                  "nullable": false
-                },
-                "installedAt": {
-                  "codecId": "pg/timestamptz-date@1",
-                  "dataType": "pg/timestamptz",
-                  "default": {
-                    "expression": "now()",
-                    "kind": "function"
-                  },
-                  "nullable": false,
-                  "typeParams": {
-                    "precision": 3
-                  }
-                },
-                "notes": {
-                  "codecId": "pg/text@1",
-                  "dataType": "pg/text",
-                  "nullable": true
-                },
-                "siteId": {
-                  "codecId": "pg/int4@1",
-                  "dataType": "pg/int4",
-                  "nullable": false
-                }
-              },
-              "foreignKeys": [
-                {
-                  "index": {
-                    "name": "SiteEquipment_siteId_idx_cabdc5ab"
-                  },
-                  "onDelete": "cascade",
-                  "source": {
-                    "columns": [
-                      "siteId"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "SiteEquipment"
-                  },
-                  "target": {
-                    "columns": [
-                      "id"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "Site"
-                  }
-                },
-                {
-                  "index": {
-                    "name": "SiteEquipment_equipmentId_idx_e1548594"
-                  },
-                  "onDelete": "cascade",
-                  "source": {
-                    "columns": [
-                      "equipmentId"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "SiteEquipment"
-                  },
-                  "target": {
-                    "columns": [
-                      "id"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "Equipment"
-                  }
-                }
-              ],
-              "indexes": [
-                {
-                  "columns": [
-                    "equipmentId"
-                  ],
-                  "name": "SiteEquipment_equipmentId_idx_e1548594",
-                  "prefix": "SiteEquipment_equipmentId_idx",
-                  "unique": false
-                },
-                {
-                  "columns": [
-                    "siteId"
-                  ],
-                  "name": "SiteEquipment_siteId_idx_cabdc5ab",
-                  "prefix": "SiteEquipment_siteId_idx",
-                  "unique": false
-                }
-              ],
-              "primaryKey": {
-                "columns": [
-                  "id"
-                ]
-              },
-              "uniques": [
-                {
-                  "columns": [
-                    "siteId",
-                    "equipmentId"
-                  ]
-                }
-              ]
-            },
-            "SiteInstruction": {
-              "columns": {
-                "authorId": {
-                  "codecId": "pg/int4@1",
-                  "dataType": "pg/int4",
-                  "nullable": false
-                },
-                "content": {
-                  "codecId": "pg/text@1",
-                  "dataType": "pg/text",
-                  "nullable": false
-                },
-                "createdAt": {
-                  "codecId": "pg/timestamptz-date@1",
-                  "dataType": "pg/timestamptz",
-                  "default": {
-                    "expression": "now()",
-                    "kind": "function"
-                  },
-                  "nullable": false,
-                  "typeParams": {
-                    "precision": 3
-                  }
-                },
-                "effectiveFrom": {
-                  "codecId": "pg/timestamptz-date@1",
-                  "dataType": "pg/timestamptz",
-                  "default": {
-                    "expression": "now()",
-                    "kind": "function"
-                  },
-                  "nullable": false,
-                  "typeParams": {
-                    "precision": 3
-                  }
-                },
-                "effectiveUntil": {
-                  "codecId": "pg/timestamptz-date@1",
-                  "dataType": "pg/timestamptz",
-                  "nullable": true,
-                  "typeParams": {
-                    "precision": 3
-                  }
-                },
-                "id": {
-                  "codecId": "pg/int4@1",
-                  "dataType": "pg/int4",
-                  "default": {
-                    "expression": "autoincrement()",
-                    "kind": "function"
-                  },
-                  "nullable": false
-                },
-                "isActive": {
-                  "codecId": "pg/bool@1",
-                  "dataType": "pg/bool",
-                  "default": {
-                    "kind": "literal",
-                    "value": true
-                  },
-                  "nullable": false
-                },
-                "priority": {
-                  "codecId": "pg/text@1",
-                  "dataType": "pg/text",
-                  "default": {
-                    "kind": "literal",
-                    "value": "NORMAL"
-                  },
-                  "nullable": false
-                },
-                "siteId": {
-                  "codecId": "pg/int4@1",
-                  "dataType": "pg/int4",
-                  "nullable": false
-                },
-                "title": {
-                  "codecId": "pg/text@1",
-                  "dataType": "pg/text",
-                  "nullable": false
-                },
-                "type": {
-                  "codecId": "pg/text@1",
-                  "dataType": "pg/text",
-                  "default": {
-                    "kind": "literal",
-                    "value": "PERMANENT"
-                  },
-                  "nullable": false
-                },
-                "updatedAt": {
-                  "codecId": "pg/timestamptz-date@1",
-                  "dataType": "pg/timestamptz",
-                  "default": {
-                    "expression": "now()",
-                    "kind": "function"
-                  },
-                  "nullable": false,
-                  "typeParams": {
-                    "precision": 3
-                  }
-                }
-              },
-              "foreignKeys": [
-                {
-                  "index": {
-                    "name": "SiteInstruction_siteId_idx_cabdc5ab"
-                  },
-                  "onDelete": "cascade",
-                  "source": {
-                    "columns": [
-                      "siteId"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "SiteInstruction"
-                  },
-                  "target": {
-                    "columns": [
-                      "id"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "Site"
-                  }
-                },
-                {
-                  "index": {
-                    "name": "SiteInstruction_authorId_idx_e47547ed"
-                  },
-                  "source": {
-                    "columns": [
-                      "authorId"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "SiteInstruction"
-                  },
-                  "target": {
-                    "columns": [
-                      "id"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "User"
-                  }
-                }
-              ],
-              "indexes": [
-                {
-                  "columns": [
-                    "authorId"
-                  ],
-                  "name": "SiteInstruction_authorId_idx_e47547ed",
-                  "prefix": "SiteInstruction_authorId_idx",
-                  "unique": false
-                },
-                {
-                  "columns": [
-                    "siteId"
-                  ],
-                  "name": "SiteInstruction_siteId_idx_cabdc5ab",
-                  "prefix": "SiteInstruction_siteId_idx",
-                  "unique": false
-                }
-              ],
-              "primaryKey": {
-                "columns": [
-                  "id"
-                ]
-              },
-              "uniques": []
-            },
-            "User": {
+            "users": {
               "checks": [
                 {
                   "expression": "\"role\" IN ('ADMIN', 'MANAGER', 'DIRECTOR', 'SUPERVISOR', 'AGENT')",
-                  "name": "User_role_check_3b8a4a49",
-                  "prefix": "User_role_check"
+                  "name": "users_role_check_3b8a4a49",
+                  "prefix": "users_role_check"
                 }
               ],
               "columns": {
@@ -6658,40 +6658,40 @@
               "foreignKeys": [
                 {
                   "index": {
-                    "name": "User_supervisorId_idx_fe423ed5"
+                    "name": "users_supervisorId_idx_fe423ed5"
                   },
                   "source": {
                     "columns": [
                       "supervisorId"
                     ],
                     "namespaceId": "public",
-                    "tableName": "User"
+                    "tableName": "users"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "User"
+                    "tableName": "users"
                   }
                 },
                 {
                   "index": {
-                    "name": "User_teamLeaderId_idx_1d5c7be0"
+                    "name": "users_teamLeaderId_idx_1d5c7be0"
                   },
                   "source": {
                     "columns": [
                       "teamLeaderId"
                     ],
                     "namespaceId": "public",
-                    "tableName": "User"
+                    "tableName": "users"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "User"
+                    "tableName": "users"
                   }
                 }
               ],
@@ -6700,16 +6700,16 @@
                   "columns": [
                     "supervisorId"
                   ],
-                  "name": "User_supervisorId_idx_fe423ed5",
-                  "prefix": "User_supervisorId_idx",
+                  "name": "users_supervisorId_idx_fe423ed5",
+                  "prefix": "users_supervisorId_idx",
                   "unique": false
                 },
                 {
                   "columns": [
                     "teamLeaderId"
                   ],
-                  "name": "User_teamLeaderId_idx_1d5c7be0",
-                  "prefix": "User_teamLeaderId_idx",
+                  "name": "users_teamLeaderId_idx_1d5c7be0",
+                  "prefix": "users_teamLeaderId_idx",
                   "unique": false
                 }
               ],
@@ -6754,7 +6754,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "7b8805860bdf841d6797463065eb7e7ebc276508d7b1238db7bb7dd43c4b452e"
+    "storageHash": "eaa1ebf0fdbc3d258774bcb0514043e3063b51eeaabf1465e430d5bd286d3e90"
   },
   "capabilities": {
     "postgres": {

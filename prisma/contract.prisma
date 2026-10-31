@@ -47,6 +47,8 @@ model User {
   roleAssignments     RoleAssignment[]
   createdAt           DateTime              @default(now())
   updatedAt           DateTime              @default(now())
+
+  @@map("users")
 }
 
 model RoleAssignment {
@@ -57,6 +59,8 @@ model RoleAssignment {
   assignedAt DateTime @default(now())
   createdAt  DateTime @default(now())
   updatedAt  DateTime @default(now())
+
+  @@map("role_assignments")
 }
 
 model Client {
@@ -74,6 +78,8 @@ model Client {
   contracts      ClientContract[]
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @default(now())
+
+  @@map("clients")
 }
 
 model ClientContract {
@@ -89,6 +95,8 @@ model ClientContract {
   notes          String?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @default(now())
+
+  @@map("client_contracts")
 }
 
 model Site {
@@ -119,6 +127,8 @@ model Site {
   siteEquipments      SiteEquipment[]
   createdAt           DateTime          @default(now())
   updatedAt           DateTime          @default(now())
+
+  @@map("sites")
 }
 
 model Checkpoint {
@@ -137,6 +147,8 @@ model Checkpoint {
   scans               PatrolScan[]
   createdAt           DateTime     @default(now())
   updatedAt           DateTime     @default(now())
+
+  @@map("checkpoints")
 }
 
 model Shift {
@@ -162,6 +174,8 @@ model Shift {
   equipmentAssignments EquipmentAssignment[]
   createdAt            DateTime              @default(now())
   updatedAt            DateTime              @default(now())
+
+  @@map("shifts")
 }
 
 model Attendance {
@@ -184,6 +198,8 @@ model Attendance {
   verificationNotes  String?
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @default(now())
+
+  @@map("attendances")
 }
 
 model Patrol {
@@ -206,6 +222,8 @@ model Patrol {
   incidents            Incident[]
   createdAt            DateTime     @default(now())
   updatedAt            DateTime     @default(now())
+
+  @@map("patrols")
 }
 
 model PatrolScan {
@@ -223,6 +241,8 @@ model PatrolScan {
   status             String     @default("OK") // OK, ANOMALY_DETECTED, MISSED
   anomalyDescription String?
   createdAt          DateTime   @default(now())
+
+  @@map("patrol_scans")
 }
 
 model Incident {
@@ -255,6 +275,8 @@ model Incident {
   comments          IncidentComment[]
   createdAt         DateTime             @default(now())
   updatedAt         DateTime             @default(now())
+
+  @@map("incidents")
 }
 
 model IncidentAttachment {
@@ -267,6 +289,8 @@ model IncidentAttachment {
   fileSize   Int?
   caption    String?
   uploadedAt DateTime @default(now())
+
+  @@map("incident_attachments")
 }
 
 model IncidentComment {
@@ -277,6 +301,8 @@ model IncidentComment {
   author     User     @relation("AuthorComments", fields: [authorId], references: [id])
   comment    String
   createdAt  DateTime @default(now())
+
+  @@map("incident_comments")
 }
 
 model Equipment {
@@ -292,6 +318,8 @@ model Equipment {
   siteEquipments     SiteEquipment[]
   createdAt          DateTime              @default(now())
   updatedAt          DateTime              @default(now())
+
+  @@map("equipment")
 }
 
 model EquipmentAssignment {
@@ -310,6 +338,8 @@ model EquipmentAssignment {
   notes                String?
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @default(now())
+
+  @@map("equipment_assignments")
 }
 
 model SiteInstruction {
@@ -327,6 +357,8 @@ model SiteInstruction {
   isActive       Boolean   @default(true)
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @default(now())
+
+  @@map("site_instructions")
 }
 
 model SiteEquipment {
@@ -340,6 +372,7 @@ model SiteEquipment {
   createdAt   DateTime  @default(now())
 
   @@unique([siteId, equipmentId])
+  @@map("site_equipments")
 }
 
 model Notification {
@@ -352,4 +385,6 @@ model Notification {
   isRead    Boolean   @default(false)
   readAt    DateTime?
   createdAt DateTime  @default(now())
+
+  @@map("notifications")
 }

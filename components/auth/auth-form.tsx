@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { getAuthenticatorAssuranceLevel } from "@/lib/supabase/assurance";
 import {
   buttonClassName,
   FormMessage,
@@ -78,15 +79,19 @@ export function AuthForm({
         return;
       }
 
-      const { error: signInError } = await supabase.auth.signInWithPassword({
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
       if (signInError) throw signInError;
 
-      const { data: assurance, error: assuranceError } =
-        await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
-      if (assuranceError) throw assuranceError;
+      const assurance = await getAuthenticatorAssuranceLevel(
+        supabase,
+        data.session?.access_token,
+      );
+      if (!assurance) {
+        throw new Error("La session de connexion est introuvable. Veuillez réessayer.");
+      }
 
       router.replace(
         assurance.nextLevel === "aal2" && assurance.currentLevel !== "aal2"

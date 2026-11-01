@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState, type FormEvent } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { getAuthenticatorAssuranceLevel } from "@/lib/supabase/assurance";
 import {
   buttonClassName,
   FormMessage,
@@ -143,9 +144,10 @@ export function MfaSettings() {
 
     try {
       const supabase = createClient();
-      const { data: assurance, error: assuranceError } =
-        await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
-      if (assuranceError) throw assuranceError;
+      const assurance = await getAuthenticatorAssuranceLevel(supabase);
+      if (!assurance) {
+        throw new Error("La session de connexion est introuvable. Veuillez vous reconnecter.");
+      }
       if (assurance.currentLevel !== "aal2") {
         throw new Error("Vérifiez d’abord votre code TOTP avant de désactiver cette protection.");
       }

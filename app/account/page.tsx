@@ -2,6 +2,7 @@ import { MfaSettings } from "@/components/auth/mfa-settings";
 import { PasswordChangeForm } from "@/components/auth/password-change-form";
 import { SignOutButton } from "@/components/auth/sign-out-button";
 import { getAuthenticatedUser } from "@/lib/supabase/auth";
+import { getAuthenticatorAssuranceLevel } from "@/lib/supabase/assurance";
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -17,10 +18,9 @@ export default async function AccountPage({
   }
 
   const supabase = await createClient();
-  const { data: assurance, error } =
-    await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
-  if (error) {
-    throw error;
+  const assurance = await getAuthenticatorAssuranceLevel(supabase);
+  if (!assurance) {
+    redirect("/auth/sign-in");
   }
   if (assurance.nextLevel === "aal2" && assurance.currentLevel !== "aal2") {
     redirect("/auth/mfa");

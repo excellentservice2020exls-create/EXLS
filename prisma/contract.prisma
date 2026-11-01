@@ -16,7 +16,7 @@ enum UserStatus {
   ARCHIVED  = "ARCHIVED"
 }
 
-enum ContractServiceType {
+enum ContractServiceKind {
   @@type("pg/text@1")
   STATIC_GUARDING = "STATIC_GUARDING"
   MOBILE_PATROL   = "MOBILE_PATROL"
@@ -82,7 +82,7 @@ enum ScanStatus {
   MISSED           = "MISSED"
 }
 
-enum IncidentCategory {
+enum IncidentCategoryKind {
   @@type("pg/text@1")
   INTRUSION         = "INTRUSION"
   FIRE_ALARM        = "FIRE_ALARM"
@@ -112,7 +112,7 @@ enum IncidentStatus {
   CLOSED      = "CLOSED"
 }
 
-enum EquipmentCategory {
+enum EquipmentCategoryKind {
   @@type("pg/text@1")
   RADIO_COMMUNICATION = "RADIO_COMMUNICATION"
   LIGHTING            = "LIGHTING"
@@ -167,6 +167,76 @@ enum NotificationType {
   SYSTEM            = "SYSTEM"
 }
 
+model ContractServiceType {
+  id          String     @id
+  name        String
+  description String?
+  isActive    Boolean    @default(true) @map("is_active")
+  createdAt   DateTime   @default(now()) @map("created_at")
+  contracts   Contract[]
+
+  @@map("contract_service_types")
+}
+
+model IncidentCategory {
+  id          String     @id
+  name        String
+  description String?
+  isActive    Boolean    @default(true) @map("is_active")
+  createdAt   DateTime   @default(now()) @map("created_at")
+  incidents   CoreIncident[]
+
+  @@map("incident_categories")
+}
+
+model EquipmentCategory {
+  id          String     @id
+  name        String
+  description String?
+  isActive    Boolean    @default(true) @map("is_active")
+  createdAt   DateTime   @default(now()) @map("created_at")
+  equipment   CoreEquipment[]
+
+  @@map("equipment_categories")
+}
+
+model Contract {
+  id            Uuid                 @id @default(sql`gen_random_uuid()`)
+  serviceTypeId String               @map("service_type_id")
+  serviceType   ContractServiceType @relation(fields: [serviceTypeId], references: [id])
+  status        ContractStatus      @default(ACTIVE)
+  clientName    String               @map("client_name")
+  startDate     DateTime             @map("start_date")
+  endDate       DateTime?            @map("end_date")
+  createdAt     DateTime             @default(now()) @map("created_at")
+
+  @@map("contracts")
+}
+
+model CoreIncident {
+  id          Uuid              @id @default(sql`gen_random_uuid()`)
+  categoryId  String            @map("category_id")
+  category    IncidentCategory @relation(fields: [categoryId], references: [id])
+  severity    IncidentSeverity
+  status      IncidentStatus   @default(NEW)
+  description String
+  reportedAt  DateTime          @default(now()) @map("reported_at")
+
+  @@map("core_incidents")
+}
+
+model CoreEquipment {
+  id           Uuid                 @id @default(sql`gen_random_uuid()`)
+  categoryId   String               @map("category_id")
+  category     EquipmentCategory  @relation(fields: [categoryId], references: [id])
+  status       EquipmentStatus    @default(AVAILABLE)
+  condition    EquipmentCondition @default(EXCELLENT)
+  serialNumber String?              @unique @map("serial_number")
+  createdAt    DateTime             @default(now()) @map("created_at")
+
+  @@map("core_equipment")
+}
+
 model User {
   id                  Int                   @id @default(autoincrement())
   email               String                @unique
@@ -175,7 +245,7 @@ model User {
   lastName            String
   phone               String?
   matricule           String                @unique
-  role                Role
+  role                Role                  @default(AGENT)
   status              UserStatus            @default(ACTIVE)
   adminLock           String?               @unique // Enforces single ADMIN (e.g. 'GLOBAL_ADMIN' only on the sole admin)
   mustChangePassword  Boolean               @default(false)
@@ -202,23 +272,10 @@ model User {
   authoredInstructions SiteInstruction[]    @relation("AuthorInstructions")
   equipmentAssignments EquipmentAssignment[] @relation("AgentEquipmentAssignments")
   notifications       Notification[]        @relation("UserNotifications")
-  roleAssignments     RoleAssignment[]
   createdAt           DateTime              @default(now())
-  updatedAt           DateTime              @default(now())
+  updatedAt           DateTime              @default(now()) @onUpdate(now())
 
   @@map("users")
-}
-
-model RoleAssignment {
-  id         Int      @id @default(autoincrement())
-  userId     Int
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  role       Role
-  assignedAt DateTime @default(now())
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @default(now())
-
-  @@map("role_assignments")
 }
 
 model Client {
@@ -235,7 +292,7 @@ model Client {
   sites          Site[]
   contracts      ClientContract[]
   createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @default(now())
+  updatedAt      DateTime         @default(now()) @onUpdate(now())
 
   @@map("clients")
 }
@@ -247,12 +304,12 @@ model ClientContract {
   contractNumber String    @unique
   startDate      DateTime
   endDate        DateTime?
-  serviceType    ContractServiceType
+  serviceType    ContractServiceKind
   status         ContractStatus      @default(ACTIVE)
-  hourlyRate     Decimal?
+  hourlyRate     Numeric(10, 2)?
   notes          String?
   createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @default(now())
+  updatedAt      DateTime  @default(now()) @onUpdate(now())
 
   @@map("client_contracts")
 }
@@ -284,7 +341,7 @@ model Site {
   siteInstructions    SiteInstruction[]
   siteEquipments      SiteEquipment[]
   createdAt           DateTime          @default(now())
-  updatedAt           DateTime          @default(now())
+  updatedAt           DateTime          @default(now()) @onUpdate(now())
 
   @@map("sites")
 }
@@ -304,7 +361,7 @@ model Checkpoint {
   isRequired          Boolean      @default(true)
   scans               PatrolScan[]
   createdAt           DateTime     @default(now())
-  updatedAt           DateTime     @default(now())
+  updatedAt           DateTime     @default(now()) @onUpdate(now())
 
   @@map("checkpoints")
 }
@@ -324,14 +381,14 @@ model Shift {
   startTime            DateTime
   endTime              DateTime
   status               ShiftStatus           @default(SCHEDULED)
-  hourlyRate           Decimal?
+  hourlyRate           Numeric(10, 2)?
   notes                String?
   attendance           Attendance?
   patrols              Patrol[]
   incidents            Incident[]
   equipmentAssignments EquipmentAssignment[]
   createdAt            DateTime              @default(now())
-  updatedAt            DateTime              @default(now())
+  updatedAt            DateTime              @default(now()) @onUpdate(now())
 
   @@map("shifts")
 }
@@ -355,7 +412,7 @@ model Attendance {
   verifiedBy         User?     @relation("SupervisorVerifiedAttendances", fields: [verifiedById], references: [id])
   verificationNotes  String?
   createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @default(now())
+  updatedAt          DateTime  @default(now()) @onUpdate(now())
 
   @@map("attendances")
 }
@@ -379,7 +436,7 @@ model Patrol {
   scans                PatrolScan[]
   incidents            Incident[]
   createdAt            DateTime     @default(now())
-  updatedAt            DateTime     @default(now())
+  updatedAt            DateTime     @default(now()) @onUpdate(now())
 
   @@map("patrols")
 }
@@ -417,7 +474,7 @@ model Incident {
   assignedTo        User?                @relation("AssignedIncidents", fields: [assignedToId], references: [id])
   incidentNumber    String               @unique
   title             String
-  category          IncidentCategory
+  category          IncidentCategoryKind
   severity          IncidentSeverity     @default(MEDIUM)
   status            IncidentStatus       @default(NEW)
   occurredAt        DateTime
@@ -432,7 +489,7 @@ model Incident {
   attachments       IncidentAttachment[]
   comments          IncidentComment[]
   createdAt         DateTime             @default(now())
-  updatedAt         DateTime             @default(now())
+  updatedAt         DateTime             @default(now()) @onUpdate(now())
 
   @@map("incidents")
 }
@@ -468,14 +525,14 @@ model Equipment {
   name               String
   code               String                @unique
   serialNumber       String?               @unique
-  category           EquipmentCategory
+  category           EquipmentCategoryKind
   status             EquipmentStatus       @default(AVAILABLE)
   purchaseDate       DateTime?
   lastInspectionDate DateTime?
   assignments        EquipmentAssignment[]
   siteEquipments     SiteEquipment[]
   createdAt          DateTime              @default(now())
-  updatedAt          DateTime              @default(now())
+  updatedAt          DateTime              @default(now()) @onUpdate(now())
 
   @@map("equipment")
 }
@@ -495,7 +552,7 @@ model EquipmentAssignment {
   anomalyReported      Boolean   @default(false)
   notes                String?
   createdAt            DateTime  @default(now())
-  updatedAt            DateTime  @default(now())
+  updatedAt            DateTime  @default(now()) @onUpdate(now())
 
   @@map("equipment_assignments")
 }
@@ -514,7 +571,7 @@ model SiteInstruction {
   effectiveUntil DateTime?
   isActive       Boolean   @default(true)
   createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @default(now())
+  updatedAt      DateTime  @default(now()) @onUpdate(now())
 
   @@map("site_instructions")
 }

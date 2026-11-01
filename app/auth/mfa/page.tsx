@@ -17,10 +17,10 @@ export default async function MfaPage() {
     throw error;
   }
   if (data.currentLevel === "aal2") {
-    redirect("/account");
+    redirect("/attendance");
   }
   if (data.nextLevel !== "aal2") {
-    redirect("/account");
+    redirect("/attendance");
   }
 
   return <MfaChallenge />;

@@ -17,7 +17,7 @@ export function SignOutButton() {
       const { error: signOutError } = await createClient().auth.signOut();
       if (signOutError) throw signOutError;
 
-      router.replace("/auth/sign-in");
+      router.replace("/");
       router.refresh();
     } catch (caughtError) {
       setError(caughtError instanceof Error ? caughtError.message : "La déconnexion a échoué.");

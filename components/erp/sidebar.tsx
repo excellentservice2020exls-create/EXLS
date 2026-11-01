@@ -1,3 +1,5 @@
+// components/erp/sidebar.tsx
+
 import Link from "next/link";
 
 const managementRoles = ["ADMIN", "MANAGER", "DIRECTOR"];
@@ -6,6 +8,7 @@ const supervisoryRoles = [...managementRoles, "SUPERVISOR"];
 export function Sidebar({ role, email }: { role: string; email: string }) {
   const items = [
     { href: "/dashboard", label: "Tableau de bord", roles: managementRoles },
+    { href: "/profile", label: "Mon profil", roles: [...supervisoryRoles, "AGENT"] },
     { href: "/employees", label: "Personnel", roles: managementRoles },
     { href: "/clients", label: "Abonnés / Clients", roles: managementRoles },
     { href: "/missions", label: "Missions", roles: supervisoryRoles },

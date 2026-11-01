@@ -1,8 +1,9 @@
 import { createEmployee } from "../actions";
-import { MANAGEMENT_ROLES, requireRole } from "@/lib/erp-auth";
+import { canAssignRole, ERP_ROLES, requirePermission } from "@/lib/erp-auth";
 
 const errorMessages: Record<string, string> = {
   invalid: "Vérifiez les informations saisies et le rôle sélectionné.",
+  "role-not-assignable": "Votre niveau d’accès ne vous permet pas d’attribuer ce profil.",
   "profile-exists": "Un profil EXLS existe déjà pour cette adresse e-mail.",
   invite: "L’invitation n’a pas pu être envoyée. Vérifiez la configuration Supabase Auth.",
   profile: "Le profil EXLS n’a pas pu être enregistré. Vérifiez le matricule et réessayez.",
@@ -11,10 +12,13 @@ const errorMessages: Record<string, string> = {
 export default async function NewEmployeePage({
   searchParams,
 }: PageProps<"/employees/new">) {
-  await requireRole(MANAGEMENT_ROLES);
+  const user = await requirePermission("employees:create");
   const { error } = await searchParams;
   const errorMessage =
     typeof error === "string" ? errorMessages[error] : undefined;
+  const assignableRoles = ERP_ROLES.filter(
+    (role) => role !== "ADMIN" && canAssignRole(user, role),
+  );
 
   return (
     <div className="max-w-2xl space-y-6">
@@ -55,10 +59,17 @@ export default async function NewEmployeePage({
         <label className="block space-y-2 text-sm text-slate-600">
           <span>Profil</span>
           <select name="role" required defaultValue="AGENT" className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2">
-            <option value="AGENT">Agent</option>
-            <option value="SUPERVISOR">Superviseur</option>
-            <option value="MANAGER">Responsable</option>
-            <option value="DIRECTOR">Direction</option>
+            {assignableRoles.map((role) => (
+              <option key={role} value={role}>
+                {{
+                  AGENT: "Agent",
+                  SUPERVISOR: "Superviseur",
+                  MANAGER: "Responsable",
+                  DIRECTOR: "Direction",
+                  ADMIN: "Administrateur",
+                }[role]}
+              </option>
+            ))}
           </select>
         </label>
         <label className="space-y-2 text-sm text-slate-600">

@@ -1,8 +1,8 @@
 import { createClient } from "../actions";
-import { MANAGEMENT_ROLES, requireRole } from "@/lib/erp-auth";
+import { requirePermission } from "@/lib/erp-auth";
 
 export default async function NewClientPage() {
-  await requireRole(MANAGEMENT_ROLES);
+  await requirePermission("clients:create");
   return (
     <div className="max-w-2xl space-y-6">
       <header>

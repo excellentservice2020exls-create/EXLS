@@ -2,7 +2,12 @@
 
 import { notFound, redirect } from "next/navigation";
 import { db } from "@/prisma/db";
-import { MANAGEMENT_ROLES, requireAppUser, requireRole, SUPERVISOR_ROLES } from "@/lib/erp-auth";
+import {
+  hasPermission,
+  requireAppUser,
+  requirePermission,
+  requireShiftAccess,
+} from "@/lib/erp-auth";
 
 function parseId(value: FormDataEntryValue | null) {
   const text = String(value ?? "");
@@ -42,6 +47,12 @@ function returnToAttendance(shiftId: number, date: string, error?: string): neve
 
 export async function createAttendanceRecord(formData: FormData) {
   const user = await requireAppUser();
+  const canCreateForTeam = hasPermission(user, "attendance:create:team");
+  const canCreateForSelf = hasPermission(user, "attendance:create:self");
+  if (!canCreateForTeam && !canCreateForSelf) {
+    notFound();
+  }
+
   const shiftId = parseId(formData.get("shiftId"));
   const date = String(formData.get("date") ?? "");
   const time = String(formData.get("time") ?? "");
@@ -52,18 +63,16 @@ export async function createAttendanceRecord(formData: FormData) {
 
   const shift = await db.orm.public.Shift
     .where({ id: shiftId })
-    .select("id", "agentId", "supervisorId", "startTime", "endTime", "status")
+    .select("id", "agentId", "supervisorId", "teamLeaderId", "siteId", "startTime", "endTime", "status")
     .first();
 
   if (!shift) {
     returnToAttendance(shiftId, date, "shift_not_found");
   }
 
-  const role = String(user.role);
-  const canManageAll = (MANAGEMENT_ROLES as readonly string[]).includes(role);
-  const canSuperviseShift = role === "SUPERVISOR" && shift.supervisorId === user.id;
-  const isAssignedAgent = role === "AGENT" && shift.agentId === user.id;
-  if (!canManageAll && !canSuperviseShift && !isAssignedAgent) {
+  await requireShiftAccess(user, shift);
+  const isAssignedAgent = canCreateForSelf && shift.agentId === user.id;
+  if (!canCreateForTeam && !isAssignedAgent) {
     notFound();
   }
 
@@ -97,7 +106,7 @@ export async function createAttendanceRecord(formData: FormData) {
 }
 
 export async function verifyAttendance(formData: FormData) {
-  const user = await requireRole(SUPERVISOR_ROLES);
+  const user = await requirePermission("attendance:verify");
   const attendanceId = parseId(formData.get("attendanceId"));
   if (!attendanceId) {
     notFound();
@@ -113,15 +122,13 @@ export async function verifyAttendance(formData: FormData) {
 
   const shift = await db.orm.public.Shift
     .where({ id: attendance.shiftId })
-    .select("id", "startTime", "supervisorId")
+    .select("id", "startTime", "supervisorId", "teamLeaderId", "agentId", "siteId")
     .first();
   if (!shift) {
     notFound();
   }
 
-  if (String(user.role) === "SUPERVISOR" && shift.supervisorId !== user.id) {
-    notFound();
-  }
+  await requireShiftAccess(user, shift);
 
   if (String(attendance.status) !== "VERIFIED") {
     await db.orm.public.Attendance.where({ id: attendance.id }).update({

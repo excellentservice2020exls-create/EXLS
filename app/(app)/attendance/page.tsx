@@ -1,7 +1,7 @@
 import { createAttendanceRecord, verifyAttendance } from "./actions";
-import { getAgentById, getAttendanceForShift, getShifts, getSiteById } from "@/lib/erp-data";
+import { getAccessibleShifts, getAgentById, getAttendanceForShift, getSiteById } from "@/lib/erp-data";
 import { unstable_noStore as noStore } from "next/cache";
-import { MANAGEMENT_ROLES, requireAppUser } from "@/lib/erp-auth";
+import { hasPermission, requirePermission } from "@/lib/erp-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -10,20 +10,14 @@ export default async function AttendancePage({
 }: {
   searchParams?: Promise<{ shiftId?: string; date?: string; error?: string }>;
 }) {
-  const user = await requireAppUser();
+  const user = await requirePermission("attendance:read");
   const params = await searchParams;
   noStore();
   const requestedDate = params?.date ?? "";
   const targetDate = /^\d{4}-\d{2}-\d{2}$/.test(requestedDate)
     ? requestedDate
     : dateValue(new Date());
-  const allShifts = await getShifts(targetDate);
-  const role = String(user.role);
-  const shifts = role === "AGENT"
-    ? allShifts.filter((shift) => shift.agentId === user.id)
-    : role === "SUPERVISOR"
-      ? allShifts.filter((shift) => shift.supervisorId === user.id)
-      : allShifts;
+  const shifts = await getAccessibleShifts(user, targetDate);
   const selectedShift = params?.shiftId
     ? shifts.find((shift) => String(shift.id) === params.shiftId) ?? null
     : shifts[0] ?? null;
@@ -40,8 +34,10 @@ export default async function AttendancePage({
   const agent = await getAgentById(selectedShift.agentId);
   const attendance = await getAttendanceForShift(selectedShift.id);
   const record = attendance[0];
-  const canVerify = (MANAGEMENT_ROLES as readonly string[]).includes(role) ||
-    (role === "SUPERVISOR" && selectedShift.supervisorId === user.id);
+  const canVerify = hasPermission(user, "attendance:verify");
+  const canCreateForShift =
+    hasPermission(user, "attendance:create:team") ||
+    (hasPermission(user, "attendance:create:self") && selectedShift.agentId === user.id);
   const errors: Record<string, string> = {
     invalid: "Les informations de pointage sont invalides.",
     shift_not_found: "Cette mission n’existe plus.",
@@ -94,7 +90,7 @@ export default async function AttendancePage({
           </div>
         </div>
 
-        {!record && (
+        {!record && canCreateForShift && (
           <form action={createAttendanceRecord} className="mt-4 grid gap-3 md:grid-cols-[1fr_1fr_auto] md:items-end">
             <input type="hidden" name="shiftId" value={selectedShift.id} />
             <label className="space-y-2 text-sm text-slate-600">

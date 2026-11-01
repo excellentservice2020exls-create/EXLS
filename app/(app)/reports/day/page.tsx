@@ -1,26 +1,20 @@
-import { getAttendanceForShift, getDashboardStats, getShifts, getSiteById } from "@/lib/erp-data";
+import {
+  getAccessibleShifts,
+  getAttendanceForShift,
+  getDashboardStats,
+  getShifts,
+  getSiteById,
+} from "@/lib/erp-data";
 import { unstable_noStore as noStore } from "next/cache";
-import { SUPERVISOR_ROLES, requireRole } from "@/lib/erp-auth";
+import { hasRole, MANAGEMENT_ROLES, requirePermission, type AppUser } from "@/lib/erp-auth";
 
 export const dynamic = "force-dynamic";
 
 export default async function ReportsDayPage() {
-  const user = await requireRole(SUPERVISOR_ROLES);
+  const user = await requirePermission("reports:read");
   noStore();
-  const stats = await getDashboardStats();
-  const allShifts = await getShifts();
-  const shifts = String(user.role) === "SUPERVISOR"
-    ? allShifts.filter((shift) => shift.supervisorId === user.id)
-    : allShifts;
-  const reportStats = String(user.role) === "SUPERVISOR"
-    ? {
-        activeUsers: new Set(shifts.map((shift) => shift.agentId)).size,
-        activeShifts: shifts.filter((shift) => String(shift.status) !== "COMPLETED").length,
-        verifiedAttendances: (await Promise.all(shifts.map((shift) => getAttendanceForShift(shift.id))))
-          .flat()
-          .filter((attendance) => String(attendance.status) === "VERIFIED").length,
-      }
-    : stats;
+  const shifts = await getAccessibleShifts(user);
+  const reportStats = await getReportStats(user, shifts);
   const rows = await Promise.all(
     shifts.map(async (shift) => ({
       shift,
@@ -79,4 +73,24 @@ export default async function ReportsDayPage() {
       </div>
     </div>
   );
+}
+
+async function getReportStats(
+  user: AppUser,
+  shifts: Awaited<ReturnType<typeof getShifts>>,
+) {
+  if (hasRole(user, MANAGEMENT_ROLES)) {
+    return getDashboardStats();
+  }
+
+  const attendances = (await Promise.all(
+    shifts.map((shift) => getAttendanceForShift(shift.id)),
+  )).flat();
+  return {
+    activeUsers: new Set(shifts.map((shift) => shift.agentId)).size,
+    activeShifts: shifts.filter((shift) => String(shift.status) !== "COMPLETED").length,
+    verifiedAttendances: attendances.filter(
+      (attendance) => String(attendance.status) === "VERIFIED",
+    ).length,
+  };
 }

@@ -1,12 +1,12 @@
 import { createShift } from "../actions";
 import { getEmployees, getSites } from "@/lib/erp-data";
 import { unstable_noStore as noStore } from "next/cache";
-import { MANAGEMENT_ROLES, requireRole } from "@/lib/erp-auth";
+import { requirePermission } from "@/lib/erp-auth";
 
 export const dynamic = "force-dynamic";
 
 export default async function NewMissionPage() {
-  await requireRole(MANAGEMENT_ROLES);
+  await requirePermission("missions:create");
   noStore();
   const sites = await getSites();
   const agents = (await getEmployees()).filter(

@@ -2,10 +2,10 @@
 
 import { redirect } from "next/navigation";
 import { db } from "@/prisma/db";
-import { MANAGEMENT_ROLES, requireRole } from "@/lib/erp-auth";
+import { requirePermission } from "@/lib/erp-auth";
 
 export async function createClient(formData: FormData) {
-  await requireRole(MANAGEMENT_ROLES);
+  await requirePermission("clients:create");
   const name = String(formData.get("name") ?? "").trim();
   const contactName = String(formData.get("contactName") ?? "").trim();
   const contactEmail = String(formData.get("contactEmail") ?? "").trim();

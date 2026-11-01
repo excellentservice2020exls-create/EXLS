@@ -1,5 +1,6 @@
 import { db } from "@/prisma/db";
 import { unstable_noStore as noStore } from "next/cache";
+import { canAccessShiftInScope, getAppDataScope, type AppUser } from "@/lib/erp-auth";
 
 export async function getDashboardStats() {
   noStore();
@@ -45,7 +46,7 @@ export async function getShifts(date?: string) {
   noStore();
   if (!date) {
     return db.orm.public.Shift
-      .select("id", "title", "startTime", "endTime", "status", "siteId", "agentId", "supervisorId")
+      .select("id", "title", "startTime", "endTime", "status", "siteId", "agentId", "supervisorId", "teamLeaderId")
       .orderBy((shift) => shift.startTime.desc())
       .all();
   }
@@ -56,9 +57,17 @@ export async function getShifts(date?: string) {
   return db.orm.public.Shift
     .where((shift) => shift.startTime.gte(start))
     .where((shift) => shift.startTime.lte(end))
-    .select("id", "title", "startTime", "endTime", "status", "siteId", "agentId", "supervisorId")
+    .select("id", "title", "startTime", "endTime", "status", "siteId", "agentId", "supervisorId", "teamLeaderId")
     .orderBy((shift) => shift.startTime.asc())
     .all();
+}
+
+export async function getAccessibleShifts(user: AppUser, date?: string) {
+  const [shifts, scope] = await Promise.all([
+    getShifts(date),
+    getAppDataScope(user),
+  ]);
+  return shifts.filter((shift) => canAccessShiftInScope(user, scope, shift));
 }
 
 export async function getSites() {

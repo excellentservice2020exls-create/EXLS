@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getDashboardStats, getShifts, getSiteById } from "@/lib/erp-data";
 import { unstable_noStore as noStore } from "next/cache";
-import { MANAGEMENT_ROLES, requireAppUser } from "@/lib/erp-auth";
+import { hasPermission, requireAppUser } from "@/lib/erp-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -20,8 +20,8 @@ function StatCard({ label, value, accent }: { label: string; value: string; acce
 
 export default async function DashboardPage() {
   const user = await requireAppUser();
-  if (!(MANAGEMENT_ROLES as readonly string[]).includes(String(user.role))) {
-    redirect(String(user.role) === "SUPERVISOR" ? "/missions" : "/attendance");
+  if (!hasPermission(user, "dashboard:read")) {
+    redirect(hasPermission(user, "missions:read") ? "/missions" : "/attendance");
   }
   noStore();
   const stats = await getDashboardStats();

@@ -6,7 +6,13 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900">
-      <Sidebar role={String(user.role)} email={user.email} />
+      <Sidebar
+        role={user.role}
+        roles={user.roles}
+        level={user.level}
+        email={user.email}
+        permissions={user.permissions}
+      />
       <main className="ml-72 p-8">{children}</main>
     </div>
   );

@@ -1,14 +1,14 @@
 import Link from "next/link";
 import { getEmployees } from "@/lib/erp-data";
 import { unstable_noStore as noStore } from "next/cache";
-import { MANAGEMENT_ROLES, requireRole } from "@/lib/erp-auth";
+import { requirePermission } from "@/lib/erp-auth";
 
 export const dynamic = "force-dynamic";
 
 export default async function EmployeesPage({
   searchParams,
 }: PageProps<"/employees">) {
-  await requireRole(MANAGEMENT_ROLES);
+  await requirePermission("employees:read");
   noStore();
   const employees = await getEmployees();
   const { status } = await searchParams;

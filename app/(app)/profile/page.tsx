@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { requireAppUser } from "@/lib/erp-auth";
+import { requirePermission } from "@/lib/erp-auth";
 import { db } from "@/prisma/db";
 
 export const dynamic = "force-dynamic";
@@ -25,7 +25,7 @@ function ProfileDetail({ label, value }: { label: string; value: string }) {
 }
 
 export default async function ProfilePage() {
-  const appUser = await requireAppUser();
+  const appUser = await requirePermission("profile:read:self");
   const profile = await db.orm.public.User
     .where({ id: appUser.id })
     .select(
@@ -71,6 +71,10 @@ export default async function ProfilePage() {
             <h2 className="text-xl font-semibold text-slate-900">{fullName}</h2>
             <p className="mt-1 text-sm text-slate-500">
               {roleLabels[role] ?? role}
+            </p>
+            <p className="mt-1 text-xs text-slate-500">
+              Niveau d&apos;accès {appUser.level} ·{" "}
+              {appUser.roles.map((assignedRole) => roleLabels[assignedRole] ?? assignedRole).join(", ")}
             </p>
           </div>
         </div>

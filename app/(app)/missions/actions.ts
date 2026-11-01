@@ -2,10 +2,10 @@
 
 import { redirect } from "next/navigation";
 import { db } from "@/prisma/db";
-import { MANAGEMENT_ROLES, requireRole } from "@/lib/erp-auth";
+import { getEffectiveRoles, requirePermission } from "@/lib/erp-auth";
 
 export async function createShift(formData: FormData) {
-  await requireRole(MANAGEMENT_ROLES);
+  await requirePermission("missions:create");
   const title = String(formData.get("title") ?? "").trim();
   const date = String(formData.get("date") ?? "");
   const startTime = String(formData.get("startTime") ?? "");
@@ -38,10 +38,12 @@ export async function createShift(formData: FormData) {
     db.orm.public.Site.where({ id: siteId }).select("id", "name", "isActive").first(),
     db.orm.public.User.where({ id: agentId }).select("id", "role", "status").first(),
   ]);
-  if (
-    !site || String(site.isActive) !== "true" ||
-    !agent || String(agent.role) !== "AGENT" || String(agent.status) !== "ACTIVE"
-  ) {
+  if (!site || !agent || String(site.isActive) !== "true" || String(agent.status) !== "ACTIVE") {
+    return;
+  }
+
+  const agentRoles = await getEffectiveRoles(agent.id, String(agent.role));
+  if (!agentRoles.includes("AGENT")) {
     return;
   }
 

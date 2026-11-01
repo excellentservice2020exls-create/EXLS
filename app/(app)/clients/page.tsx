@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { getClients } from "@/lib/erp-data";
 import { unstable_noStore as noStore } from "next/cache";
-import { MANAGEMENT_ROLES, requireRole } from "@/lib/erp-auth";
+import { requirePermission } from "@/lib/erp-auth";
 
 export const dynamic = "force-dynamic";
 
 export default async function ClientsPage() {
-  await requireRole(MANAGEMENT_ROLES);
+  await requirePermission("clients:read");
   noStore();
   const clients = await getClients();
 

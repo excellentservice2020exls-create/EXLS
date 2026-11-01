@@ -1,7 +1,7 @@
-import { MANAGEMENT_ROLES, requireRole } from "@/lib/erp-auth";
+import { requirePermission } from "@/lib/erp-auth";
 
 export default async function SettingsPage() {
-  await requireRole(MANAGEMENT_ROLES);
+  await requirePermission("settings:read");
   return (
     <div className="space-y-6">
       <header>

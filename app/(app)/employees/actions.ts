@@ -4,7 +4,7 @@ import { createHash, randomBytes } from "node:crypto";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { db } from "@/prisma/db";
-import { MANAGEMENT_ROLES, requireRole } from "@/lib/erp-auth";
+import { canAssignRole, requirePermission } from "@/lib/erp-auth";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 const employeeRoles = ["AGENT", "SUPERVISOR", "MANAGER", "DIRECTOR"] as const;
@@ -33,7 +33,7 @@ function getInviteRedirectUrl(origin: string | null) {
 }
 
 export async function createEmployee(formData: FormData) {
-  await requireRole(MANAGEMENT_ROLES);
+  const user = await requirePermission("employees:create");
   const firstName = String(formData.get("firstName") ?? "").trim();
   const lastName = String(formData.get("lastName") ?? "").trim();
   const phone = String(formData.get("phone") ?? "").trim();
@@ -47,6 +47,9 @@ export async function createEmployee(formData: FormData) {
     !isEmployeeRole(requestedRole)
   ) {
     redirect("/employees/new?error=invalid");
+  }
+  if (!canAssignRole(user, requestedRole)) {
+    redirect("/employees/new?error=role-not-assignable");
   }
 
   const escapedEmail = email.replace(/[\\%_]/g, "\\$&");

@@ -1,17 +1,14 @@
 import Link from "next/link";
-import { getAgentById, getShifts, getSiteById } from "@/lib/erp-data";
+import { getAccessibleShifts, getAgentById, getSiteById } from "@/lib/erp-data";
 import { unstable_noStore as noStore } from "next/cache";
-import { MANAGEMENT_ROLES, SUPERVISOR_ROLES, requireRole } from "@/lib/erp-auth";
+import { hasPermission, requirePermission } from "@/lib/erp-auth";
 
 export const dynamic = "force-dynamic";
 
 export default async function MissionsPage() {
-  const user = await requireRole(SUPERVISOR_ROLES);
+  const user = await requirePermission("missions:read");
   noStore();
-  const allShifts = await getShifts();
-  const shifts = String(user.role) === "SUPERVISOR"
-    ? allShifts.filter((shift) => shift.supervisorId === user.id)
-    : allShifts;
+  const shifts = await getAccessibleShifts(user);
   const rows = await Promise.all(
     shifts.map(async (shift) => {
       const site = await getSiteById(shift.siteId);
@@ -27,7 +24,7 @@ export default async function MissionsPage() {
           <p className="text-sm font-medium uppercase tracking-[0.2em] text-emerald-700">Missions</p>
           <h1 className="mt-2 text-3xl font-bold text-slate-900">Planification des missions</h1>
         </div>
-        {MANAGEMENT_ROLES.includes(String(user.role) as (typeof MANAGEMENT_ROLES)[number]) && (
+        {hasPermission(user, "missions:create") && (
           <Link href="/missions/new" className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-500">
             + Nouvelle mission
           </Link>

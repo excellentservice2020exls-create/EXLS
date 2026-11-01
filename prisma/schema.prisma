@@ -4,12 +4,28 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
 }
 
 // ==========================================
-// 1. ENUMS Stables (Cycles de vie)
+// 1. ENUMS Stables & Métiers
 // ==========================================
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  MANAGER
+  SUPERVISOR
+  TEAM_LEADER
+  AGENT
+  USER
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
 
 enum ContractStatus {
   ACTIVE
@@ -47,17 +63,74 @@ enum EquipmentCondition {
   DAMAGED
 }
 
+enum ShiftType {
+  DAY
+  NIGHT
+  CUSTOM
+}
+
+enum ShiftStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum ClockMethod {
+  QR_SCAN
+  NFC
+  MANUAL
+}
+
+enum AttendanceStatus {
+  ON_TIME
+  LATE
+  ABSENT
+  EXCUSED
+}
+
+enum PatrolStatus {
+  IN_PROGRESS
+  COMPLETED
+  ABORTED
+}
+
+enum ScanStatus {
+  OK
+  ANOMALY
+  MISSED
+}
+
+enum InstructionType {
+  PERMANENT
+  TEMPORARY
+  URGENT
+}
+
+enum PriorityLevel {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+enum NotificationType {
+  SYSTEM
+  ALERT
+  REMINDER
+}
+
 // ==========================================
-// 2. TABLES DE RÉFÉRENCE (Évolutives / Maîtres)
+// 2. TABLES DE RÉFÉRENCE (Maîtres)
 // ==========================================
 
 model ContractServiceType {
-  id          String     @id @db.Text
-  name        String     @db.Text
-  description String?    @db.Text
-  isActive    Boolean    @default(true) @map("is_active")
-  createdAt   DateTime   @default(now()) @map("created_at") @db.Timestamptz
-  contracts   Contract[]
+  id              String           @id @db.Text
+  name            String           @db.Text
+  description     String?          @db.Text
+  isActive        Boolean          @default(true) @map("is_active")
+  createdAt       DateTime         @default(now()) @map("created_at") @db.Timestamptz
+  clientContracts ClientContract[]
 
   @@map("contract_service_types")
 }
@@ -88,374 +161,373 @@ model EquipmentCategory {
 // 3. TABLES MÉTIERS PRINCIPALES
 // ==========================================
 
-model Contract {
-  id            String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  serviceTypeId String              @map("service_type_id")
-  serviceType   ContractServiceType @relation(fields: [serviceTypeId], references: [id])
-  status        ContractStatus      @default(ACTIVE)
-  clientName    String              @map("client_name") @db.Text
-  startDate     DateTime            @map("start_date") @db.Timestamptz
-  endDate       DateTime?           @map("end_date") @db.Timestamptz
-  createdAt     DateTime            @default(now()) @map("created_at") @db.Timestamptz
-
-  @@map("contracts")
-}
-
-model Incident {
-  id          String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  categoryId  String           @map("category_id")
-  category    IncidentCategory @relation(fields: [categoryId], references: [id])
-  severity    IncidentSeverity
-  status      IncidentStatus   @default(NEW)
-  description String           @db.Text
-  reportedAt  DateTime         @default(now()) @map("reported_at") @db.Timestamptz
-
-  @@map("incidents")
-}
-
-model Equipment {
-  id           String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  categoryId   String             @map("category_id")
-  category     EquipmentCategory  @relation(fields: [categoryId], references: [id])
-  status       EquipmentStatus    @default(AVAILABLE)
-  condition    EquipmentCondition @default(EXCELLENT)
-  serialNumber String?            @unique @map("serial_number") @db.Text
-  createdAt    DateTime           @default(now()) @map("created_at") @db.Timestamptz
-
-  @@map("equipment")
-}
-
 model User {
-  id                    Int                   @id @default(autoincrement())
-  email                 String                @unique
-  passwordHash          String
-  firstName             String
-  lastName              String
-  phone                 String?
-  matricule             String                @unique
-  role                  Role                  @default(AGENT)
-  status                UserStatus            @default(ACTIVE)
-  adminLock             String?               @unique // Enforces single ADMIN (e.g. 'GLOBAL_ADMIN')
-  mustChangePassword    Boolean               @default(false)
-  cnapsNumber           String?               // Carte professionnelle de sécurité
-  cnapsExpiration       DateTime?
-  supervisorId          Int?
-  teamLeaderId          Int?
-  supervisor            User?                 @relation("SupervisorAgents", fields: [supervisorId], references: [id])
-  supervisedAgents      User[]                @relation("SupervisorAgents")
-  teamLeader            User?                 @relation("TeamLeaderAgents", fields: [teamLeaderId], references: [id])
-  teamAgents            User[]                @relation("TeamLeaderAgents")
-  managedSites          Site[]                @relation("SiteManager")
-  supervisedSites       Site[]                @relation("SiteSupervisor")
-  shifts                Shift[]               @relation("AgentShifts")
-  supervisedShifts      Shift[]               @relation("SupervisorShifts")
-  teamLeaderShifts      Shift[]               @relation("TeamLeaderShifts")
-  attendances           Attendance[]          @relation("AgentAttendances")
-  verifiedAttendances   Attendance[]          @relation("SupervisorVerifiedAttendances")
-  patrols               Patrol[]              @relation("AgentPatrols")
-  patrolScans           PatrolScan[]          @relation("AgentPatrolScans")
-  reportedIncidents     Incident[]            @relation("ReportedIncidents")
-  assignedIncidents     Incident[]            @relation("AssignedIncidents")
-  incidentComments      IncidentComment[]     @relation("AuthorComments")
-  authoredInstructions  SiteInstruction[]     @relation("AuthorInstructions")
-  equipmentAssignments  EquipmentAssignment[]  @relation("AgentEquipmentAssignments")
-  notifications         Notification[]        @relation("UserNotifications")
-  createdAt             DateTime              @default(now())
-  updatedAt             DateTime              @default(now()) @updatedAt
+  id                  Int                   @id @default(autoincrement())
+  email               String                @unique @db.Text
+  passwordHash        String                @map("password_hash") @db.Text
+  firstName           String                @map("first_name") @db.Text
+  lastName            String                @map("last_name") @db.Text
+  phone               String?               @db.Text
+  matricule           String                @unique @db.Text
+  role                Role                  @default(USER)
+  status              UserStatus            @default(ACTIVE)
+  adminLock           String?               @unique @map("admin_lock") @db.Text
+  mustChangePassword  Boolean               @default(false) @map("must_change_password")
+  cnapsNumber         String?               @map("cnaps_number") @db.Text
+  cnapsExpiration     DateTime?             @map("cnaps_expiration") @db.Timestamptz
+  supervisorId        Int?                  @map("supervisor_id")
+  teamLeaderId        Int?                  @map("team_leader_id")
+  supervisor          User?                 @relation("SupervisorAgents", fields: [supervisorId], references: [id])
+  supervisedAgents    User[]                @relation("SupervisorAgents")
+  teamLeader          User?                 @relation("TeamLeaderAgents", fields: [teamLeaderId], references: [id])
+  teamAgents          User[]                @relation("TeamLeaderAgents")
+  managedSites        Site[]                @relation("SiteManager")
+  supervisedSites     Site[]                @relation("SiteSupervisor")
+  shifts              Shift[]               @relation("AgentShifts")
+  supervisedShifts    Shift[]               @relation("SupervisorShifts")
+  teamLeaderShifts    Shift[]               @relation("TeamLeaderShifts")
+  attendances         Attendance[]          @relation("AgentAttendances")
+  verifiedAttendances Attendance[]          @relation("SupervisorVerifiedAttendances")
+  patrols             Patrol[]              @relation("AgentPatrols")
+  patrolScans         PatrolScan[]          @relation("AgentPatrolScans")
+  reportedIncidents   Incident[]            @relation("ReportedIncidents")
+  assignedIncidents   Incident[]            @relation("AssignedIncidents")
+  incidentComments    IncidentComment[]     @relation("AuthorComments")
+  authoredInstructions SiteInstruction[]    @relation("AuthorInstructions")
+  equipmentAssignments EquipmentAssignment[] @relation("AgentEquipmentAssignments")
+  notifications       Notification[]        @relation("UserNotifications")
+  createdAt           DateTime              @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt           DateTime              @default(now()) @updatedAt @map("updated_at")
+
+  @@map("users")
 }
 
 model Client {
   id             Int              @id @default(autoincrement())
-  name           String
-  code           String           @unique
-  contactName    String
-  contactEmail   String
-  contactPhone   String
-  billingAddress String
-  city           String
-  postalCode     String
-  isActive       Boolean          @default(true)
+  name           String           @db.Text
+  code           String           @unique @db.Text
+  contactName    String           @map("contact_name") @db.Text
+  contactEmail   String           @map("contact_email") @db.Text
+  contactPhone   String           @map("contact_phone") @db.Text
+  billingAddress String           @map("billing_address") @db.Text
+  city           String           @db.Text
+  postalCode     String           @map("postal_code") @db.Text
+  isActive       Boolean          @default(true) @map("is_active")
   sites          Site[]
   contracts      ClientContract[]
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @default(now()) @updatedAt
+  createdAt      DateTime         @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt      DateTime         @default(now()) @updatedAt @map("updated_at")
+
+  @@map("clients")
 }
 
 model ClientContract {
   id             Int                 @id @default(autoincrement())
-  clientId       Int
+  clientId       Int                 @map("client_id")
   client         Client              @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  contractNumber String              @unique
-  startDate      DateTime
-  endDate        DateTime?
-  serviceType    ContractServiceType
+  contractNumber String              @unique @map("contract_number") @db.Text
+  startDate      DateTime            @map("start_date") @db.Timestamptz
+  endDate        DateTime?           @map("end_date") @db.Timestamptz
+  serviceTypeId  String              @map("service_type_id")
+  serviceType    ContractServiceType @relation(fields: [serviceTypeId], references: [id])
   status         ContractStatus      @default(ACTIVE)
-  hourlyRate     Decimal?            @db.Decimal(10, 2)
-  notes          String?
-  createdAt      DateTime            @default(now())
-  updatedAt      DateTime            @default(now()) @updatedAt
+  hourlyRate     Decimal?            @map("hourly_rate") @db.Decimal(10, 2)
+  notes          String?             @db.Text
+  createdAt      DateTime            @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt      DateTime            @default(now()) @updatedAt @map("updated_at")
+
+  @@map("client_contracts")
 }
 
 model Site {
   id                  Int               @id @default(autoincrement())
-  clientId            Int
+  clientId            Int               @map("client_id")
   client              Client            @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  managerId           Int?
+  managerId           Int?              @map("manager_id")
   manager             User?             @relation("SiteManager", fields: [managerId], references: [id])
-  supervisorId        Int?
+  supervisorId        Int?              @map("supervisor_id")
   supervisor          User?             @relation("SiteSupervisor", fields: [supervisorId], references: [id])
-  name                String
-  code                String            @unique
-  address             String
-  city                String
-  postalCode          String
+  name                String            @db.Text
+  code                String            @unique @db.Text
+  address             String            @db.Text
+  city                String            @db.Text
+  postalCode          String            @map("postal_code") @db.Text
   latitude            Float?
   longitude           Float?
-  geofenceRadius      Int               @default(100) // Rayon geofencing en metres
-  emergencyPhone      String?
-  accessCode          String?
-  generalInstructions String?
-  isActive            Boolean           @default(true)
+  geofenceRadius      Int               @default(100) @map("geofence_radius")
+  emergencyPhone      String?           @map("emergency_phone") @db.Text
+  accessCode          String?           @map("access_code") @db.Text
+  generalInstructions String?           @map("general_instructions") @db.Text
+  isActive            Boolean           @default(true) @map("is_active")
   checkpoints         Checkpoint[]
   shifts              Shift[]
   patrols             Patrol[]
   incidents           Incident[]
   siteInstructions    SiteInstruction[]
   siteEquipments      SiteEquipment[]
-  createdAt           DateTime          @default(now())
-  updatedAt           DateTime          @default(now()) @updatedAt
+  createdAt           DateTime          @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt           DateTime          @default(now()) @updatedAt @map("updated_at")
+
+  @@map("sites")
 }
 
 model Checkpoint {
-  id                  Int          @id @default(autoincrement())
-  siteId              Int
-  site                Site         @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  name                String
-  code                String
-  qrCodeData          String       @unique
-  nfcTagId            String?
-  floorLocation       String?
-  latitude            Float?
-  longitude           Float?
-  orderIndex          Int          @default(0)
-  isRequired          Boolean      @default(true)
-  scans               PatrolScan[]
-  createdAt           DateTime     @default(now())
-  updatedAt           DateTime     @default(now()) @updatedAt
+  id            Int          @id @default(autoincrement())
+  siteId        Int          @map("site_id")
+  site          Site         @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  name          String       @db.Text
+  code          String       @db.Text
+  qrCodeData    String       @unique @map("qr_code_data") @db.Text
+  nfcTagId      String?      @map("nfc_tag_id") @db.Text
+  floorLocation String?      @map("floor_location") @db.Text
+  latitude      Float?
+  longitude     Float?
+  orderIndex    Int          @default(0) @map("order_index")
+  isRequired    Boolean      @default(true) @map("is_required")
+  scans         PatrolScan[]
+  createdAt     DateTime     @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt     DateTime     @default(now()) @updatedAt @map("updated_at")
+
+  @@map("checkpoints")
 }
 
 model Shift {
   id                   Int                   @id @default(autoincrement())
-  siteId               Int
+  siteId               Int                   @map("site_id")
   site                 Site                  @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  agentId              Int
+  agentId              Int                   @map("agent_id")
   agent                User                  @relation("AgentShifts", fields: [agentId], references: [id])
-  teamLeaderId         Int?
+  teamLeaderId         Int?                  @map("team_leader_id")
   teamLeader           User?                 @relation("TeamLeaderShifts", fields: [teamLeaderId], references: [id])
-  supervisorId         Int?
+  supervisorId         Int?                  @map("supervisor_id")
   supervisor           User?                 @relation("SupervisorShifts", fields: [supervisorId], references: [id])
-  title                String
-  shiftType            ShiftType
-  startTime            DateTime
-  endTime              DateTime
+  title                String                @db.Text
+  shiftType            ShiftType             @map("shift_type")
+  startTime            DateTime              @map("start_time") @db.Timestamptz
+  endTime              DateTime              @map("end_time") @db.Timestamptz
   status               ShiftStatus           @default(SCHEDULED)
-  hourlyRate           Decimal?              @db.Decimal(10, 2)
-  notes                String?
+  hourlyRate           Decimal?              @map("hourly_rate") @db.Decimal(10, 2)
+  notes                String?               @db.Text
   attendance           Attendance?
   patrols              Patrol[]
   incidents            Incident[]
   equipmentAssignments EquipmentAssignment[]
-  createdAt            DateTime              @default(now())
-  updatedAt            DateTime              @default(now()) @updatedAt
+  createdAt            DateTime              @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt            DateTime              @default(now()) @updatedAt @map("updated_at")
+
+  @@map("shifts")
 }
 
 model Attendance {
-  id                 Int              @id @default(autoincrement())
-  shiftId            Int              @unique
-  shift              Shift            @relation(fields: [shiftId], references: [id], onDelete: Cascade)
-  agentId            Int
-  agent              User             @relation("AgentAttendances", fields: [agentId], references: [id])
-  clockInTime        DateTime
-  clockInLatitude    Float?
-  clockInLongitude   Float?
-  clockInMethod      ClockMethod      @default(QR_SCAN)
-  clockOutTime       DateTime?
-  clockOutLatitude   Float?
-  clockOutLongitude  Float?
-  status             AttendanceStatus @default(ON_TIME)
-  lateMinutes        Int              @default(0)
-  verifiedById       Int?
-  verifiedBy         User?            @relation("SupervisorVerifiedAttendances", fields: [verifiedById], references: [id])
-  verificationNotes  String?
-  createdAt          DateTime         @default(now())
-  updatedAt          DateTime         @default(now()) @updatedAt
+  id                  Int              @id @default(autoincrement())
+  shiftId             Int              @unique @map("shift_id")
+  shift               Shift            @relation(fields: [shiftId], references: [id], onDelete: Cascade)
+  agentId             Int              @map("agent_id")
+  agent               User             @relation("AgentAttendances", fields: [agentId], references: [id])
+  clockInTime         DateTime         @map("clock_in_time") @db.Timestamptz
+  clockInLatitude     Float?           @map("clock_in_latitude")
+  clockInLongitude    Float?           @map("clock_in_longitude")
+  clockInMethod       ClockMethod      @default(QR_SCAN) @map("clock_in_method")
+  clockOutTime        DateTime?        @map("clock_out_time") @db.Timestamptz
+  clockOutLatitude    Float?           @map("clock_out_latitude")
+  clockOutLongitude   Float?           @map("clock_out_longitude")
+  status              AttendanceStatus @default(ON_TIME)
+  lateMinutes         Int              @default(0) @map("late_minutes")
+  verifiedById        Int?             @map("verified_by_id")
+  verifiedBy          User?            @relation("SupervisorVerifiedAttendances", fields: [verifiedById], references: [id])
+  verificationNotes   String?          @map("verification_notes") @db.Text
+  createdAt           DateTime         @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt           DateTime         @default(now()) @updatedAt @map("updated_at")
+
+  @@map("attendances")
 }
 
 model Patrol {
-  id                   Int          @id @default(autoincrement())
-  siteId               Int
-  site                 Site         @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  agentId              Int
-  agent                User         @relation("AgentPatrols", fields: [agentId], references: [id])
-  shiftId              Int?
-  shift                Shift?       @relation(fields: [shiftId], references: [id])
-  title                String
-  scheduledStartTime   DateTime?
-  startedAt            DateTime     @default(now())
-  completedAt          DateTime?
-  status               PatrolStatus @default(IN_PROGRESS)
-  totalCheckpoints     Int          @default(0)
-  scannedCheckpoints   Int          @default(0)
-  notes                String?
-  scans                PatrolScan[]
-  incidents            Incident[]
-  createdAt            DateTime     @default(now())
-  updatedAt            DateTime     @default(now()) @updatedAt
+  id                 Int          @id @default(autoincrement())
+  siteId             Int          @map("site_id")
+  site               Site         @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  agentId            Int          @map("agent_id")
+  agent              User         @relation("AgentPatrols", fields: [agentId], references: [id])
+  shiftId            Int?         @map("shift_id")
+  shift              Shift?       @relation(fields: [shiftId], references: [id])
+  title              String       @db.Text
+  scheduledStartTime DateTime?    @map("scheduled_start_time") @db.Timestamptz
+  startedAt          DateTime     @default(now()) @map("started_at") @db.Timestamptz
+  completedAt        DateTime?    @map("completed_at") @db.Timestamptz
+  status             PatrolStatus @default(IN_PROGRESS)
+  totalCheckpoints   Int          @default(0) @map("total_checkpoints")
+  scannedCheckpoints Int          @default(0) @map("scanned_checkpoints")
+  notes              String?      @db.Text
+  scans              PatrolScan[]
+  incidents          Incident[]
+  createdAt          DateTime     @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt          DateTime     @default(now()) @updatedAt @map("updated_at")
+
+  @@map("patrols")
 }
 
 model PatrolScan {
   id                 Int        @id @default(autoincrement())
-  patrolId           Int
+  patrolId           Int        @map("patrol_id")
   patrol             Patrol     @relation(fields: [patrolId], references: [id], onDelete: Cascade)
-  checkpointId       Int
+  checkpointId       Int        @map("checkpoint_id")
   checkpoint         Checkpoint @relation(fields: [checkpointId], references: [id], onDelete: Cascade)
-  agentId            Int
+  agentId            Int        @map("agent_id")
   agent              User       @relation("AgentPatrolScans", fields: [agentId], references: [id])
-  scannedAt          DateTime   @default(now())
+  scannedAt          DateTime   @default(now()) @map("scanned_at") @db.Timestamptz
   latitude           Float?
   longitude          Float?
-  scanMethod         String     @default("QR") // QR, NFC, MANUAL
+  scanMethod         String     @default("QR") @map("scan_method") @db.Text
   status             ScanStatus @default(OK)
-  anomalyDescription String?
-  createdAt          DateTime   @default(now())
+  anomalyDescription String?    @map("anomaly_description") @db.Text
+  createdAt          DateTime   @default(now()) @map("created_at") @db.Timestamptz
+
+  @@map("patrol_scans")
 }
 
 model Incident {
   id                Int                  @id @default(autoincrement())
-  siteId            Int
+  siteId            Int                  @map("site_id")
   site              Site                 @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  shiftId           Int?
+  shiftId           Int?                 @map("shift_id")
   shift             Shift?               @relation(fields: [shiftId], references: [id])
-  patrolId          Int?
+  patrolId          Int?                 @map("patrol_id")
   patrol            Patrol?              @relation(fields: [patrolId], references: [id])
-  reportedById      Int
+  reportedById      Int                  @map("reported_by_id")
   reportedBy        User                 @relation("ReportedIncidents", fields: [reportedById], references: [id])
-  assignedToId      Int?
+  assignedToId      Int?                 @map("assigned_to_id")
   assignedTo        User?                @relation("AssignedIncidents", fields: [assignedToId], references: [id])
-  incidentNumber    String               @unique
-  title             String
-  category          IncidentCategory
+  incidentNumber    String               @unique @map("incident_number") @db.Text
+  title             String               @db.Text
+  categoryId        String               @map("category_id")
+  category          IncidentCategory     @relation(fields: [categoryId], references: [id])
   severity          IncidentSeverity     @default(MEDIUM)
   status            IncidentStatus       @default(NEW)
-  occurredAt        DateTime
-  reportedAt        DateTime             @default(now())
-  locationDetail    String?
-  description       String
-  actionTaken       String?
-  policeCalled      Boolean              @default(false)
-  clientNotified    Boolean              @default(false)
-  resolutionSummary String?
-  resolvedAt        DateTime?
+  occurredAt        DateTime             @map("occurred_at") @db.Timestamptz
+  reportedAt        DateTime             @default(now()) @map("reported_at") @db.Timestamptz
+  locationDetail    String?              @map("location_detail") @db.Text
+  description       String               @db.Text
+  actionTaken       String?              @map("action_taken") @db.Text
+  policeCalled      Boolean              @default(false) @map("police_called")
+  clientNotified    Boolean              @default(false) @map("client_notified")
+  resolutionSummary String?              @map("resolution_summary") @db.Text
+  resolvedAt        DateTime?            @map("resolved_at") @db.Timestamptz
   attachments       IncidentAttachment[]
   comments          IncidentComment[]
-  createdAt         DateTime             @default(now())
-  updatedAt         DateTime             @default(now()) @updatedAt
+  createdAt         DateTime             @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt         DateTime             @default(now()) @updatedAt @map("updated_at")
+
+  @@map("incidents")
 }
 
 model IncidentAttachment {
   id         Int      @id @default(autoincrement())
-  incidentId Int
+  incidentId Int      @map("incident_id")
   incident   Incident @relation(fields: [incidentId], references: [id], onDelete: Cascade)
-  fileUrl    String
-  fileName   String
-  fileType   String
-  fileSize   Int?
-  caption    String?
-  uploadedAt DateTime @default(now())
+  fileUrl    String   @map("file_url") @db.Text
+  fileName   String   @map("file_name") @db.Text
+  fileType   String   @map("file_type") @db.Text
+  fileSize   Int?     @map("file_size")
+  caption    String?  @db.Text
+  uploadedAt DateTime @default(now()) @map("uploaded_at") @db.Timestamptz
+
+  @@map("incident_attachments")
 }
 
 model IncidentComment {
   id         Int      @id @default(autoincrement())
-  incidentId Int
+  incidentId Int      @map("incident_id")
   incident   Incident @relation(fields: [incidentId], references: [id], onDelete: Cascade)
-  authorId   Int
+  authorId   Int      @map("author_id")
   author     User     @relation("AuthorComments", fields: [authorId], references: [id])
-  comment    String
-  createdAt  DateTime @default(now())
+  comment    String   @db.Text
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  @@map("incident_comments")
 }
 
 model Equipment {
-  id                 Int                   @id @default(autoincrement())
-  name               String
-  code               String                @unique
-  serialNumber       String?               @unique
-  category           EquipmentCategory
-  status             EquipmentStatus       @default(AVAILABLE)
-  purchaseDate       DateTime?
-  lastInspectionDate DateTime?
+  id                 Int                  @id @default(autoincrement())
+  categoryId         String               @map("category_id")
+  category           EquipmentCategory    @relation(fields: [categoryId], references: [id])
+  name               String               @db.Text
+  code               String               @unique @db.Text
+  serialNumber       String?              @unique @map("serial_number") @db.Text
+  status             EquipmentStatus      @default(AVAILABLE)
+  condition          EquipmentCondition   @default(EXCELLENT)
+  purchaseDate       DateTime?            @map("purchase_date") @db.Timestamptz
+  lastInspectionDate DateTime?            @map("last_inspection_date") @db.Timestamptz
   assignments        EquipmentAssignment[]
   siteEquipments     SiteEquipment[]
-  createdAt          DateTime              @default(now())
-  updatedAt          DateTime              @default(now()) @updatedAt
+  createdAt          DateTime             @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt          DateTime             @default(now()) @updatedAt @map("updated_at")
+
+  @@map("equipment")
 }
 
 model EquipmentAssignment {
-  id                    Int                @id @default(autoincrement())
-  equipmentId           Int
-  equipment             Equipment          @relation(fields: [equipmentId], references: [id], onDelete: Cascade)
-  agentId               Int
-  agent                 User               @relation("AgentEquipmentAssignments", fields: [agentId], references: [id])
-  shiftId               Int?
-  shift                 Shift?             @relation(fields: [shiftId], references: [id])
-  assignedAt            DateTime           @default(now())
-  returnedAt            DateTime?
-  conditionOnAssignment EquipmentCondition @default(GOOD)
-  conditionOnReturn     EquipmentCondition?
-  anomalyReported       Boolean            @default(false)
-  notes                 String?
-  createdAt             DateTime           @default(now())
-  updatedAt             DateTime           @default(now()) @updatedAt
+  id                      Int                @id @default(autoincrement())
+  equipmentId             Int                @map("equipment_id")
+  equipment               Equipment          @relation(fields: [equipmentId], references: [id], onDelete: Cascade)
+  agentId                 Int                @map("agent_id")
+  agent                   User               @relation("AgentEquipmentAssignments", fields: [agentId], references: [id])
+  shiftId                 Int?               @map("shift_id")
+  shift                   Shift?             @relation(fields: [shiftId], references: [id])
+  assignedAt              DateTime           @default(now()) @map("assigned_at") @db.Timestamptz
+  returnedAt              DateTime?          @map("returned_at") @db.Timestamptz
+  conditionOnAssignment   EquipmentCondition @default(GOOD) @map("condition_on_assignment")
+  conditionOnReturn       EquipmentCondition? @map("condition_on_return")
+  anomalyReported         Boolean            @default(false) @map("anomaly_reported")
+  notes                   String?            @db.Text
+  createdAt               DateTime           @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt               DateTime           @default(now()) @updatedAt @map("updated_at")
+
+  @@map("equipment_assignments")
 }
 
 model SiteInstruction {
   id             Int             @id @default(autoincrement())
-  siteId         Int
+  siteId         Int             @map("site_id")
   site           Site            @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  authorId       Int
+  authorId       Int             @map("author_id")
   author         User            @relation("AuthorInstructions", fields: [authorId], references: [id])
-  title          String
-  content        String
+  title          String          @db.Text
+  content        String          @db.Text
   type           InstructionType @default(PERMANENT)
   priority       PriorityLevel   @default(NORMAL)
-  effectiveFrom  DateTime        @default(now())
-  effectiveUntil DateTime?
-  isActive       Boolean         @default(true)
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @default(now()) @updatedAt
+  effectiveFrom  DateTime        @default(now()) @map("effective_from") @db.Timestamptz
+  effectiveUntil DateTime?       @map("effective_until") @db.Timestamptz
+  isActive       Boolean         @default(true) @map("is_active")
+  createdAt      DateTime        @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt      DateTime        @default(now()) @updatedAt @map("updated_at")
+
+  @@map("site_instructions")
 }
 
 model SiteEquipment {
   id          Int       @id @default(autoincrement())
-  siteId      Int
+  siteId      Int       @map("site_id")
   site        Site      @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  equipmentId Int
+  equipmentId Int       @map("equipment_id")
   equipment   Equipment @relation(fields: [equipmentId], references: [id], onDelete: Cascade)
-  installedAt DateTime  @default(now())
-  notes       String?
-  createdAt   DateTime  @default(now())
+  installedAt DateTime  @default(now()) @map("installed_at") @db.Timestamptz
+  notes       String?   @db.Text
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz
 
   @@unique([siteId, equipmentId])
+  @@map("site_equipments")
 }
 
 model Notification {
   id        Int              @id @default(autoincrement())
-  userId    Int
+  userId    Int              @map("user_id")
   user      User             @relation("UserNotifications", fields: [userId], references: [id], onDelete: Cascade)
-  title     String
-  message   String
+  title     String           @db.Text
+  message   String           @db.Text
   type      NotificationType @default(SYSTEM)
-  isRead    Boolean          @default(false)
-  readAt    DateTime?
-  createdAt DateTime         @default(now())
-}
+  isRead    Boolean          @default(false) @map("is_read")
+  readAt    DateTime?        @map("read_at") @db.Timestamptz
+  createdAt DateTime         @default(now()) @map("created_at") @db.Timestamptz
 
+  @@map("notifications")
+}

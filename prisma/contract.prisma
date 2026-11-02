@@ -2,17 +2,21 @@
 
 enum Role {
   @@type("pg/text@1")
-  ADMIN      = "ADMIN"
-  MANAGER    = "MANAGER"
-  DIRECTOR   = "DIRECTOR"
-  SUPERVISOR = "SUPERVISOR"
-  AGENT      = "AGENT"
+  SUPER_ADMIN   = "SUPER_ADMIN"
+  ADMIN         =  "ADMIN"
+  MANAGER       =  "MANAGER"
+  SUPERVISOR    =  "SUPERVISOR"
+  TEAM_LEADER   =  "TEAM_LEADER"
+  AGENT         =  "AGENT"
+  USER          =  "USER"
 }
 
 enum UserStatus {
   @@type("pg/text@1")
   ACTIVE    = "ACTIVE"
   SUSPENDED = "SUSPENDED"
+  DESERTER  = "DESERTER"
+  DISMISSED  = "DISMISSED"
   ARCHIVED  = "ARCHIVED"
 }
 
@@ -37,6 +41,9 @@ enum ShiftType {
   DAY           = "DAY"
   NIGHT         = "NIGHT"
   WEEKEND       = "WEEKEND"
+  WEEKDAY       = "WEEKDAY"
+  FULL_TIME     = "FULL_TIME"
+  PART_TIME     = "PART_TIME"
   REINFORCEMENT = "REINFORCEMENT"
   DOG_PATROL    = "DOG_PATROL"
 }
@@ -55,6 +62,7 @@ enum AttendanceStatus {
   @@type("pg/text@1")
   ON_TIME         = "ON_TIME"
   LATE            = "LATE"
+  PRESENT        = "PRESENT"
   ABSENT          = "ABSENT"
   EARLY_DEPARTURE = "EARLY_DEPARTURE"
   VERIFIED        = "VERIFIED"

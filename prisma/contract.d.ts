@@ -23,9 +23,8 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'56ee8d8239480e425db4af4bb825ef86a709b5b0dc5d5780400c34f87df585c7'>;
-export type ExecutionHash =
-  ExecutionHashBase<'dbff7740df8ab98b6106fac674466b7469a10d8524532698b075e8944ac474ab'>;
+  StorageHashBase<'266ebdec44d64cb93785e6783d3d747f50d0d9bd5661544e983a176aa4044c1d'>;
+export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
 
@@ -278,214 +277,10 @@ type ParameterizedOutputTypeFunctions = PgParameterizedOutputTypes;
 type FieldTypeOverrides = {
   readonly public: {
     readonly models: {
-      readonly Attendance: {
-        readonly clockInMethod: {
-          readonly output: 'QR_SCAN' | 'GPS_GEOFENCE' | 'SUPERVISOR_OVERRIDE';
-          readonly input: 'QR_SCAN' | 'GPS_GEOFENCE' | 'SUPERVISOR_OVERRIDE';
-        };
-        readonly status: {
-          readonly output:
-            'ON_TIME' | 'LATE' | 'PRESENT' | 'ABSENT' | 'EARLY_DEPARTURE' | 'VERIFIED';
-          readonly input:
-            'ON_TIME' | 'LATE' | 'PRESENT' | 'ABSENT' | 'EARLY_DEPARTURE' | 'VERIFIED';
-        };
-      };
-      readonly ClientContract: {
-        readonly serviceType: {
-          readonly output:
-            | 'STATIC_GUARDING'
-            | 'MOBILE_PATROL'
-            | 'EVENT_SECURITY'
-            | 'VIP_PROTECTION'
-            | 'DOG_HANDLER';
-          readonly input:
-            | 'STATIC_GUARDING'
-            | 'MOBILE_PATROL'
-            | 'EVENT_SECURITY'
-            | 'VIP_PROTECTION'
-            | 'DOG_HANDLER';
-        };
-        readonly status: {
-          readonly output: 'ACTIVE' | 'EXPIRED' | 'TERMINATED';
-          readonly input: 'ACTIVE' | 'EXPIRED' | 'TERMINATED';
-        };
-      };
       readonly Contract: {
         readonly status: {
           readonly output: 'ACTIVE' | 'EXPIRED' | 'TERMINATED';
           readonly input: 'ACTIVE' | 'EXPIRED' | 'TERMINATED';
-        };
-      };
-      readonly CoreEquipment: {
-        readonly condition: {
-          readonly output: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'DAMAGED';
-          readonly input: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'DAMAGED';
-        };
-        readonly status: {
-          readonly output:
-            'AVAILABLE' | 'ASSIGNED' | 'UNDER_MAINTENANCE' | 'DAMAGED' | 'LOST' | 'RETIRED';
-          readonly input:
-            'AVAILABLE' | 'ASSIGNED' | 'UNDER_MAINTENANCE' | 'DAMAGED' | 'LOST' | 'RETIRED';
-        };
-      };
-      readonly CoreIncident: {
-        readonly severity: {
-          readonly output: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
-          readonly input: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
-        };
-        readonly status: {
-          readonly output: 'NEW' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED';
-          readonly input: 'NEW' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED';
-        };
-      };
-      readonly Equipment: {
-        readonly category: {
-          readonly output:
-            | 'RADIO_COMMUNICATION'
-            | 'LIGHTING'
-            | 'DEFENSE_AND_PPE'
-            | 'DETECTION'
-            | 'KEYS_AND_BADGES'
-            | 'PTI_DEVICE'
-            | 'VEHICLE';
-          readonly input:
-            | 'RADIO_COMMUNICATION'
-            | 'LIGHTING'
-            | 'DEFENSE_AND_PPE'
-            | 'DETECTION'
-            | 'KEYS_AND_BADGES'
-            | 'PTI_DEVICE'
-            | 'VEHICLE';
-        };
-        readonly status: {
-          readonly output:
-            'AVAILABLE' | 'ASSIGNED' | 'UNDER_MAINTENANCE' | 'DAMAGED' | 'LOST' | 'RETIRED';
-          readonly input:
-            'AVAILABLE' | 'ASSIGNED' | 'UNDER_MAINTENANCE' | 'DAMAGED' | 'LOST' | 'RETIRED';
-        };
-      };
-      readonly EquipmentAssignment: {
-        readonly conditionOnAssignment: {
-          readonly output: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'DAMAGED';
-          readonly input: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'DAMAGED';
-        };
-        readonly conditionOnReturn: {
-          readonly output: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'DAMAGED';
-          readonly input: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'DAMAGED';
-        };
-      };
-      readonly Incident: {
-        readonly category: {
-          readonly output:
-            | 'INTRUSION'
-            | 'FIRE_ALARM'
-            | 'THEFT'
-            | 'VANDALISM'
-            | 'AGGRESSION'
-            | 'TECHNICAL_FAILURE'
-            | 'MEDICAL_EMERGENCY'
-            | 'ACCESS_DENIAL'
-            | 'SUSPICIOUS_PERSON'
-            | 'OTHER';
-          readonly input:
-            | 'INTRUSION'
-            | 'FIRE_ALARM'
-            | 'THEFT'
-            | 'VANDALISM'
-            | 'AGGRESSION'
-            | 'TECHNICAL_FAILURE'
-            | 'MEDICAL_EMERGENCY'
-            | 'ACCESS_DENIAL'
-            | 'SUSPICIOUS_PERSON'
-            | 'OTHER';
-        };
-        readonly severity: {
-          readonly output: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
-          readonly input: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
-        };
-        readonly status: {
-          readonly output: 'NEW' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED';
-          readonly input: 'NEW' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED';
-        };
-      };
-      readonly Notification: {
-        readonly type: {
-          readonly output:
-            | 'SOS_ALERT'
-            | 'LATE_CLOCK_IN'
-            | 'PATROL_MISSED'
-            | 'INCIDENT_CRITICAL'
-            | 'SHIFT_ASSIGNED'
-            | 'SYSTEM';
-          readonly input:
-            | 'SOS_ALERT'
-            | 'LATE_CLOCK_IN'
-            | 'PATROL_MISSED'
-            | 'INCIDENT_CRITICAL'
-            | 'SHIFT_ASSIGNED'
-            | 'SYSTEM';
-        };
-      };
-      readonly Patrol: {
-        readonly status: {
-          readonly output: 'IN_PROGRESS' | 'COMPLETED' | 'INCOMPLETE' | 'ABORTED';
-          readonly input: 'IN_PROGRESS' | 'COMPLETED' | 'INCOMPLETE' | 'ABORTED';
-        };
-      };
-      readonly PatrolScan: {
-        readonly status: {
-          readonly output: 'OK' | 'ANOMALY_DETECTED' | 'MISSED';
-          readonly input: 'OK' | 'ANOMALY_DETECTED' | 'MISSED';
-        };
-      };
-      readonly Shift: {
-        readonly shiftType: {
-          readonly output:
-            | 'DAY'
-            | 'NIGHT'
-            | 'WEEKEND'
-            | 'WEEKDAY'
-            | 'FULL_TIME'
-            | 'PART_TIME'
-            | 'REINFORCEMENT'
-            | 'DOG_PATROL';
-          readonly input:
-            | 'DAY'
-            | 'NIGHT'
-            | 'WEEKEND'
-            | 'WEEKDAY'
-            | 'FULL_TIME'
-            | 'PART_TIME'
-            | 'REINFORCEMENT'
-            | 'DOG_PATROL';
-        };
-        readonly status: {
-          readonly output:
-            'SCHEDULED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED' | 'NO_SHOW' | 'REPLACED';
-          readonly input:
-            'SCHEDULED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED' | 'NO_SHOW' | 'REPLACED';
-        };
-      };
-      readonly SiteInstruction: {
-        readonly priority: {
-          readonly output: 'LOW' | 'NORMAL' | 'HIGH' | 'URGENT';
-          readonly input: 'LOW' | 'NORMAL' | 'HIGH' | 'URGENT';
-        };
-        readonly type: {
-          readonly output: 'PERMANENT' | 'TEMPORARY' | 'EMERGENCY_PROCEDURE' | 'ACCESS_CONTROL';
-          readonly input: 'PERMANENT' | 'TEMPORARY' | 'EMERGENCY_PROCEDURE' | 'ACCESS_CONTROL';
-        };
-      };
-      readonly User: {
-        readonly role: {
-          readonly output:
-            'SUPER_ADMIN' | 'ADMIN' | 'MANAGER' | 'SUPERVISOR' | 'TEAM_LEADER' | 'AGENT' | 'USER';
-          readonly input:
-            'SUPER_ADMIN' | 'ADMIN' | 'MANAGER' | 'SUPERVISOR' | 'TEAM_LEADER' | 'AGENT' | 'USER';
-        };
-        readonly status: {
-          readonly output: 'ACTIVE' | 'SUSPENDED' | 'DESERTER' | 'DISMISSED' | 'ARCHIVED';
-          readonly input: 'ACTIVE' | 'SUSPENDED' | 'DESERTER' | 'DISMISSED' | 'ARCHIVED';
         };
       };
     };
@@ -509,204 +304,10 @@ export type FieldInputTypes = FieldTypesFromDomain<
 >;
 type ColumnTypeOverrides = {
   readonly public: {
-    readonly attendances: {
-      readonly clockInMethod: {
-        readonly output: 'QR_SCAN' | 'GPS_GEOFENCE' | 'SUPERVISOR_OVERRIDE';
-        readonly input: 'QR_SCAN' | 'GPS_GEOFENCE' | 'SUPERVISOR_OVERRIDE';
-      };
-      readonly status: {
-        readonly output: 'ON_TIME' | 'LATE' | 'PRESENT' | 'ABSENT' | 'EARLY_DEPARTURE' | 'VERIFIED';
-        readonly input: 'ON_TIME' | 'LATE' | 'PRESENT' | 'ABSENT' | 'EARLY_DEPARTURE' | 'VERIFIED';
-      };
-    };
-    readonly client_contracts: {
-      readonly serviceType: {
-        readonly output:
-          'STATIC_GUARDING' | 'MOBILE_PATROL' | 'EVENT_SECURITY' | 'VIP_PROTECTION' | 'DOG_HANDLER';
-        readonly input:
-          'STATIC_GUARDING' | 'MOBILE_PATROL' | 'EVENT_SECURITY' | 'VIP_PROTECTION' | 'DOG_HANDLER';
-      };
-      readonly status: {
-        readonly output: 'ACTIVE' | 'EXPIRED' | 'TERMINATED';
-        readonly input: 'ACTIVE' | 'EXPIRED' | 'TERMINATED';
-      };
-    };
     readonly contracts: {
       readonly status: {
         readonly output: 'ACTIVE' | 'EXPIRED' | 'TERMINATED';
         readonly input: 'ACTIVE' | 'EXPIRED' | 'TERMINATED';
-      };
-    };
-    readonly core_equipment: {
-      readonly condition: {
-        readonly output: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'DAMAGED';
-        readonly input: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'DAMAGED';
-      };
-      readonly status: {
-        readonly output:
-          'AVAILABLE' | 'ASSIGNED' | 'UNDER_MAINTENANCE' | 'DAMAGED' | 'LOST' | 'RETIRED';
-        readonly input:
-          'AVAILABLE' | 'ASSIGNED' | 'UNDER_MAINTENANCE' | 'DAMAGED' | 'LOST' | 'RETIRED';
-      };
-    };
-    readonly core_incidents: {
-      readonly severity: {
-        readonly output: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
-        readonly input: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
-      };
-      readonly status: {
-        readonly output: 'NEW' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED';
-        readonly input: 'NEW' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED';
-      };
-    };
-    readonly equipment: {
-      readonly category: {
-        readonly output:
-          | 'RADIO_COMMUNICATION'
-          | 'LIGHTING'
-          | 'DEFENSE_AND_PPE'
-          | 'DETECTION'
-          | 'KEYS_AND_BADGES'
-          | 'PTI_DEVICE'
-          | 'VEHICLE';
-        readonly input:
-          | 'RADIO_COMMUNICATION'
-          | 'LIGHTING'
-          | 'DEFENSE_AND_PPE'
-          | 'DETECTION'
-          | 'KEYS_AND_BADGES'
-          | 'PTI_DEVICE'
-          | 'VEHICLE';
-      };
-      readonly status: {
-        readonly output:
-          'AVAILABLE' | 'ASSIGNED' | 'UNDER_MAINTENANCE' | 'DAMAGED' | 'LOST' | 'RETIRED';
-        readonly input:
-          'AVAILABLE' | 'ASSIGNED' | 'UNDER_MAINTENANCE' | 'DAMAGED' | 'LOST' | 'RETIRED';
-      };
-    };
-    readonly equipment_assignments: {
-      readonly conditionOnAssignment: {
-        readonly output: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'DAMAGED';
-        readonly input: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'DAMAGED';
-      };
-      readonly conditionOnReturn: {
-        readonly output: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'DAMAGED';
-        readonly input: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'DAMAGED';
-      };
-    };
-    readonly incidents: {
-      readonly category: {
-        readonly output:
-          | 'INTRUSION'
-          | 'FIRE_ALARM'
-          | 'THEFT'
-          | 'VANDALISM'
-          | 'AGGRESSION'
-          | 'TECHNICAL_FAILURE'
-          | 'MEDICAL_EMERGENCY'
-          | 'ACCESS_DENIAL'
-          | 'SUSPICIOUS_PERSON'
-          | 'OTHER';
-        readonly input:
-          | 'INTRUSION'
-          | 'FIRE_ALARM'
-          | 'THEFT'
-          | 'VANDALISM'
-          | 'AGGRESSION'
-          | 'TECHNICAL_FAILURE'
-          | 'MEDICAL_EMERGENCY'
-          | 'ACCESS_DENIAL'
-          | 'SUSPICIOUS_PERSON'
-          | 'OTHER';
-      };
-      readonly severity: {
-        readonly output: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
-        readonly input: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
-      };
-      readonly status: {
-        readonly output: 'NEW' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED';
-        readonly input: 'NEW' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED';
-      };
-    };
-    readonly notifications: {
-      readonly type: {
-        readonly output:
-          | 'SOS_ALERT'
-          | 'LATE_CLOCK_IN'
-          | 'PATROL_MISSED'
-          | 'INCIDENT_CRITICAL'
-          | 'SHIFT_ASSIGNED'
-          | 'SYSTEM';
-        readonly input:
-          | 'SOS_ALERT'
-          | 'LATE_CLOCK_IN'
-          | 'PATROL_MISSED'
-          | 'INCIDENT_CRITICAL'
-          | 'SHIFT_ASSIGNED'
-          | 'SYSTEM';
-      };
-    };
-    readonly patrol_scans: {
-      readonly status: {
-        readonly output: 'OK' | 'ANOMALY_DETECTED' | 'MISSED';
-        readonly input: 'OK' | 'ANOMALY_DETECTED' | 'MISSED';
-      };
-    };
-    readonly patrols: {
-      readonly status: {
-        readonly output: 'IN_PROGRESS' | 'COMPLETED' | 'INCOMPLETE' | 'ABORTED';
-        readonly input: 'IN_PROGRESS' | 'COMPLETED' | 'INCOMPLETE' | 'ABORTED';
-      };
-    };
-    readonly shifts: {
-      readonly shiftType: {
-        readonly output:
-          | 'DAY'
-          | 'NIGHT'
-          | 'WEEKEND'
-          | 'WEEKDAY'
-          | 'FULL_TIME'
-          | 'PART_TIME'
-          | 'REINFORCEMENT'
-          | 'DOG_PATROL';
-        readonly input:
-          | 'DAY'
-          | 'NIGHT'
-          | 'WEEKEND'
-          | 'WEEKDAY'
-          | 'FULL_TIME'
-          | 'PART_TIME'
-          | 'REINFORCEMENT'
-          | 'DOG_PATROL';
-      };
-      readonly status: {
-        readonly output:
-          'SCHEDULED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED' | 'NO_SHOW' | 'REPLACED';
-        readonly input:
-          'SCHEDULED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED' | 'NO_SHOW' | 'REPLACED';
-      };
-    };
-    readonly site_instructions: {
-      readonly priority: {
-        readonly output: 'LOW' | 'NORMAL' | 'HIGH' | 'URGENT';
-        readonly input: 'LOW' | 'NORMAL' | 'HIGH' | 'URGENT';
-      };
-      readonly type: {
-        readonly output: 'PERMANENT' | 'TEMPORARY' | 'EMERGENCY_PROCEDURE' | 'ACCESS_CONTROL';
-        readonly input: 'PERMANENT' | 'TEMPORARY' | 'EMERGENCY_PROCEDURE' | 'ACCESS_CONTROL';
-      };
-    };
-    readonly users: {
-      readonly role: {
-        readonly output:
-          'SUPER_ADMIN' | 'ADMIN' | 'MANAGER' | 'SUPERVISOR' | 'TEAM_LEADER' | 'AGENT' | 'USER';
-        readonly input:
-          'SUPER_ADMIN' | 'ADMIN' | 'MANAGER' | 'SUPERVISOR' | 'TEAM_LEADER' | 'AGENT' | 'USER';
-      };
-      readonly status: {
-        readonly output: 'ACTIVE' | 'SUSPENDED' | 'DESERTER' | 'DISMISSED' | 'ARCHIVED';
-        readonly input: 'ACTIVE' | 'SUSPENDED' | 'DESERTER' | 'DISMISSED' | 'ARCHIVED';
       };
     };
   };
@@ -763,9 +364,9 @@ export namespace Models {
     qrCodeData: FieldOutputTypes['public']['Checkpoint']['qrCodeData'];
     siteId: FieldOutputTypes['public']['Checkpoint']['siteId'];
     updatedAt: FieldOutputTypes['public']['Checkpoint']['updatedAt'];
-    scans: public_PatrolScan[];
+    patrolScans: public_PatrolScan[];
     site: public_Site;
-    readonly [RelationKeys]?: 'scans' | 'site';
+    readonly [RelationKeys]?: 'patrolScans' | 'site';
   };
   export type public_Client = {
     billingAddress: FieldOutputTypes['public']['Client']['billingAddress'];
@@ -780,9 +381,9 @@ export namespace Models {
     name: FieldOutputTypes['public']['Client']['name'];
     postalCode: FieldOutputTypes['public']['Client']['postalCode'];
     updatedAt: FieldOutputTypes['public']['Client']['updatedAt'];
-    contracts: public_ClientContract[];
+    clientContracts: public_ClientContract[];
     sites: public_Site[];
-    readonly [RelationKeys]?: 'contracts' | 'sites';
+    readonly [RelationKeys]?: 'clientContracts' | 'sites';
   };
   export type public_ClientContract = {
     clientId: FieldOutputTypes['public']['ClientContract']['clientId'];
@@ -819,26 +420,6 @@ export namespace Models {
     contracts: public_Contract[];
     readonly [RelationKeys]?: 'contracts';
   };
-  export type public_CoreEquipment = {
-    categoryId: FieldOutputTypes['public']['CoreEquipment']['categoryId'];
-    condition: FieldOutputTypes['public']['CoreEquipment']['condition'];
-    createdAt: FieldOutputTypes['public']['CoreEquipment']['createdAt'];
-    id: FieldOutputTypes['public']['CoreEquipment']['id'];
-    serialNumber: FieldOutputTypes['public']['CoreEquipment']['serialNumber'];
-    status: FieldOutputTypes['public']['CoreEquipment']['status'];
-    category: public_EquipmentCategory;
-    readonly [RelationKeys]?: 'category';
-  };
-  export type public_CoreIncident = {
-    categoryId: FieldOutputTypes['public']['CoreIncident']['categoryId'];
-    description: FieldOutputTypes['public']['CoreIncident']['description'];
-    id: FieldOutputTypes['public']['CoreIncident']['id'];
-    reportedAt: FieldOutputTypes['public']['CoreIncident']['reportedAt'];
-    severity: FieldOutputTypes['public']['CoreIncident']['severity'];
-    status: FieldOutputTypes['public']['CoreIncident']['status'];
-    category: public_IncidentCategory;
-    readonly [RelationKeys]?: 'category';
-  };
   export type public_Equipment = {
     category: FieldOutputTypes['public']['Equipment']['category'];
     code: FieldOutputTypes['public']['Equipment']['code'];
@@ -850,9 +431,9 @@ export namespace Models {
     serialNumber: FieldOutputTypes['public']['Equipment']['serialNumber'];
     status: FieldOutputTypes['public']['Equipment']['status'];
     updatedAt: FieldOutputTypes['public']['Equipment']['updatedAt'];
-    assignments: public_EquipmentAssignment[];
+    equipmentAssignments: public_EquipmentAssignment[];
     siteEquipments: public_SiteEquipment[];
-    readonly [RelationKeys]?: 'assignments' | 'siteEquipments';
+    readonly [RelationKeys]?: 'equipmentAssignments' | 'siteEquipments';
   };
   export type public_EquipmentAssignment = {
     agentId: FieldOutputTypes['public']['EquipmentAssignment']['agentId'];
@@ -878,8 +459,7 @@ export namespace Models {
     id: FieldOutputTypes['public']['EquipmentCategory']['id'];
     isActive: FieldOutputTypes['public']['EquipmentCategory']['isActive'];
     name: FieldOutputTypes['public']['EquipmentCategory']['name'];
-    equipment: public_CoreEquipment[];
-    readonly [RelationKeys]?: 'equipment';
+    readonly [RelationKeys]?: never;
   };
   export type public_Incident = {
     actionTaken: FieldOutputTypes['public']['Incident']['actionTaken'];
@@ -905,14 +485,20 @@ export namespace Models {
     title: FieldOutputTypes['public']['Incident']['title'];
     updatedAt: FieldOutputTypes['public']['Incident']['updatedAt'];
     assignedTo: public_User | null;
-    attachments: public_IncidentAttachment[];
-    comments: public_IncidentComment[];
+    incidentAttachments: public_IncidentAttachment[];
+    incidentComments: public_IncidentComment[];
     patrol: public_Patrol | null;
     reportedBy: public_User;
     shift: public_Shift | null;
     site: public_Site;
     readonly [RelationKeys]?:
-      'assignedTo' | 'attachments' | 'comments' | 'patrol' | 'reportedBy' | 'shift' | 'site';
+      | 'assignedTo'
+      | 'incidentAttachments'
+      | 'incidentComments'
+      | 'patrol'
+      | 'reportedBy'
+      | 'shift'
+      | 'site';
   };
   export type public_IncidentAttachment = {
     caption: FieldOutputTypes['public']['IncidentAttachment']['caption'];
@@ -932,8 +518,7 @@ export namespace Models {
     id: FieldOutputTypes['public']['IncidentCategory']['id'];
     isActive: FieldOutputTypes['public']['IncidentCategory']['isActive'];
     name: FieldOutputTypes['public']['IncidentCategory']['name'];
-    incidents: public_CoreIncident[];
-    readonly [RelationKeys]?: 'incidents';
+    readonly [RelationKeys]?: never;
   };
   export type public_IncidentComment = {
     authorId: FieldOutputTypes['public']['IncidentComment']['authorId'];
@@ -974,10 +559,10 @@ export namespace Models {
     updatedAt: FieldOutputTypes['public']['Patrol']['updatedAt'];
     agent: public_User;
     incidents: public_Incident[];
-    scans: public_PatrolScan[];
+    patrolScans: public_PatrolScan[];
     shift: public_Shift | null;
     site: public_Site;
-    readonly [RelationKeys]?: 'agent' | 'incidents' | 'scans' | 'shift' | 'site';
+    readonly [RelationKeys]?: 'agent' | 'incidents' | 'patrolScans' | 'shift' | 'site';
   };
   export type public_PatrolScan = {
     agentId: FieldOutputTypes['public']['PatrolScan']['agentId'];
@@ -996,6 +581,16 @@ export namespace Models {
     patrol: public_Patrol;
     readonly [RelationKeys]?: 'agent' | 'checkpoint' | 'patrol';
   };
+  export type public_RoleAssignment = {
+    assignedAt: FieldOutputTypes['public']['RoleAssignment']['assignedAt'];
+    createdAt: FieldOutputTypes['public']['RoleAssignment']['createdAt'];
+    id: FieldOutputTypes['public']['RoleAssignment']['id'];
+    role: FieldOutputTypes['public']['RoleAssignment']['role'];
+    updatedAt: FieldOutputTypes['public']['RoleAssignment']['updatedAt'];
+    userId: FieldOutputTypes['public']['RoleAssignment']['userId'];
+    user: public_User;
+    readonly [RelationKeys]?: 'user';
+  };
   export type public_Shift = {
     agentId: FieldOutputTypes['public']['Shift']['agentId'];
     createdAt: FieldOutputTypes['public']['Shift']['createdAt'];
@@ -1012,7 +607,7 @@ export namespace Models {
     title: FieldOutputTypes['public']['Shift']['title'];
     updatedAt: FieldOutputTypes['public']['Shift']['updatedAt'];
     agent: public_User;
-    attendance: public_Attendance | null;
+    attendances: public_Attendance | null;
     equipmentAssignments: public_EquipmentAssignment[];
     incidents: public_Incident[];
     patrols: public_Patrol[];
@@ -1021,7 +616,7 @@ export namespace Models {
     teamLeader: public_User | null;
     readonly [RelationKeys]?:
       | 'agent'
-      | 'attendance'
+      | 'attendances'
       | 'equipmentAssignments'
       | 'incidents'
       | 'patrols'
@@ -1114,45 +709,47 @@ export namespace Models {
     supervisorId: FieldOutputTypes['public']['User']['supervisorId'];
     teamLeaderId: FieldOutputTypes['public']['User']['teamLeaderId'];
     updatedAt: FieldOutputTypes['public']['User']['updatedAt'];
-    assignedIncidents: public_Incident[];
     attendances: public_Attendance[];
-    authoredInstructions: public_SiteInstruction[];
+    attendancesAttendances: public_Attendance[];
     equipmentAssignments: public_EquipmentAssignment[];
     incidentComments: public_IncidentComment[];
-    managedSites: public_Site[];
+    incidents: public_Incident[];
+    incidentsIncidents: public_Incident[];
     notifications: public_Notification[];
     patrolScans: public_PatrolScan[];
     patrols: public_Patrol[];
-    reportedIncidents: public_Incident[];
+    roleAssignments: public_RoleAssignment[];
     shifts: public_Shift[];
-    supervisedAgents: public_User[];
-    supervisedShifts: public_Shift[];
-    supervisedSites: public_Site[];
+    shifts2: public_Shift[];
+    shiftsShifts: public_Shift[];
+    siteInstructions: public_SiteInstruction[];
+    sites: public_Site[];
+    sitesSites: public_Site[];
     supervisor: public_User | null;
-    teamAgents: public_User[];
     teamLeader: public_User | null;
-    teamLeaderShifts: public_Shift[];
-    verifiedAttendances: public_Attendance[];
+    users: public_User[];
+    usersUsers: public_User[];
     readonly [RelationKeys]?:
-      | 'assignedIncidents'
       | 'attendances'
-      | 'authoredInstructions'
+      | 'attendancesAttendances'
       | 'equipmentAssignments'
       | 'incidentComments'
-      | 'managedSites'
+      | 'incidents'
+      | 'incidentsIncidents'
       | 'notifications'
       | 'patrolScans'
       | 'patrols'
-      | 'reportedIncidents'
+      | 'roleAssignments'
       | 'shifts'
-      | 'supervisedAgents'
-      | 'supervisedShifts'
-      | 'supervisedSites'
+      | 'shifts2'
+      | 'shiftsShifts'
+      | 'siteInstructions'
+      | 'sites'
+      | 'sitesSites'
       | 'supervisor'
-      | 'teamAgents'
       | 'teamLeader'
-      | 'teamLeaderShifts'
-      | 'verifiedAttendances';
+      | 'users'
+      | 'usersUsers';
   };
 }
 
@@ -1164,8 +761,6 @@ export declare const models: {
     ClientContract: Models.public_ClientContract;
     Contract: Models.public_Contract;
     ContractServiceType: Models.public_ContractServiceType;
-    CoreEquipment: Models.public_CoreEquipment;
-    CoreIncident: Models.public_CoreIncident;
     Equipment: Models.public_Equipment;
     EquipmentAssignment: Models.public_EquipmentAssignment;
     EquipmentCategory: Models.public_EquipmentCategory;
@@ -1176,6 +771,7 @@ export declare const models: {
     Notification: Models.public_Notification;
     Patrol: Models.public_Patrol;
     PatrolScan: Models.public_PatrolScan;
+    RoleAssignment: Models.public_RoleAssignment;
     Shift: Models.public_Shift;
     Site: Models.public_Site;
     SiteEquipment: Models.public_SiteEquipment;
@@ -1197,6 +793,11 @@ export type TypeMaps = TypeMapsType<
 type ContractBase = Omit<
   ContractType<{
     readonly namespaces: {
+      readonly extensions: {
+        readonly id: 'extensions';
+        readonly kind: 'postgres-schema';
+        readonly entries: { readonly table: {} };
+      };
       readonly public: {
         readonly id: 'public';
         readonly kind: 'postgres-schema';
@@ -1323,8 +924,13 @@ type ContractBase = Omit<
                   readonly many: false;
                 };
               };
-              primaryKey: { readonly columns: readonly ['id'] };
-              uniques: readonly [{ readonly columns: readonly ['shiftId'] }];
+              primaryKey: { readonly columns: readonly ['id']; readonly name: 'attendances_pkey' };
+              uniques: readonly [
+                {
+                  readonly columns: readonly ['shiftId'];
+                  readonly name: 'attendances_shiftId_key';
+                },
+              ];
               indexes: readonly [
                 {
                   readonly name: 'attendances_agentId_idx_8d0ba4f0';
@@ -1344,18 +950,6 @@ type ContractBase = Omit<
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
                     readonly tableName: 'attendances';
-                    readonly columns: readonly ['shiftId'];
-                  };
-                  readonly target: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'shifts';
-                    readonly columns: readonly ['id'];
-                  };
-                },
-                {
-                  readonly source: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'attendances';
                     readonly columns: readonly ['agentId'];
                   };
                   readonly target: {
@@ -1363,6 +957,20 @@ type ContractBase = Omit<
                     readonly tableName: 'users';
                     readonly columns: readonly ['id'];
                   };
+                  readonly name: 'attendances_agentId_fkey';
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'attendances';
+                    readonly columns: readonly ['shiftId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'shifts';
+                    readonly columns: readonly ['id'];
+                  };
+                  readonly name: 'attendances_shiftId_fkey';
                 },
                 {
                   readonly source: {
@@ -1375,6 +983,7 @@ type ContractBase = Omit<
                     readonly tableName: 'users';
                     readonly columns: readonly ['id'];
                   };
+                  readonly name: 'attendances_verifiedById_fkey';
                 },
               ];
             };
@@ -1475,8 +1084,13 @@ type ContractBase = Omit<
                   readonly many: false;
                 };
               };
-              primaryKey: { readonly columns: readonly ['id'] };
-              uniques: readonly [{ readonly columns: readonly ['qrCodeData'] }];
+              primaryKey: { readonly columns: readonly ['id']; readonly name: 'checkpoints_pkey' };
+              uniques: readonly [
+                {
+                  readonly columns: readonly ['qrCodeData'];
+                  readonly name: 'checkpoints_qrCodeData_key';
+                },
+              ];
               indexes: readonly [
                 {
                   readonly name: 'checkpoints_siteId_idx_cabdc5ab';
@@ -1497,6 +1111,7 @@ type ContractBase = Omit<
                     readonly tableName: 'sites';
                     readonly columns: readonly ['id'];
                   };
+                  readonly name: 'checkpoints_siteId_fkey';
                 },
               ];
             };
@@ -1533,7 +1148,6 @@ type ContractBase = Omit<
                   readonly dataType: 'pg/numeric';
                   readonly codecId: 'pg/numeric@1';
                   readonly nullable: true;
-                  readonly typeParams: { readonly precision: 10; readonly scale: 2 };
                   readonly many: false;
                 };
                 readonly id: {
@@ -1584,8 +1198,16 @@ type ContractBase = Omit<
                   readonly many: false;
                 };
               };
-              primaryKey: { readonly columns: readonly ['id'] };
-              uniques: readonly [{ readonly columns: readonly ['contractNumber'] }];
+              primaryKey: {
+                readonly columns: readonly ['id'];
+                readonly name: 'client_contracts_pkey';
+              };
+              uniques: readonly [
+                {
+                  readonly columns: readonly ['contractNumber'];
+                  readonly name: 'client_contracts_contractNumber_key';
+                },
+              ];
               indexes: readonly [
                 {
                   readonly name: 'client_contracts_clientId_idx_153a9a49';
@@ -1606,6 +1228,7 @@ type ContractBase = Omit<
                     readonly tableName: 'clients';
                     readonly columns: readonly ['id'];
                   };
+                  readonly name: 'client_contracts_clientId_fkey';
                 },
               ];
             };
@@ -1696,8 +1319,10 @@ type ContractBase = Omit<
                   readonly many: false;
                 };
               };
-              primaryKey: { readonly columns: readonly ['id'] };
-              uniques: readonly [{ readonly columns: readonly ['code'] }];
+              primaryKey: { readonly columns: readonly ['id']; readonly name: 'clients_pkey' };
+              uniques: readonly [
+                { readonly columns: readonly ['code']; readonly name: 'clients_code_key' },
+              ];
               indexes: readonly [];
               foreignKeys: readonly [];
             };
@@ -1708,7 +1333,7 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/timestamptz-date@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
-                  readonly typeParams: { readonly precision: 3 };
+                  readonly typeParams: { readonly precision: 6 };
                   readonly many: false;
                 };
                 readonly description: {
@@ -1740,7 +1365,10 @@ type ContractBase = Omit<
                   readonly many: false;
                 };
               };
-              primaryKey: { readonly columns: readonly ['id'] };
+              primaryKey: {
+                readonly columns: readonly ['id'];
+                readonly name: 'contract_service_types_pkey';
+              };
               uniques: readonly [];
               indexes: readonly [];
               foreignKeys: readonly [];
@@ -1758,14 +1386,14 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/timestamptz-date@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
-                  readonly typeParams: { readonly precision: 3 };
+                  readonly typeParams: { readonly precision: 6 };
                   readonly many: false;
                 };
                 readonly end_date: {
                   readonly dataType: 'pg/timestamptz';
                   readonly codecId: 'pg/timestamptz-date@1';
                   readonly nullable: true;
-                  readonly typeParams: { readonly precision: 3 };
+                  readonly typeParams: { readonly precision: 6 };
                   readonly many: false;
                 };
                 readonly id: {
@@ -1788,30 +1416,24 @@ type ContractBase = Omit<
                   readonly dataType: 'pg/timestamptz';
                   readonly codecId: 'pg/timestamptz-date@1';
                   readonly nullable: false;
-                  readonly typeParams: { readonly precision: 3 };
+                  readonly typeParams: { readonly precision: 6 };
                   readonly many: false;
                 };
                 readonly status: {
-                  readonly dataType: 'pg/text';
-                  readonly codecId: 'pg/text@1';
+                  readonly dataType: 'pg/enum';
+                  readonly codecId: 'pg/enum@1';
                   readonly nullable: false;
                   readonly default: {
                     readonly kind: 'literal';
-                    readonly value: DefaultLiteralValue<'pg/text@1', 'ACTIVE'>;
+                    readonly value: DefaultLiteralValue<'pg/enum@1', 'ACTIVE'>;
                   };
+                  readonly typeParams: { readonly typeName: 'ContractStatus' };
                   readonly many: false;
                 };
               };
-              primaryKey: { readonly columns: readonly ['id'] };
+              primaryKey: { readonly columns: readonly ['id']; readonly name: 'contracts_pkey' };
               uniques: readonly [];
-              indexes: readonly [
-                {
-                  readonly name: 'contracts_service_type_id_idx_2ed171c9';
-                  readonly prefix: 'contracts_service_type_id_idx';
-                  readonly columns: readonly ['service_type_id'];
-                  readonly unique: false;
-                },
-              ];
+              indexes: readonly [];
               foreignKeys: readonly [
                 {
                   readonly source: {
@@ -1824,158 +1446,7 @@ type ContractBase = Omit<
                     readonly tableName: 'contract_service_types';
                     readonly columns: readonly ['id'];
                   };
-                },
-              ];
-            };
-            readonly core_equipment: {
-              columns: {
-                readonly category_id: {
-                  readonly dataType: 'pg/text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                  readonly many: false;
-                };
-                readonly condition: {
-                  readonly dataType: 'pg/text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                  readonly default: {
-                    readonly kind: 'literal';
-                    readonly value: DefaultLiteralValue<'pg/text@1', 'EXCELLENT'>;
-                  };
-                  readonly many: false;
-                };
-                readonly created_at: {
-                  readonly dataType: 'pg/timestamptz';
-                  readonly codecId: 'pg/timestamptz-date@1';
-                  readonly nullable: false;
-                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
-                  readonly typeParams: { readonly precision: 3 };
-                  readonly many: false;
-                };
-                readonly id: {
-                  readonly dataType: 'pg/uuid';
-                  readonly codecId: 'pg/uuid@1';
-                  readonly nullable: false;
-                  readonly default: {
-                    readonly kind: 'function';
-                    readonly expression: 'gen_random_uuid()';
-                  };
-                  readonly many: false;
-                };
-                readonly serial_number: {
-                  readonly dataType: 'pg/text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: true;
-                  readonly many: false;
-                };
-                readonly status: {
-                  readonly dataType: 'pg/text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                  readonly default: {
-                    readonly kind: 'literal';
-                    readonly value: DefaultLiteralValue<'pg/text@1', 'AVAILABLE'>;
-                  };
-                  readonly many: false;
-                };
-              };
-              primaryKey: { readonly columns: readonly ['id'] };
-              uniques: readonly [{ readonly columns: readonly ['serial_number'] }];
-              indexes: readonly [
-                {
-                  readonly name: 'core_equipment_category_id_idx_da7213d4';
-                  readonly prefix: 'core_equipment_category_id_idx';
-                  readonly columns: readonly ['category_id'];
-                  readonly unique: false;
-                },
-              ];
-              foreignKeys: readonly [
-                {
-                  readonly source: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'core_equipment';
-                    readonly columns: readonly ['category_id'];
-                  };
-                  readonly target: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'equipment_categories';
-                    readonly columns: readonly ['id'];
-                  };
-                },
-              ];
-            };
-            readonly core_incidents: {
-              columns: {
-                readonly category_id: {
-                  readonly dataType: 'pg/text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                  readonly many: false;
-                };
-                readonly description: {
-                  readonly dataType: 'pg/text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                  readonly many: false;
-                };
-                readonly id: {
-                  readonly dataType: 'pg/uuid';
-                  readonly codecId: 'pg/uuid@1';
-                  readonly nullable: false;
-                  readonly default: {
-                    readonly kind: 'function';
-                    readonly expression: 'gen_random_uuid()';
-                  };
-                  readonly many: false;
-                };
-                readonly reported_at: {
-                  readonly dataType: 'pg/timestamptz';
-                  readonly codecId: 'pg/timestamptz-date@1';
-                  readonly nullable: false;
-                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
-                  readonly typeParams: { readonly precision: 3 };
-                  readonly many: false;
-                };
-                readonly severity: {
-                  readonly dataType: 'pg/text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                  readonly many: false;
-                };
-                readonly status: {
-                  readonly dataType: 'pg/text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                  readonly default: {
-                    readonly kind: 'literal';
-                    readonly value: DefaultLiteralValue<'pg/text@1', 'NEW'>;
-                  };
-                  readonly many: false;
-                };
-              };
-              primaryKey: { readonly columns: readonly ['id'] };
-              uniques: readonly [];
-              indexes: readonly [
-                {
-                  readonly name: 'core_incidents_category_id_idx_da7213d4';
-                  readonly prefix: 'core_incidents_category_id_idx';
-                  readonly columns: readonly ['category_id'];
-                  readonly unique: false;
-                },
-              ];
-              foreignKeys: readonly [
-                {
-                  readonly source: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'core_incidents';
-                    readonly columns: readonly ['category_id'];
-                  };
-                  readonly target: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'incident_categories';
-                    readonly columns: readonly ['id'];
-                  };
+                  readonly name: 'contracts_service_type_id_fkey';
                 },
               ];
             };
@@ -2056,10 +1527,13 @@ type ContractBase = Omit<
                   readonly many: false;
                 };
               };
-              primaryKey: { readonly columns: readonly ['id'] };
+              primaryKey: { readonly columns: readonly ['id']; readonly name: 'equipment_pkey' };
               uniques: readonly [
-                { readonly columns: readonly ['code'] },
-                { readonly columns: readonly ['serialNumber'] },
+                { readonly columns: readonly ['code']; readonly name: 'equipment_code_key' },
+                {
+                  readonly columns: readonly ['serialNumber'];
+                  readonly name: 'equipment_serialNumber_key';
+                },
               ];
               indexes: readonly [];
               foreignKeys: readonly [];
@@ -2158,7 +1632,10 @@ type ContractBase = Omit<
                   readonly many: false;
                 };
               };
-              primaryKey: { readonly columns: readonly ['id'] };
+              primaryKey: {
+                readonly columns: readonly ['id'];
+                readonly name: 'equipment_assignments_pkey';
+              };
               uniques: readonly [];
               indexes: readonly [
                 {
@@ -2185,18 +1662,6 @@ type ContractBase = Omit<
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
                     readonly tableName: 'equipment_assignments';
-                    readonly columns: readonly ['equipmentId'];
-                  };
-                  readonly target: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'equipment';
-                    readonly columns: readonly ['id'];
-                  };
-                },
-                {
-                  readonly source: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'equipment_assignments';
                     readonly columns: readonly ['agentId'];
                   };
                   readonly target: {
@@ -2204,6 +1669,20 @@ type ContractBase = Omit<
                     readonly tableName: 'users';
                     readonly columns: readonly ['id'];
                   };
+                  readonly name: 'equipment_assignments_agentId_fkey';
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'equipment_assignments';
+                    readonly columns: readonly ['equipmentId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'equipment';
+                    readonly columns: readonly ['id'];
+                  };
+                  readonly name: 'equipment_assignments_equipmentId_fkey';
                 },
                 {
                   readonly source: {
@@ -2216,6 +1695,7 @@ type ContractBase = Omit<
                     readonly tableName: 'shifts';
                     readonly columns: readonly ['id'];
                   };
+                  readonly name: 'equipment_assignments_shiftId_fkey';
                 },
               ];
             };
@@ -2226,7 +1706,7 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/timestamptz-date@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
-                  readonly typeParams: { readonly precision: 3 };
+                  readonly typeParams: { readonly precision: 6 };
                   readonly many: false;
                 };
                 readonly description: {
@@ -2258,7 +1738,10 @@ type ContractBase = Omit<
                   readonly many: false;
                 };
               };
-              primaryKey: { readonly columns: readonly ['id'] };
+              primaryKey: {
+                readonly columns: readonly ['id'];
+                readonly name: 'equipment_categories_pkey';
+              };
               uniques: readonly [];
               indexes: readonly [];
               foreignKeys: readonly [];
@@ -2320,7 +1803,10 @@ type ContractBase = Omit<
                   readonly many: false;
                 };
               };
-              primaryKey: { readonly columns: readonly ['id'] };
+              primaryKey: {
+                readonly columns: readonly ['id'];
+                readonly name: 'incident_attachments_pkey';
+              };
               uniques: readonly [];
               indexes: readonly [
                 {
@@ -2342,6 +1828,7 @@ type ContractBase = Omit<
                     readonly tableName: 'incidents';
                     readonly columns: readonly ['id'];
                   };
+                  readonly name: 'incident_attachments_incidentId_fkey';
                 },
               ];
             };
@@ -2352,7 +1839,7 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/timestamptz-date@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
-                  readonly typeParams: { readonly precision: 3 };
+                  readonly typeParams: { readonly precision: 6 };
                   readonly many: false;
                 };
                 readonly description: {
@@ -2384,7 +1871,10 @@ type ContractBase = Omit<
                   readonly many: false;
                 };
               };
-              primaryKey: { readonly columns: readonly ['id'] };
+              primaryKey: {
+                readonly columns: readonly ['id'];
+                readonly name: 'incident_categories_pkey';
+              };
               uniques: readonly [];
               indexes: readonly [];
               foreignKeys: readonly [];
@@ -2428,7 +1918,10 @@ type ContractBase = Omit<
                   readonly many: false;
                 };
               };
-              primaryKey: { readonly columns: readonly ['id'] };
+              primaryKey: {
+                readonly columns: readonly ['id'];
+                readonly name: 'incident_comments_pkey';
+              };
               uniques: readonly [];
               indexes: readonly [
                 {
@@ -2449,18 +1942,6 @@ type ContractBase = Omit<
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
                     readonly tableName: 'incident_comments';
-                    readonly columns: readonly ['incidentId'];
-                  };
-                  readonly target: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'incidents';
-                    readonly columns: readonly ['id'];
-                  };
-                },
-                {
-                  readonly source: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'incident_comments';
                     readonly columns: readonly ['authorId'];
                   };
                   readonly target: {
@@ -2468,6 +1949,20 @@ type ContractBase = Omit<
                     readonly tableName: 'users';
                     readonly columns: readonly ['id'];
                   };
+                  readonly name: 'incident_comments_authorId_fkey';
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'incident_comments';
+                    readonly columns: readonly ['incidentId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'incidents';
+                    readonly columns: readonly ['id'];
+                  };
+                  readonly name: 'incident_comments_incidentId_fkey';
                 },
               ];
             };
@@ -2634,8 +2129,13 @@ type ContractBase = Omit<
                   readonly many: false;
                 };
               };
-              primaryKey: { readonly columns: readonly ['id'] };
-              uniques: readonly [{ readonly columns: readonly ['incidentNumber'] }];
+              primaryKey: { readonly columns: readonly ['id']; readonly name: 'incidents_pkey' };
+              uniques: readonly [
+                {
+                  readonly columns: readonly ['incidentNumber'];
+                  readonly name: 'incidents_incidentNumber_key';
+                },
+              ];
               indexes: readonly [
                 {
                   readonly name: 'incidents_assignedToId_idx_45a131c2';
@@ -2673,25 +2173,14 @@ type ContractBase = Omit<
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
                     readonly tableName: 'incidents';
-                    readonly columns: readonly ['siteId'];
+                    readonly columns: readonly ['assignedToId'];
                   };
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'sites';
+                    readonly tableName: 'users';
                     readonly columns: readonly ['id'];
                   };
-                },
-                {
-                  readonly source: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'incidents';
-                    readonly columns: readonly ['shiftId'];
-                  };
-                  readonly target: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'shifts';
-                    readonly columns: readonly ['id'];
-                  };
+                  readonly name: 'incidents_assignedToId_fkey';
                 },
                 {
                   readonly source: {
@@ -2704,6 +2193,7 @@ type ContractBase = Omit<
                     readonly tableName: 'patrols';
                     readonly columns: readonly ['id'];
                   };
+                  readonly name: 'incidents_patrolId_fkey';
                 },
                 {
                   readonly source: {
@@ -2716,18 +2206,33 @@ type ContractBase = Omit<
                     readonly tableName: 'users';
                     readonly columns: readonly ['id'];
                   };
+                  readonly name: 'incidents_reportedById_fkey';
                 },
                 {
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
                     readonly tableName: 'incidents';
-                    readonly columns: readonly ['assignedToId'];
+                    readonly columns: readonly ['shiftId'];
                   };
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'users';
+                    readonly tableName: 'shifts';
                     readonly columns: readonly ['id'];
                   };
+                  readonly name: 'incidents_shiftId_fkey';
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'incidents';
+                    readonly columns: readonly ['siteId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'sites';
+                    readonly columns: readonly ['id'];
+                  };
+                  readonly name: 'incidents_siteId_fkey';
                 },
               ];
             };
@@ -2797,7 +2302,10 @@ type ContractBase = Omit<
                   readonly many: false;
                 };
               };
-              primaryKey: { readonly columns: readonly ['id'] };
+              primaryKey: {
+                readonly columns: readonly ['id'];
+                readonly name: 'notifications_pkey';
+              };
               uniques: readonly [];
               indexes: readonly [
                 {
@@ -2819,6 +2327,7 @@ type ContractBase = Omit<
                     readonly tableName: 'users';
                     readonly columns: readonly ['id'];
                   };
+                  readonly name: 'notifications_userId_fkey';
                 },
               ];
             };
@@ -2907,7 +2416,7 @@ type ContractBase = Omit<
                   readonly many: false;
                 };
               };
-              primaryKey: { readonly columns: readonly ['id'] };
+              primaryKey: { readonly columns: readonly ['id']; readonly name: 'patrol_scans_pkey' };
               uniques: readonly [];
               indexes: readonly [
                 {
@@ -2934,13 +2443,14 @@ type ContractBase = Omit<
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
                     readonly tableName: 'patrol_scans';
-                    readonly columns: readonly ['patrolId'];
+                    readonly columns: readonly ['agentId'];
                   };
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'patrols';
+                    readonly tableName: 'users';
                     readonly columns: readonly ['id'];
                   };
+                  readonly name: 'patrol_scans_agentId_fkey';
                 },
                 {
                   readonly source: {
@@ -2953,18 +2463,20 @@ type ContractBase = Omit<
                     readonly tableName: 'checkpoints';
                     readonly columns: readonly ['id'];
                   };
+                  readonly name: 'patrol_scans_checkpointId_fkey';
                 },
                 {
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
                     readonly tableName: 'patrol_scans';
-                    readonly columns: readonly ['agentId'];
+                    readonly columns: readonly ['patrolId'];
                   };
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'users';
+                    readonly tableName: 'patrols';
                     readonly columns: readonly ['id'];
                   };
+                  readonly name: 'patrol_scans_patrolId_fkey';
                 },
               ];
             };
@@ -3079,7 +2591,7 @@ type ContractBase = Omit<
                   readonly many: false;
                 };
               };
-              primaryKey: { readonly columns: readonly ['id'] };
+              primaryKey: { readonly columns: readonly ['id']; readonly name: 'patrols_pkey' };
               uniques: readonly [];
               indexes: readonly [
                 {
@@ -3106,18 +2618,6 @@ type ContractBase = Omit<
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
                     readonly tableName: 'patrols';
-                    readonly columns: readonly ['siteId'];
-                  };
-                  readonly target: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'sites';
-                    readonly columns: readonly ['id'];
-                  };
-                },
-                {
-                  readonly source: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'patrols';
                     readonly columns: readonly ['agentId'];
                   };
                   readonly target: {
@@ -3125,6 +2625,7 @@ type ContractBase = Omit<
                     readonly tableName: 'users';
                     readonly columns: readonly ['id'];
                   };
+                  readonly name: 'patrols_agentId_fkey';
                 },
                 {
                   readonly source: {
@@ -3137,6 +2638,98 @@ type ContractBase = Omit<
                     readonly tableName: 'shifts';
                     readonly columns: readonly ['id'];
                   };
+                  readonly name: 'patrols_shiftId_fkey';
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'patrols';
+                    readonly columns: readonly ['siteId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'sites';
+                    readonly columns: readonly ['id'];
+                  };
+                  readonly name: 'patrols_siteId_fkey';
+                },
+              ];
+            };
+            readonly role_assignments: {
+              columns: {
+                readonly assignedAt: {
+                  readonly dataType: 'pg/timestamptz';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                  readonly typeParams: { readonly precision: 3 };
+                  readonly many: false;
+                };
+                readonly createdAt: {
+                  readonly dataType: 'pg/timestamptz';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                  readonly typeParams: { readonly precision: 3 };
+                  readonly many: false;
+                };
+                readonly id: {
+                  readonly dataType: 'pg/int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                  readonly many: false;
+                };
+                readonly role: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly updatedAt: {
+                  readonly dataType: 'pg/timestamptz';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                  readonly typeParams: { readonly precision: 3 };
+                  readonly many: false;
+                };
+                readonly userId: {
+                  readonly dataType: 'pg/int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+              };
+              primaryKey: {
+                readonly columns: readonly ['id'];
+                readonly name: 'role_assignments_pkey';
+              };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'role_assignments_userId_idx_a489d58a';
+                  readonly prefix: 'role_assignments_userId_idx';
+                  readonly columns: readonly ['userId'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'role_assignments';
+                    readonly columns: readonly ['userId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'users';
+                    readonly columns: readonly ['id'];
+                  };
+                  readonly name: 'role_assignments_userId_fkey';
                 },
               ];
             };
@@ -3167,7 +2760,6 @@ type ContractBase = Omit<
                   readonly dataType: 'pg/numeric';
                   readonly codecId: 'pg/numeric@1';
                   readonly nullable: true;
-                  readonly typeParams: { readonly precision: 10; readonly scale: 2 };
                   readonly many: false;
                 };
                 readonly id: {
@@ -3242,7 +2834,7 @@ type ContractBase = Omit<
                   readonly many: false;
                 };
               };
-              primaryKey: { readonly columns: readonly ['id'] };
+              primaryKey: { readonly columns: readonly ['id']; readonly name: 'shifts_pkey' };
               uniques: readonly [];
               indexes: readonly [
                 {
@@ -3275,18 +2867,6 @@ type ContractBase = Omit<
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
                     readonly tableName: 'shifts';
-                    readonly columns: readonly ['siteId'];
-                  };
-                  readonly target: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'sites';
-                    readonly columns: readonly ['id'];
-                  };
-                },
-                {
-                  readonly source: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'shifts';
                     readonly columns: readonly ['agentId'];
                   };
                   readonly target: {
@@ -3294,18 +2874,20 @@ type ContractBase = Omit<
                     readonly tableName: 'users';
                     readonly columns: readonly ['id'];
                   };
+                  readonly name: 'shifts_agentId_fkey';
                 },
                 {
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
                     readonly tableName: 'shifts';
-                    readonly columns: readonly ['teamLeaderId'];
+                    readonly columns: readonly ['siteId'];
                   };
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'users';
+                    readonly tableName: 'sites';
                     readonly columns: readonly ['id'];
                   };
+                  readonly name: 'shifts_siteId_fkey';
                 },
                 {
                   readonly source: {
@@ -3318,6 +2900,20 @@ type ContractBase = Omit<
                     readonly tableName: 'users';
                     readonly columns: readonly ['id'];
                   };
+                  readonly name: 'shifts_supervisorId_fkey';
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'shifts';
+                    readonly columns: readonly ['teamLeaderId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'users';
+                    readonly columns: readonly ['id'];
+                  };
+                  readonly name: 'shifts_teamLeaderId_fkey';
                 },
               ];
             };
@@ -3368,8 +2964,16 @@ type ContractBase = Omit<
                   readonly many: false;
                 };
               };
-              primaryKey: { readonly columns: readonly ['id'] };
-              uniques: readonly [{ readonly columns: readonly ['siteId', 'equipmentId'] }];
+              primaryKey: {
+                readonly columns: readonly ['id'];
+                readonly name: 'site_equipments_pkey';
+              };
+              uniques: readonly [
+                {
+                  readonly columns: readonly ['siteId', 'equipmentId'];
+                  readonly name: 'site_equipments_siteId_equipmentId_key';
+                },
+              ];
               indexes: readonly [
                 {
                   readonly name: 'site_equipments_equipmentId_idx_e1548594';
@@ -3389,18 +2993,6 @@ type ContractBase = Omit<
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
                     readonly tableName: 'site_equipments';
-                    readonly columns: readonly ['siteId'];
-                  };
-                  readonly target: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'sites';
-                    readonly columns: readonly ['id'];
-                  };
-                },
-                {
-                  readonly source: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'site_equipments';
                     readonly columns: readonly ['equipmentId'];
                   };
                   readonly target: {
@@ -3408,6 +3000,20 @@ type ContractBase = Omit<
                     readonly tableName: 'equipment';
                     readonly columns: readonly ['id'];
                   };
+                  readonly name: 'site_equipments_equipmentId_fkey';
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'site_equipments';
+                    readonly columns: readonly ['siteId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'sites';
+                    readonly columns: readonly ['id'];
+                  };
+                  readonly name: 'site_equipments_siteId_fkey';
                 },
               ];
             };
@@ -3509,7 +3115,10 @@ type ContractBase = Omit<
                   readonly many: false;
                 };
               };
-              primaryKey: { readonly columns: readonly ['id'] };
+              primaryKey: {
+                readonly columns: readonly ['id'];
+                readonly name: 'site_instructions_pkey';
+              };
               uniques: readonly [];
               indexes: readonly [
                 {
@@ -3530,18 +3139,6 @@ type ContractBase = Omit<
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
                     readonly tableName: 'site_instructions';
-                    readonly columns: readonly ['siteId'];
-                  };
-                  readonly target: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'sites';
-                    readonly columns: readonly ['id'];
-                  };
-                },
-                {
-                  readonly source: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'site_instructions';
                     readonly columns: readonly ['authorId'];
                   };
                   readonly target: {
@@ -3549,6 +3146,20 @@ type ContractBase = Omit<
                     readonly tableName: 'users';
                     readonly columns: readonly ['id'];
                   };
+                  readonly name: 'site_instructions_authorId_fkey';
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'site_instructions';
+                    readonly columns: readonly ['siteId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'sites';
+                    readonly columns: readonly ['id'];
+                  };
+                  readonly name: 'site_instructions_siteId_fkey';
                 },
               ];
             };
@@ -3679,8 +3290,10 @@ type ContractBase = Omit<
                   readonly many: false;
                 };
               };
-              primaryKey: { readonly columns: readonly ['id'] };
-              uniques: readonly [{ readonly columns: readonly ['code'] }];
+              primaryKey: { readonly columns: readonly ['id']; readonly name: 'sites_pkey' };
+              uniques: readonly [
+                { readonly columns: readonly ['code']; readonly name: 'sites_code_key' },
+              ];
               indexes: readonly [
                 {
                   readonly name: 'sites_clientId_idx_153a9a49';
@@ -3713,6 +3326,7 @@ type ContractBase = Omit<
                     readonly tableName: 'clients';
                     readonly columns: readonly ['id'];
                   };
+                  readonly name: 'sites_clientId_fkey';
                 },
                 {
                   readonly source: {
@@ -3725,6 +3339,7 @@ type ContractBase = Omit<
                     readonly tableName: 'users';
                     readonly columns: readonly ['id'];
                   };
+                  readonly name: 'sites_managerId_fkey';
                 },
                 {
                   readonly source: {
@@ -3737,6 +3352,7 @@ type ContractBase = Omit<
                     readonly tableName: 'users';
                     readonly columns: readonly ['id'];
                   };
+                  readonly name: 'sites_supervisorId_fkey';
                 },
               ];
             };
@@ -3829,10 +3445,6 @@ type ContractBase = Omit<
                   readonly dataType: 'pg/text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
-                  readonly default: {
-                    readonly kind: 'literal';
-                    readonly value: DefaultLiteralValue<'pg/text@1', 'AGENT'>;
-                  };
                   readonly many: false;
                 };
                 readonly status: {
@@ -3866,11 +3478,11 @@ type ContractBase = Omit<
                   readonly many: false;
                 };
               };
-              primaryKey: { readonly columns: readonly ['id'] };
+              primaryKey: { readonly columns: readonly ['id']; readonly name: 'users_pkey' };
               uniques: readonly [
-                { readonly columns: readonly ['email'] },
-                { readonly columns: readonly ['matricule'] },
-                { readonly columns: readonly ['adminLock'] },
+                { readonly columns: readonly ['adminLock']; readonly name: 'users_adminLock_key' },
+                { readonly columns: readonly ['email']; readonly name: 'users_email_key' },
+                { readonly columns: readonly ['matricule']; readonly name: 'users_matricule_key' },
               ];
               indexes: readonly [
                 {
@@ -3898,6 +3510,7 @@ type ContractBase = Omit<
                     readonly tableName: 'users';
                     readonly columns: readonly ['id'];
                   };
+                  readonly name: 'users_supervisorId_fkey';
                 },
                 {
                   readonly source: {
@@ -3910,6 +3523,7 @@ type ContractBase = Omit<
                     readonly tableName: 'users';
                     readonly columns: readonly ['id'];
                   };
+                  readonly name: 'users_teamLeaderId_fkey';
                 },
               ];
             };
@@ -3920,7 +3534,6 @@ type ContractBase = Omit<
               readonly values: readonly [
                 'ON_TIME',
                 'LATE',
-                'PRESENT',
                 'ABSENT',
                 'EARLY_DEPARTURE',
                 'VERIFIED',
@@ -3930,31 +3543,9 @@ type ContractBase = Omit<
               readonly kind: 'valueSet';
               readonly values: readonly ['QR_SCAN', 'GPS_GEOFENCE', 'SUPERVISOR_OVERRIDE'];
             };
-            readonly ContractServiceKind: {
-              readonly kind: 'valueSet';
-              readonly values: readonly [
-                'STATIC_GUARDING',
-                'MOBILE_PATROL',
-                'EVENT_SECURITY',
-                'VIP_PROTECTION',
-                'DOG_HANDLER',
-              ];
-            };
             readonly ContractStatus: {
               readonly kind: 'valueSet';
               readonly values: readonly ['ACTIVE', 'EXPIRED', 'TERMINATED'];
-            };
-            readonly EquipmentCategoryKind: {
-              readonly kind: 'valueSet';
-              readonly values: readonly [
-                'RADIO_COMMUNICATION',
-                'LIGHTING',
-                'DEFENSE_AND_PPE',
-                'DETECTION',
-                'KEYS_AND_BADGES',
-                'PTI_DEVICE',
-                'VEHICLE',
-              ];
             };
             readonly EquipmentCondition: {
               readonly kind: 'valueSet';
@@ -3969,21 +3560,6 @@ type ContractBase = Omit<
                 'DAMAGED',
                 'LOST',
                 'RETIRED',
-              ];
-            };
-            readonly IncidentCategoryKind: {
-              readonly kind: 'valueSet';
-              readonly values: readonly [
-                'INTRUSION',
-                'FIRE_ALARM',
-                'THEFT',
-                'VANDALISM',
-                'AGGRESSION',
-                'TECHNICAL_FAILURE',
-                'MEDICAL_EMERGENCY',
-                'ACCESS_DENIAL',
-                'SUSPICIOUS_PERSON',
-                'OTHER',
               ];
             };
             readonly IncidentSeverity: {
@@ -4052,14 +3628,12 @@ type ContractBase = Omit<
             readonly ShiftType: {
               readonly kind: 'valueSet';
               readonly values: readonly [
+                'HOUR',
                 'DAY',
                 'NIGHT',
-                'WEEKEND',
-                'WEEKDAY',
-                'FULL_TIME',
-                'PART_TIME',
-                'REINFORCEMENT',
-                'DOG_PATROL',
+                'WEEK_DAYS',
+                'WEEK_NIGHTS',
+                'FULL_DAY',
               ];
             };
             readonly UserStatus: {
@@ -4074,6 +3648,11 @@ type ContractBase = Omit<
             };
           };
         };
+      };
+      readonly vault: {
+        readonly id: 'vault';
+        readonly kind: 'postgres-schema';
+        readonly entries: { readonly table: {} };
       };
     };
     readonly storageHash: StorageHash;
@@ -4101,14 +3680,6 @@ type ContractBase = Omit<
       readonly model: 'ContractServiceType';
     };
     readonly contracts: { readonly namespace: 'public' & NamespaceId; readonly model: 'Contract' };
-    readonly core_equipment: {
-      readonly namespace: 'public' & NamespaceId;
-      readonly model: 'CoreEquipment';
-    };
-    readonly core_incidents: {
-      readonly namespace: 'public' & NamespaceId;
-      readonly model: 'CoreIncident';
-    };
     readonly equipment: { readonly namespace: 'public' & NamespaceId; readonly model: 'Equipment' };
     readonly equipment_assignments: {
       readonly namespace: 'public' & NamespaceId;
@@ -4140,6 +3711,10 @@ type ContractBase = Omit<
       readonly model: 'PatrolScan';
     };
     readonly patrols: { readonly namespace: 'public' & NamespaceId; readonly model: 'Patrol' };
+    readonly role_assignments: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'RoleAssignment';
+    };
     readonly shifts: { readonly namespace: 'public' & NamespaceId; readonly model: 'Shift' };
     readonly site_equipments: {
       readonly namespace: 'public' & NamespaceId;
@@ -4358,7 +3933,7 @@ type ContractBase = Omit<
               };
             };
             readonly relations: {
-              readonly scans: {
+              readonly patrolScans: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
                   readonly model: 'PatrolScan';
@@ -4459,7 +4034,7 @@ type ContractBase = Omit<
               };
             };
             readonly relations: {
-              readonly contracts: {
+              readonly clientContracts: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
                   readonly model: 'ClientContract';
@@ -4526,11 +4101,7 @@ type ContractBase = Omit<
               };
               readonly hourlyRate: {
                 readonly nullable: true;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/numeric@1';
-                  readonly typeParams: { readonly precision: 10; readonly scale: 2 };
-                };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
               };
               readonly id: {
                 readonly nullable: false;
@@ -4608,7 +4179,7 @@ type ContractBase = Omit<
                 readonly type: {
                   readonly kind: 'scalar';
                   readonly codecId: 'pg/timestamptz-date@1';
-                  readonly typeParams: { readonly precision: 3 };
+                  readonly typeParams: { readonly precision: 6 };
                 };
               };
               readonly endDate: {
@@ -4616,7 +4187,7 @@ type ContractBase = Omit<
                 readonly type: {
                   readonly kind: 'scalar';
                   readonly codecId: 'pg/timestamptz-date@1';
-                  readonly typeParams: { readonly precision: 3 };
+                  readonly typeParams: { readonly precision: 6 };
                 };
               };
               readonly id: {
@@ -4632,12 +4203,16 @@ type ContractBase = Omit<
                 readonly type: {
                   readonly kind: 'scalar';
                   readonly codecId: 'pg/timestamptz-date@1';
-                  readonly typeParams: { readonly precision: 3 };
+                  readonly typeParams: { readonly precision: 6 };
                 };
               };
               readonly status: {
                 readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/enum@1';
+                  readonly typeParams: { readonly typeName: 'ContractStatus' };
+                };
               };
             };
             readonly relations: {
@@ -4675,7 +4250,7 @@ type ContractBase = Omit<
                 readonly type: {
                   readonly kind: 'scalar';
                   readonly codecId: 'pg/timestamptz-date@1';
-                  readonly typeParams: { readonly precision: 3 };
+                  readonly typeParams: { readonly precision: 6 };
                 };
               };
               readonly description: {
@@ -4717,122 +4292,6 @@ type ContractBase = Omit<
                 readonly id: { readonly column: 'id' };
                 readonly isActive: { readonly column: 'is_active' };
                 readonly name: { readonly column: 'name' };
-              };
-            };
-          };
-          readonly CoreEquipment: {
-            readonly fields: {
-              readonly categoryId: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly condition: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly createdAt: {
-                readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-date@1';
-                  readonly typeParams: { readonly precision: 3 };
-                };
-              };
-              readonly id: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
-              };
-              readonly serialNumber: {
-                readonly nullable: true;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly status: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-            };
-            readonly relations: {
-              readonly category: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'EquipmentCategory';
-                };
-                readonly cardinality: 'N:1';
-                readonly nullable: false;
-                readonly on: {
-                  readonly localFields: readonly ['categoryId'];
-                  readonly targetFields: readonly ['id'];
-                };
-              };
-            };
-            readonly storage: {
-              readonly table: 'core_equipment';
-              readonly namespaceId: 'public';
-              readonly fields: {
-                readonly categoryId: { readonly column: 'category_id' };
-                readonly condition: { readonly column: 'condition' };
-                readonly createdAt: { readonly column: 'created_at' };
-                readonly id: { readonly column: 'id' };
-                readonly serialNumber: { readonly column: 'serial_number' };
-                readonly status: { readonly column: 'status' };
-              };
-            };
-          };
-          readonly CoreIncident: {
-            readonly fields: {
-              readonly categoryId: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly description: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly id: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
-              };
-              readonly reportedAt: {
-                readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-date@1';
-                  readonly typeParams: { readonly precision: 3 };
-                };
-              };
-              readonly severity: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly status: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-            };
-            readonly relations: {
-              readonly category: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'IncidentCategory';
-                };
-                readonly cardinality: 'N:1';
-                readonly nullable: false;
-                readonly on: {
-                  readonly localFields: readonly ['categoryId'];
-                  readonly targetFields: readonly ['id'];
-                };
-              };
-            };
-            readonly storage: {
-              readonly table: 'core_incidents';
-              readonly namespaceId: 'public';
-              readonly fields: {
-                readonly categoryId: { readonly column: 'category_id' };
-                readonly description: { readonly column: 'description' };
-                readonly id: { readonly column: 'id' };
-                readonly reportedAt: { readonly column: 'reported_at' };
-                readonly severity: { readonly column: 'severity' };
-                readonly status: { readonly column: 'status' };
               };
             };
           };
@@ -4896,7 +4355,7 @@ type ContractBase = Omit<
               };
             };
             readonly relations: {
-              readonly assignments: {
+              readonly equipmentAssignments: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
                   readonly model: 'EquipmentAssignment';
@@ -5064,7 +4523,7 @@ type ContractBase = Omit<
                 readonly type: {
                   readonly kind: 'scalar';
                   readonly codecId: 'pg/timestamptz-date@1';
-                  readonly typeParams: { readonly precision: 3 };
+                  readonly typeParams: { readonly precision: 6 };
                 };
               };
               readonly description: {
@@ -5084,19 +4543,7 @@ type ContractBase = Omit<
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
             };
-            readonly relations: {
-              readonly equipment: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'CoreEquipment';
-                };
-                readonly cardinality: '1:N';
-                readonly on: {
-                  readonly localFields: readonly ['id'];
-                  readonly targetFields: readonly ['categoryId'];
-                };
-              };
-            };
+            readonly relations: Record<string, never>;
             readonly storage: {
               readonly table: 'equipment_categories';
               readonly namespaceId: 'public';
@@ -5230,7 +4677,7 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['id'];
                 };
               };
-              readonly attachments: {
+              readonly incidentAttachments: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
                   readonly model: 'IncidentAttachment';
@@ -5241,7 +4688,7 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['incidentId'];
                 };
               };
-              readonly comments: {
+              readonly incidentComments: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
                   readonly model: 'IncidentComment';
@@ -5399,7 +4846,7 @@ type ContractBase = Omit<
                 readonly type: {
                   readonly kind: 'scalar';
                   readonly codecId: 'pg/timestamptz-date@1';
-                  readonly typeParams: { readonly precision: 3 };
+                  readonly typeParams: { readonly precision: 6 };
                 };
               };
               readonly description: {
@@ -5419,19 +4866,7 @@ type ContractBase = Omit<
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
             };
-            readonly relations: {
-              readonly incidents: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'CoreIncident';
-                };
-                readonly cardinality: '1:N';
-                readonly on: {
-                  readonly localFields: readonly ['id'];
-                  readonly targetFields: readonly ['categoryId'];
-                };
-              };
-            };
+            readonly relations: Record<string, never>;
             readonly storage: {
               readonly table: 'incident_categories';
               readonly namespaceId: 'public';
@@ -5675,7 +5110,7 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['patrolId'];
                 };
               };
-              readonly scans: {
+              readonly patrolScans: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
                   readonly model: 'PatrolScan';
@@ -5837,6 +5272,69 @@ type ContractBase = Omit<
               };
             };
           };
+          readonly RoleAssignment: {
+            readonly fields: {
+              readonly assignedAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly typeParams: { readonly precision: 3 };
+                };
+              };
+              readonly createdAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly typeParams: { readonly precision: 3 };
+                };
+              };
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly role: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly updatedAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly typeParams: { readonly precision: 3 };
+                };
+              };
+              readonly userId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+            };
+            readonly relations: {
+              readonly user: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
+                readonly cardinality: 'N:1';
+                readonly nullable: false;
+                readonly on: {
+                  readonly localFields: readonly ['userId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'role_assignments';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly assignedAt: { readonly column: 'assignedAt' };
+                readonly createdAt: { readonly column: 'createdAt' };
+                readonly id: { readonly column: 'id' };
+                readonly role: { readonly column: 'role' };
+                readonly updatedAt: { readonly column: 'updatedAt' };
+                readonly userId: { readonly column: 'userId' };
+              };
+            };
+          };
           readonly Shift: {
             readonly fields: {
               readonly agentId: {
@@ -5861,11 +5359,7 @@ type ContractBase = Omit<
               };
               readonly hourlyRate: {
                 readonly nullable: true;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/numeric@1';
-                  readonly typeParams: { readonly precision: 10; readonly scale: 2 };
-                };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
               };
               readonly id: {
                 readonly nullable: false;
@@ -5926,7 +5420,7 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['id'];
                 };
               };
-              readonly attendance: {
+              readonly attendances: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
                   readonly model: 'Attendance';
@@ -6487,17 +5981,6 @@ type ContractBase = Omit<
               };
             };
             readonly relations: {
-              readonly assignedIncidents: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'Incident';
-                };
-                readonly cardinality: '1:N';
-                readonly on: {
-                  readonly localFields: readonly ['id'];
-                  readonly targetFields: readonly ['assignedToId'];
-                };
-              };
               readonly attendances: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
@@ -6509,15 +5992,15 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['agentId'];
                 };
               };
-              readonly authoredInstructions: {
+              readonly attendancesAttendances: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'SiteInstruction';
+                  readonly model: 'Attendance';
                 };
                 readonly cardinality: '1:N';
                 readonly on: {
                   readonly localFields: readonly ['id'];
-                  readonly targetFields: readonly ['authorId'];
+                  readonly targetFields: readonly ['verifiedById'];
                 };
               };
               readonly equipmentAssignments: {
@@ -6542,12 +6025,26 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['authorId'];
                 };
               };
-              readonly managedSites: {
-                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'Site' };
+              readonly incidents: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Incident';
+                };
                 readonly cardinality: '1:N';
                 readonly on: {
                   readonly localFields: readonly ['id'];
-                  readonly targetFields: readonly ['managerId'];
+                  readonly targetFields: readonly ['assignedToId'];
+                };
+              };
+              readonly incidentsIncidents: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Incident';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['reportedById'];
                 };
               };
               readonly notifications: {
@@ -6583,15 +6080,15 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['agentId'];
                 };
               };
-              readonly reportedIncidents: {
+              readonly roleAssignments: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'Incident';
+                  readonly model: 'RoleAssignment';
                 };
                 readonly cardinality: '1:N';
                 readonly on: {
                   readonly localFields: readonly ['id'];
-                  readonly targetFields: readonly ['reportedById'];
+                  readonly targetFields: readonly ['userId'];
                 };
               };
               readonly shifts: {
@@ -6605,15 +6102,18 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['agentId'];
                 };
               };
-              readonly supervisedAgents: {
-                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
+              readonly shifts2: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Shift';
+                };
                 readonly cardinality: '1:N';
                 readonly on: {
                   readonly localFields: readonly ['id'];
-                  readonly targetFields: readonly ['supervisorId'];
+                  readonly targetFields: readonly ['teamLeaderId'];
                 };
               };
-              readonly supervisedShifts: {
+              readonly shiftsShifts: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
                   readonly model: 'Shift';
@@ -6624,7 +6124,26 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['supervisorId'];
                 };
               };
-              readonly supervisedSites: {
+              readonly siteInstructions: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'SiteInstruction';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['authorId'];
+                };
+              };
+              readonly sites: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'Site' };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['managerId'];
+                };
+              };
+              readonly sitesSites: {
                 readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'Site' };
                 readonly cardinality: '1:N';
                 readonly on: {
@@ -6641,14 +6160,6 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['id'];
                 };
               };
-              readonly teamAgents: {
-                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
-                readonly cardinality: '1:N';
-                readonly on: {
-                  readonly localFields: readonly ['id'];
-                  readonly targetFields: readonly ['teamLeaderId'];
-                };
-              };
               readonly teamLeader: {
                 readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
                 readonly cardinality: 'N:1';
@@ -6658,26 +6169,20 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['id'];
                 };
               };
-              readonly teamLeaderShifts: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'Shift';
+              readonly users: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['supervisorId'];
                 };
+              };
+              readonly usersUsers: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
                 readonly cardinality: '1:N';
                 readonly on: {
                   readonly localFields: readonly ['id'];
                   readonly targetFields: readonly ['teamLeaderId'];
-                };
-              };
-              readonly verifiedAttendances: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'Attendance';
-                };
-                readonly cardinality: '1:N';
-                readonly on: {
-                  readonly localFields: readonly ['id'];
-                  readonly targetFields: readonly ['verifiedById'];
                 };
               };
             };
@@ -6705,341 +6210,6 @@ type ContractBase = Omit<
               };
             };
           };
-        };
-        readonly enum: {
-          readonly AttendanceStatus: {
-            readonly codecId: 'pg/text@1';
-            readonly members: readonly [
-              { readonly name: 'ON_TIME'; readonly value: 'ON_TIME' },
-              { readonly name: 'LATE'; readonly value: 'LATE' },
-              { readonly name: 'PRESENT'; readonly value: 'PRESENT' },
-              { readonly name: 'ABSENT'; readonly value: 'ABSENT' },
-              { readonly name: 'EARLY_DEPARTURE'; readonly value: 'EARLY_DEPARTURE' },
-              { readonly name: 'VERIFIED'; readonly value: 'VERIFIED' },
-            ];
-          };
-          readonly ClockMethod: {
-            readonly codecId: 'pg/text@1';
-            readonly members: readonly [
-              { readonly name: 'QR_SCAN'; readonly value: 'QR_SCAN' },
-              { readonly name: 'GPS_GEOFENCE'; readonly value: 'GPS_GEOFENCE' },
-              { readonly name: 'SUPERVISOR_OVERRIDE'; readonly value: 'SUPERVISOR_OVERRIDE' },
-            ];
-          };
-          readonly ContractServiceKind: {
-            readonly codecId: 'pg/text@1';
-            readonly members: readonly [
-              { readonly name: 'STATIC_GUARDING'; readonly value: 'STATIC_GUARDING' },
-              { readonly name: 'MOBILE_PATROL'; readonly value: 'MOBILE_PATROL' },
-              { readonly name: 'EVENT_SECURITY'; readonly value: 'EVENT_SECURITY' },
-              { readonly name: 'VIP_PROTECTION'; readonly value: 'VIP_PROTECTION' },
-              { readonly name: 'DOG_HANDLER'; readonly value: 'DOG_HANDLER' },
-            ];
-          };
-          readonly ContractStatus: {
-            readonly codecId: 'pg/text@1';
-            readonly members: readonly [
-              { readonly name: 'ACTIVE'; readonly value: 'ACTIVE' },
-              { readonly name: 'EXPIRED'; readonly value: 'EXPIRED' },
-              { readonly name: 'TERMINATED'; readonly value: 'TERMINATED' },
-            ];
-          };
-          readonly EquipmentCategoryKind: {
-            readonly codecId: 'pg/text@1';
-            readonly members: readonly [
-              { readonly name: 'RADIO_COMMUNICATION'; readonly value: 'RADIO_COMMUNICATION' },
-              { readonly name: 'LIGHTING'; readonly value: 'LIGHTING' },
-              { readonly name: 'DEFENSE_AND_PPE'; readonly value: 'DEFENSE_AND_PPE' },
-              { readonly name: 'DETECTION'; readonly value: 'DETECTION' },
-              { readonly name: 'KEYS_AND_BADGES'; readonly value: 'KEYS_AND_BADGES' },
-              { readonly name: 'PTI_DEVICE'; readonly value: 'PTI_DEVICE' },
-              { readonly name: 'VEHICLE'; readonly value: 'VEHICLE' },
-            ];
-          };
-          readonly EquipmentCondition: {
-            readonly codecId: 'pg/text@1';
-            readonly members: readonly [
-              { readonly name: 'EXCELLENT'; readonly value: 'EXCELLENT' },
-              { readonly name: 'GOOD'; readonly value: 'GOOD' },
-              { readonly name: 'FAIR'; readonly value: 'FAIR' },
-              { readonly name: 'DAMAGED'; readonly value: 'DAMAGED' },
-            ];
-          };
-          readonly EquipmentStatus: {
-            readonly codecId: 'pg/text@1';
-            readonly members: readonly [
-              { readonly name: 'AVAILABLE'; readonly value: 'AVAILABLE' },
-              { readonly name: 'ASSIGNED'; readonly value: 'ASSIGNED' },
-              { readonly name: 'UNDER_MAINTENANCE'; readonly value: 'UNDER_MAINTENANCE' },
-              { readonly name: 'DAMAGED'; readonly value: 'DAMAGED' },
-              { readonly name: 'LOST'; readonly value: 'LOST' },
-              { readonly name: 'RETIRED'; readonly value: 'RETIRED' },
-            ];
-          };
-          readonly IncidentCategoryKind: {
-            readonly codecId: 'pg/text@1';
-            readonly members: readonly [
-              { readonly name: 'INTRUSION'; readonly value: 'INTRUSION' },
-              { readonly name: 'FIRE_ALARM'; readonly value: 'FIRE_ALARM' },
-              { readonly name: 'THEFT'; readonly value: 'THEFT' },
-              { readonly name: 'VANDALISM'; readonly value: 'VANDALISM' },
-              { readonly name: 'AGGRESSION'; readonly value: 'AGGRESSION' },
-              { readonly name: 'TECHNICAL_FAILURE'; readonly value: 'TECHNICAL_FAILURE' },
-              { readonly name: 'MEDICAL_EMERGENCY'; readonly value: 'MEDICAL_EMERGENCY' },
-              { readonly name: 'ACCESS_DENIAL'; readonly value: 'ACCESS_DENIAL' },
-              { readonly name: 'SUSPICIOUS_PERSON'; readonly value: 'SUSPICIOUS_PERSON' },
-              { readonly name: 'OTHER'; readonly value: 'OTHER' },
-            ];
-          };
-          readonly IncidentSeverity: {
-            readonly codecId: 'pg/text@1';
-            readonly members: readonly [
-              { readonly name: 'LOW'; readonly value: 'LOW' },
-              { readonly name: 'MEDIUM'; readonly value: 'MEDIUM' },
-              { readonly name: 'HIGH'; readonly value: 'HIGH' },
-              { readonly name: 'CRITICAL'; readonly value: 'CRITICAL' },
-            ];
-          };
-          readonly IncidentStatus: {
-            readonly codecId: 'pg/text@1';
-            readonly members: readonly [
-              { readonly name: 'NEW'; readonly value: 'NEW' },
-              { readonly name: 'IN_PROGRESS'; readonly value: 'IN_PROGRESS' },
-              { readonly name: 'RESOLVED'; readonly value: 'RESOLVED' },
-              { readonly name: 'CLOSED'; readonly value: 'CLOSED' },
-            ];
-          };
-          readonly InstructionType: {
-            readonly codecId: 'pg/text@1';
-            readonly members: readonly [
-              { readonly name: 'PERMANENT'; readonly value: 'PERMANENT' },
-              { readonly name: 'TEMPORARY'; readonly value: 'TEMPORARY' },
-              { readonly name: 'EMERGENCY_PROCEDURE'; readonly value: 'EMERGENCY_PROCEDURE' },
-              { readonly name: 'ACCESS_CONTROL'; readonly value: 'ACCESS_CONTROL' },
-            ];
-          };
-          readonly NotificationType: {
-            readonly codecId: 'pg/text@1';
-            readonly members: readonly [
-              { readonly name: 'SOS_ALERT'; readonly value: 'SOS_ALERT' },
-              { readonly name: 'LATE_CLOCK_IN'; readonly value: 'LATE_CLOCK_IN' },
-              { readonly name: 'PATROL_MISSED'; readonly value: 'PATROL_MISSED' },
-              { readonly name: 'INCIDENT_CRITICAL'; readonly value: 'INCIDENT_CRITICAL' },
-              { readonly name: 'SHIFT_ASSIGNED'; readonly value: 'SHIFT_ASSIGNED' },
-              { readonly name: 'SYSTEM'; readonly value: 'SYSTEM' },
-            ];
-          };
-          readonly PatrolStatus: {
-            readonly codecId: 'pg/text@1';
-            readonly members: readonly [
-              { readonly name: 'IN_PROGRESS'; readonly value: 'IN_PROGRESS' },
-              { readonly name: 'COMPLETED'; readonly value: 'COMPLETED' },
-              { readonly name: 'INCOMPLETE'; readonly value: 'INCOMPLETE' },
-              { readonly name: 'ABORTED'; readonly value: 'ABORTED' },
-            ];
-          };
-          readonly PriorityLevel: {
-            readonly codecId: 'pg/text@1';
-            readonly members: readonly [
-              { readonly name: 'LOW'; readonly value: 'LOW' },
-              { readonly name: 'NORMAL'; readonly value: 'NORMAL' },
-              { readonly name: 'HIGH'; readonly value: 'HIGH' },
-              { readonly name: 'URGENT'; readonly value: 'URGENT' },
-            ];
-          };
-          readonly Role: {
-            readonly codecId: 'pg/text@1';
-            readonly members: readonly [
-              { readonly name: 'SUPER_ADMIN'; readonly value: 'SUPER_ADMIN' },
-              { readonly name: 'ADMIN'; readonly value: 'ADMIN' },
-              { readonly name: 'MANAGER'; readonly value: 'MANAGER' },
-              { readonly name: 'SUPERVISOR'; readonly value: 'SUPERVISOR' },
-              { readonly name: 'TEAM_LEADER'; readonly value: 'TEAM_LEADER' },
-              { readonly name: 'AGENT'; readonly value: 'AGENT' },
-              { readonly name: 'USER'; readonly value: 'USER' },
-            ];
-          };
-          readonly ScanStatus: {
-            readonly codecId: 'pg/text@1';
-            readonly members: readonly [
-              { readonly name: 'OK'; readonly value: 'OK' },
-              { readonly name: 'ANOMALY_DETECTED'; readonly value: 'ANOMALY_DETECTED' },
-              { readonly name: 'MISSED'; readonly value: 'MISSED' },
-            ];
-          };
-          readonly ShiftStatus: {
-            readonly codecId: 'pg/text@1';
-            readonly members: readonly [
-              { readonly name: 'SCHEDULED'; readonly value: 'SCHEDULED' },
-              { readonly name: 'IN_PROGRESS'; readonly value: 'IN_PROGRESS' },
-              { readonly name: 'COMPLETED'; readonly value: 'COMPLETED' },
-              { readonly name: 'CANCELLED'; readonly value: 'CANCELLED' },
-              { readonly name: 'NO_SHOW'; readonly value: 'NO_SHOW' },
-              { readonly name: 'REPLACED'; readonly value: 'REPLACED' },
-            ];
-          };
-          readonly ShiftType: {
-            readonly codecId: 'pg/text@1';
-            readonly members: readonly [
-              { readonly name: 'DAY'; readonly value: 'DAY' },
-              { readonly name: 'NIGHT'; readonly value: 'NIGHT' },
-              { readonly name: 'WEEKEND'; readonly value: 'WEEKEND' },
-              { readonly name: 'WEEKDAY'; readonly value: 'WEEKDAY' },
-              { readonly name: 'FULL_TIME'; readonly value: 'FULL_TIME' },
-              { readonly name: 'PART_TIME'; readonly value: 'PART_TIME' },
-              { readonly name: 'REINFORCEMENT'; readonly value: 'REINFORCEMENT' },
-              { readonly name: 'DOG_PATROL'; readonly value: 'DOG_PATROL' },
-            ];
-          };
-          readonly UserStatus: {
-            readonly codecId: 'pg/text@1';
-            readonly members: readonly [
-              { readonly name: 'ACTIVE'; readonly value: 'ACTIVE' },
-              { readonly name: 'SUSPENDED'; readonly value: 'SUSPENDED' },
-              { readonly name: 'DESERTER'; readonly value: 'DESERTER' },
-              { readonly name: 'DISMISSED'; readonly value: 'DISMISSED' },
-              { readonly name: 'ARCHIVED'; readonly value: 'ARCHIVED' },
-            ];
-          };
-        };
-        readonly enumMemberTypes?: {
-          readonly AttendanceStatus: readonly [
-            { readonly name: 'ON_TIME'; readonly value: 'ON_TIME' },
-            { readonly name: 'LATE'; readonly value: 'LATE' },
-            { readonly name: 'PRESENT'; readonly value: 'PRESENT' },
-            { readonly name: 'ABSENT'; readonly value: 'ABSENT' },
-            { readonly name: 'EARLY_DEPARTURE'; readonly value: 'EARLY_DEPARTURE' },
-            { readonly name: 'VERIFIED'; readonly value: 'VERIFIED' },
-          ];
-          readonly ClockMethod: readonly [
-            { readonly name: 'QR_SCAN'; readonly value: 'QR_SCAN' },
-            { readonly name: 'GPS_GEOFENCE'; readonly value: 'GPS_GEOFENCE' },
-            { readonly name: 'SUPERVISOR_OVERRIDE'; readonly value: 'SUPERVISOR_OVERRIDE' },
-          ];
-          readonly ContractServiceKind: readonly [
-            { readonly name: 'STATIC_GUARDING'; readonly value: 'STATIC_GUARDING' },
-            { readonly name: 'MOBILE_PATROL'; readonly value: 'MOBILE_PATROL' },
-            { readonly name: 'EVENT_SECURITY'; readonly value: 'EVENT_SECURITY' },
-            { readonly name: 'VIP_PROTECTION'; readonly value: 'VIP_PROTECTION' },
-            { readonly name: 'DOG_HANDLER'; readonly value: 'DOG_HANDLER' },
-          ];
-          readonly ContractStatus: readonly [
-            { readonly name: 'ACTIVE'; readonly value: 'ACTIVE' },
-            { readonly name: 'EXPIRED'; readonly value: 'EXPIRED' },
-            { readonly name: 'TERMINATED'; readonly value: 'TERMINATED' },
-          ];
-          readonly EquipmentCategoryKind: readonly [
-            { readonly name: 'RADIO_COMMUNICATION'; readonly value: 'RADIO_COMMUNICATION' },
-            { readonly name: 'LIGHTING'; readonly value: 'LIGHTING' },
-            { readonly name: 'DEFENSE_AND_PPE'; readonly value: 'DEFENSE_AND_PPE' },
-            { readonly name: 'DETECTION'; readonly value: 'DETECTION' },
-            { readonly name: 'KEYS_AND_BADGES'; readonly value: 'KEYS_AND_BADGES' },
-            { readonly name: 'PTI_DEVICE'; readonly value: 'PTI_DEVICE' },
-            { readonly name: 'VEHICLE'; readonly value: 'VEHICLE' },
-          ];
-          readonly EquipmentCondition: readonly [
-            { readonly name: 'EXCELLENT'; readonly value: 'EXCELLENT' },
-            { readonly name: 'GOOD'; readonly value: 'GOOD' },
-            { readonly name: 'FAIR'; readonly value: 'FAIR' },
-            { readonly name: 'DAMAGED'; readonly value: 'DAMAGED' },
-          ];
-          readonly EquipmentStatus: readonly [
-            { readonly name: 'AVAILABLE'; readonly value: 'AVAILABLE' },
-            { readonly name: 'ASSIGNED'; readonly value: 'ASSIGNED' },
-            { readonly name: 'UNDER_MAINTENANCE'; readonly value: 'UNDER_MAINTENANCE' },
-            { readonly name: 'DAMAGED'; readonly value: 'DAMAGED' },
-            { readonly name: 'LOST'; readonly value: 'LOST' },
-            { readonly name: 'RETIRED'; readonly value: 'RETIRED' },
-          ];
-          readonly IncidentCategoryKind: readonly [
-            { readonly name: 'INTRUSION'; readonly value: 'INTRUSION' },
-            { readonly name: 'FIRE_ALARM'; readonly value: 'FIRE_ALARM' },
-            { readonly name: 'THEFT'; readonly value: 'THEFT' },
-            { readonly name: 'VANDALISM'; readonly value: 'VANDALISM' },
-            { readonly name: 'AGGRESSION'; readonly value: 'AGGRESSION' },
-            { readonly name: 'TECHNICAL_FAILURE'; readonly value: 'TECHNICAL_FAILURE' },
-            { readonly name: 'MEDICAL_EMERGENCY'; readonly value: 'MEDICAL_EMERGENCY' },
-            { readonly name: 'ACCESS_DENIAL'; readonly value: 'ACCESS_DENIAL' },
-            { readonly name: 'SUSPICIOUS_PERSON'; readonly value: 'SUSPICIOUS_PERSON' },
-            { readonly name: 'OTHER'; readonly value: 'OTHER' },
-          ];
-          readonly IncidentSeverity: readonly [
-            { readonly name: 'LOW'; readonly value: 'LOW' },
-            { readonly name: 'MEDIUM'; readonly value: 'MEDIUM' },
-            { readonly name: 'HIGH'; readonly value: 'HIGH' },
-            { readonly name: 'CRITICAL'; readonly value: 'CRITICAL' },
-          ];
-          readonly IncidentStatus: readonly [
-            { readonly name: 'NEW'; readonly value: 'NEW' },
-            { readonly name: 'IN_PROGRESS'; readonly value: 'IN_PROGRESS' },
-            { readonly name: 'RESOLVED'; readonly value: 'RESOLVED' },
-            { readonly name: 'CLOSED'; readonly value: 'CLOSED' },
-          ];
-          readonly InstructionType: readonly [
-            { readonly name: 'PERMANENT'; readonly value: 'PERMANENT' },
-            { readonly name: 'TEMPORARY'; readonly value: 'TEMPORARY' },
-            { readonly name: 'EMERGENCY_PROCEDURE'; readonly value: 'EMERGENCY_PROCEDURE' },
-            { readonly name: 'ACCESS_CONTROL'; readonly value: 'ACCESS_CONTROL' },
-          ];
-          readonly NotificationType: readonly [
-            { readonly name: 'SOS_ALERT'; readonly value: 'SOS_ALERT' },
-            { readonly name: 'LATE_CLOCK_IN'; readonly value: 'LATE_CLOCK_IN' },
-            { readonly name: 'PATROL_MISSED'; readonly value: 'PATROL_MISSED' },
-            { readonly name: 'INCIDENT_CRITICAL'; readonly value: 'INCIDENT_CRITICAL' },
-            { readonly name: 'SHIFT_ASSIGNED'; readonly value: 'SHIFT_ASSIGNED' },
-            { readonly name: 'SYSTEM'; readonly value: 'SYSTEM' },
-          ];
-          readonly PatrolStatus: readonly [
-            { readonly name: 'IN_PROGRESS'; readonly value: 'IN_PROGRESS' },
-            { readonly name: 'COMPLETED'; readonly value: 'COMPLETED' },
-            { readonly name: 'INCOMPLETE'; readonly value: 'INCOMPLETE' },
-            { readonly name: 'ABORTED'; readonly value: 'ABORTED' },
-          ];
-          readonly PriorityLevel: readonly [
-            { readonly name: 'LOW'; readonly value: 'LOW' },
-            { readonly name: 'NORMAL'; readonly value: 'NORMAL' },
-            { readonly name: 'HIGH'; readonly value: 'HIGH' },
-            { readonly name: 'URGENT'; readonly value: 'URGENT' },
-          ];
-          readonly Role: readonly [
-            { readonly name: 'SUPER_ADMIN'; readonly value: 'SUPER_ADMIN' },
-            { readonly name: 'ADMIN'; readonly value: 'ADMIN' },
-            { readonly name: 'MANAGER'; readonly value: 'MANAGER' },
-            { readonly name: 'SUPERVISOR'; readonly value: 'SUPERVISOR' },
-            { readonly name: 'TEAM_LEADER'; readonly value: 'TEAM_LEADER' },
-            { readonly name: 'AGENT'; readonly value: 'AGENT' },
-            { readonly name: 'USER'; readonly value: 'USER' },
-          ];
-          readonly ScanStatus: readonly [
-            { readonly name: 'OK'; readonly value: 'OK' },
-            { readonly name: 'ANOMALY_DETECTED'; readonly value: 'ANOMALY_DETECTED' },
-            { readonly name: 'MISSED'; readonly value: 'MISSED' },
-          ];
-          readonly ShiftStatus: readonly [
-            { readonly name: 'SCHEDULED'; readonly value: 'SCHEDULED' },
-            { readonly name: 'IN_PROGRESS'; readonly value: 'IN_PROGRESS' },
-            { readonly name: 'COMPLETED'; readonly value: 'COMPLETED' },
-            { readonly name: 'CANCELLED'; readonly value: 'CANCELLED' },
-            { readonly name: 'NO_SHOW'; readonly value: 'NO_SHOW' },
-            { readonly name: 'REPLACED'; readonly value: 'REPLACED' },
-          ];
-          readonly ShiftType: readonly [
-            { readonly name: 'DAY'; readonly value: 'DAY' },
-            { readonly name: 'NIGHT'; readonly value: 'NIGHT' },
-            { readonly name: 'WEEKEND'; readonly value: 'WEEKEND' },
-            { readonly name: 'WEEKDAY'; readonly value: 'WEEKDAY' },
-            { readonly name: 'FULL_TIME'; readonly value: 'FULL_TIME' },
-            { readonly name: 'PART_TIME'; readonly value: 'PART_TIME' },
-            { readonly name: 'REINFORCEMENT'; readonly value: 'REINFORCEMENT' },
-            { readonly name: 'DOG_PATROL'; readonly value: 'DOG_PATROL' },
-          ];
-          readonly UserStatus: readonly [
-            { readonly name: 'ACTIVE'; readonly value: 'ACTIVE' },
-            { readonly name: 'SUSPENDED'; readonly value: 'SUSPENDED' },
-            { readonly name: 'DESERTER'; readonly value: 'DESERTER' },
-            { readonly name: 'DISMISSED'; readonly value: 'DISMISSED' },
-            { readonly name: 'ARCHIVED'; readonly value: 'ARCHIVED' },
-          ];
         };
       };
     };
@@ -7072,157 +6242,6 @@ type ContractBase = Omit<
     };
   };
   readonly extensions: {};
-  readonly execution: {
-    readonly executionHash: ExecutionHash;
-    readonly mutations: {
-      readonly defaults: readonly [
-        {
-          readonly onUpdate: {
-            readonly id: 'timestampNow';
-            readonly kind: 'generator';
-            readonly params: { readonly precision: 3 };
-          };
-          readonly ref: {
-            readonly entry: 'attendances';
-            readonly field: 'updatedAt';
-            readonly namespace: 'public';
-          };
-        },
-        {
-          readonly onUpdate: {
-            readonly id: 'timestampNow';
-            readonly kind: 'generator';
-            readonly params: { readonly precision: 3 };
-          };
-          readonly ref: {
-            readonly entry: 'checkpoints';
-            readonly field: 'updatedAt';
-            readonly namespace: 'public';
-          };
-        },
-        {
-          readonly onUpdate: {
-            readonly id: 'timestampNow';
-            readonly kind: 'generator';
-            readonly params: { readonly precision: 3 };
-          };
-          readonly ref: {
-            readonly entry: 'client_contracts';
-            readonly field: 'updatedAt';
-            readonly namespace: 'public';
-          };
-        },
-        {
-          readonly onUpdate: {
-            readonly id: 'timestampNow';
-            readonly kind: 'generator';
-            readonly params: { readonly precision: 3 };
-          };
-          readonly ref: {
-            readonly entry: 'clients';
-            readonly field: 'updatedAt';
-            readonly namespace: 'public';
-          };
-        },
-        {
-          readonly onUpdate: {
-            readonly id: 'timestampNow';
-            readonly kind: 'generator';
-            readonly params: { readonly precision: 3 };
-          };
-          readonly ref: {
-            readonly entry: 'equipment';
-            readonly field: 'updatedAt';
-            readonly namespace: 'public';
-          };
-        },
-        {
-          readonly onUpdate: {
-            readonly id: 'timestampNow';
-            readonly kind: 'generator';
-            readonly params: { readonly precision: 3 };
-          };
-          readonly ref: {
-            readonly entry: 'equipment_assignments';
-            readonly field: 'updatedAt';
-            readonly namespace: 'public';
-          };
-        },
-        {
-          readonly onUpdate: {
-            readonly id: 'timestampNow';
-            readonly kind: 'generator';
-            readonly params: { readonly precision: 3 };
-          };
-          readonly ref: {
-            readonly entry: 'incidents';
-            readonly field: 'updatedAt';
-            readonly namespace: 'public';
-          };
-        },
-        {
-          readonly onUpdate: {
-            readonly id: 'timestampNow';
-            readonly kind: 'generator';
-            readonly params: { readonly precision: 3 };
-          };
-          readonly ref: {
-            readonly entry: 'patrols';
-            readonly field: 'updatedAt';
-            readonly namespace: 'public';
-          };
-        },
-        {
-          readonly onUpdate: {
-            readonly id: 'timestampNow';
-            readonly kind: 'generator';
-            readonly params: { readonly precision: 3 };
-          };
-          readonly ref: {
-            readonly entry: 'shifts';
-            readonly field: 'updatedAt';
-            readonly namespace: 'public';
-          };
-        },
-        {
-          readonly onUpdate: {
-            readonly id: 'timestampNow';
-            readonly kind: 'generator';
-            readonly params: { readonly precision: 3 };
-          };
-          readonly ref: {
-            readonly entry: 'site_instructions';
-            readonly field: 'updatedAt';
-            readonly namespace: 'public';
-          };
-        },
-        {
-          readonly onUpdate: {
-            readonly id: 'timestampNow';
-            readonly kind: 'generator';
-            readonly params: { readonly precision: 3 };
-          };
-          readonly ref: {
-            readonly entry: 'sites';
-            readonly field: 'updatedAt';
-            readonly namespace: 'public';
-          };
-        },
-        {
-          readonly onUpdate: {
-            readonly id: 'timestampNow';
-            readonly kind: 'generator';
-            readonly params: { readonly precision: 3 };
-          };
-          readonly ref: {
-            readonly entry: 'users';
-            readonly field: 'updatedAt';
-            readonly namespace: 'public';
-          };
-        },
-      ];
-    };
-  };
   readonly meta: {};
   readonly profileHash: ProfileHash;
 };

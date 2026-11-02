@@ -1,613 +1,645 @@
 // use prisma-8
+// Contract inferred from the live database schema. Edit as needed, then run `prisma contract emit`.
 
-enum Role {
-  @@type("pg/text@1")
-  SUPER_ADMIN   = "SUPER_ADMIN"
-  ADMIN         =  "ADMIN"
-  MANAGER       =  "MANAGER"
-  SUPERVISOR    =  "SUPERVISOR"
-  TEAM_LEADER   =  "TEAM_LEADER"
-  AGENT         =  "AGENT"
-  USER          =  "USER"
+namespace extensions {
+  extension pg_stat_statements {
+  }
+
+  extension pgcrypto {
+  }
+
+  extension uuid-ossp {
+  }
 }
 
-enum UserStatus {
-  @@type("pg/text@1")
-  ACTIVE    = "ACTIVE"
-  SUSPENDED = "SUSPENDED"
-  DESERTER  = "DESERTER"
-  DISMISSED  = "DISMISSED"
-  ARCHIVED  = "ARCHIVED"
+namespace public {
+  model Client {
+    id              Int               @id(map: "clients_pkey") @default(autoincrement())
+    billingAddress  String
+    city            String
+    code            String            @unique(map: "clients_code_key")
+    contactEmail    String
+    contactName     String
+    contactPhone    String
+    createdAt       DateTime          @default(now())
+    isActive        Boolean           @default(true)
+    name            String
+    postalCode      String
+    updatedAt       DateTime          @default(now())
+    clientContracts ClientContract[]
+    sites           Site[]
+
+    @@rls
+    @@map("clients")
+  }
+
+  model User {
+    id                     Int                    @id(map: "users_pkey") @default(autoincrement())
+    adminLock              String?                @unique(map: "users_adminLock_key")
+    cnapsExpiration        DateTime?
+    cnapsNumber            String?
+    createdAt              DateTime               @default(now())
+    email                  String                 @unique(map: "users_email_key")
+    firstName              String
+    lastName               String
+    matricule              String                 @unique(map: "users_matricule_key")
+    mustChangePassword     Boolean                @default(false)
+    passwordHash           String
+    phone                  String?
+    role                   String
+    status                 String                 @default("ACTIVE")
+    supervisorId           Int?
+    teamLeaderId           Int?
+    updatedAt              DateTime               @default(now())
+    equipmentAssignments   EquipmentAssignment[]
+    incidentComments       IncidentComment[]
+    notifications          Notification[]
+    patrolScans            PatrolScan[]
+    patrols                Patrol[]
+    roleAssignments        RoleAssignment[]
+    siteInstructions       SiteInstruction[]
+    attendances            Attendance[]          @relation(name: "attendances_agentId_fkey")
+    attendancesAttendances Attendance[]          @relation(name: "attendances_verifiedById_fkey")
+    incidents              Incident[]            @relation(name: "incidents_assignedToId_fkey")
+    incidentsIncidents     Incident[]            @relation(name: "incidents_reportedById_fkey")
+    shifts                 Shift[]               @relation(name: "shifts_agentId_fkey")
+    shiftsShifts           Shift[]               @relation(name: "shifts_supervisorId_fkey")
+    shifts2                Shift[]               @relation(name: "shifts_teamLeaderId_fkey")
+    sites                  Site[]                @relation(name: "sites_managerId_fkey")
+    sitesSites             Site[]                @relation(name: "sites_supervisorId_fkey")
+    supervisor             User?                 @relation(name: "users_supervisorId_fkey", fields: [supervisorId], references: [id], map: "users_supervisorId_fkey")
+    users                  User[]                @relation(name: "users_supervisorId_fkey")
+    teamLeader             User?                 @relation(name: "users_teamLeaderId_fkey", fields: [teamLeaderId], references: [id], map: "users_teamLeaderId_fkey")
+    usersUsers             User[]                @relation(name: "users_teamLeaderId_fkey")
+
+    @@index([supervisorId], name: "users_supervisorId_idx")
+    @@index([teamLeaderId], name: "users_teamLeaderId_idx")
+    @@check(expression: sql`(role = ANY (ARRAY['ADMIN'::text, 'MANAGER'::text, 'DIRECTOR'::text, 'SUPERVISOR'::text, 'AGENT'::text]))`, map: "users_role_check_3b8a4a49")
+    @@check(expression: sql`(status = ANY (ARRAY['ACTIVE'::text, 'SUSPENDED'::text, 'ARCHIVED'::text]))`, map: "users_status_check_0f44f6b1")
+    @@rls
+    @@map("users")
+  }
+
+  model Site {
+    id                  Int                @id(map: "sites_pkey") @default(autoincrement())
+    accessCode          String?
+    address             String
+    city                String
+    clientId            Int
+    code                String             @unique(map: "sites_code_key")
+    createdAt           DateTime           @default(now())
+    emergencyPhone      String?
+    generalInstructions String?
+    geofenceRadius      Int                @default(100)
+    isActive            Boolean            @default(true)
+    latitude            Float?
+    longitude           Float?
+    managerId           Int?
+    name                String
+    postalCode          String
+    supervisorId        Int?
+    updatedAt           DateTime           @default(now())
+    checkpoints         Checkpoint[]
+    incidents           Incident[]
+    patrols             Patrol[]
+    shifts              Shift[]
+    siteEquipments      SiteEquipment[]
+    siteInstructions    SiteInstruction[]
+    client              Client            @relation(fields: [clientId], references: [id], onDelete: Cascade, map: "sites_clientId_fkey")
+    manager             User?             @relation(name: "sites_managerId_fkey", fields: [managerId], references: [id], map: "sites_managerId_fkey")
+    supervisor          User?             @relation(name: "sites_supervisorId_fkey", fields: [supervisorId], references: [id], map: "sites_supervisorId_fkey")
+
+    @@index([clientId], name: "sites_clientId_idx")
+    @@index([managerId], name: "sites_managerId_idx")
+    @@index([supervisorId], name: "sites_supervisorId_idx")
+    @@rls
+    @@map("sites")
+  }
+
+  model Shift {
+    id                   Int                    @id(map: "shifts_pkey") @default(autoincrement())
+    agentId              Int
+    createdAt            DateTime               @default(now())
+    endTime              DateTime
+    hourlyRate           Numeric?
+    notes                String?
+    shiftType            String
+    siteId               Int
+    startTime            DateTime
+    status               String                 @default("SCHEDULED")
+    supervisorId         Int?
+    teamLeaderId         Int?
+    title                String
+    updatedAt            DateTime               @default(now())
+    attendances          Attendance?
+    equipmentAssignments EquipmentAssignment[]
+    incidents            Incident[]
+    patrols              Patrol[]
+    agent                User                  @relation(name: "shifts_agentId_fkey", fields: [agentId], references: [id], map: "shifts_agentId_fkey")
+    site                 Site                  @relation(fields: [siteId], references: [id], onDelete: Cascade, map: "shifts_siteId_fkey")
+    supervisor           User?                 @relation(name: "shifts_supervisorId_fkey", fields: [supervisorId], references: [id], map: "shifts_supervisorId_fkey")
+    teamLeader           User?                 @relation(name: "shifts_teamLeaderId_fkey", fields: [teamLeaderId], references: [id], map: "shifts_teamLeaderId_fkey")
+
+    @@index([agentId], name: "shifts_agentId_idx")
+    @@index([siteId], name: "shifts_siteId_idx")
+    @@index([supervisorId], name: "shifts_supervisorId_idx")
+    @@index([teamLeaderId], name: "shifts_teamLeaderId_idx")
+    @@check(expression: sql`("shiftType" = ANY (ARRAY['DAY'::text, 'NIGHT'::text, 'WEEKEND'::text, 'REINFORCEMENT'::text, 'DOG_PATROL'::text]))`, map: "shifts_shiftType_check_ba185ef3")
+    @@check(expression: sql`(status = ANY (ARRAY['SCHEDULED'::text, 'IN_PROGRESS'::text, 'COMPLETED'::text, 'CANCELLED'::text, 'NO_SHOW'::text, 'REPLACED'::text]))`, map: "shifts_status_check_51c56842")
+    @@rls
+    @@map("shifts")
+  }
+
+  model Attendance {
+    id                Int       @id(map: "attendances_pkey") @default(autoincrement())
+    agentId           Int
+    clockInLatitude   Float?
+    clockInLongitude  Float?
+    clockInMethod     String    @default("QR_SCAN")
+    clockInTime       DateTime
+    clockOutLatitude  Float?
+    clockOutLongitude Float?
+    clockOutTime      DateTime?
+    createdAt         DateTime  @default(now())
+    lateMinutes       Int       @default(0)
+    shiftId           Int       @unique(map: "attendances_shiftId_key")
+    status            String    @default("ON_TIME")
+    updatedAt         DateTime  @default(now())
+    verificationNotes String?
+    verifiedById      Int?
+    agent             User     @relation(name: "attendances_agentId_fkey", fields: [agentId], references: [id], map: "attendances_agentId_fkey")
+    shift             Shift    @relation(fields: [shiftId], references: [id], onDelete: Cascade, map: "attendances_shiftId_fkey")
+    verifiedBy        User?    @relation(name: "attendances_verifiedById_fkey", fields: [verifiedById], references: [id], map: "attendances_verifiedById_fkey")
+
+    @@index([agentId], name: "attendances_agentId_idx")
+    @@index([verifiedById], name: "attendances_verifiedById_idx")
+    @@check(expression: sql`("clockInMethod" = ANY (ARRAY['QR_SCAN'::text, 'GPS_GEOFENCE'::text, 'SUPERVISOR_OVERRIDE'::text]))`, map: "attendances_clockInMethod_check_f1817fd0")
+    @@check(expression: sql`(status = ANY (ARRAY['ON_TIME'::text, 'LATE'::text, 'ABSENT'::text, 'EARLY_DEPARTURE'::text, 'VERIFIED'::text]))`, map: "attendances_status_check_02d150d7")
+    @@rls
+    @@map("attendances")
+  }
+
+  model Checkpoint {
+    id            Int           @id(map: "checkpoints_pkey") @default(autoincrement())
+    code          String
+    createdAt     DateTime      @default(now())
+    floorLocation String?
+    isRequired    Boolean       @default(true)
+    latitude      Float?
+    longitude     Float?
+    name          String
+    nfcTagId      String?
+    orderIndex    Int           @default(0)
+    qrCodeData    String        @unique(map: "checkpoints_qrCodeData_key")
+    siteId        Int
+    updatedAt     DateTime      @default(now())
+    patrolScans   PatrolScan[]
+    site          Site         @relation(fields: [siteId], references: [id], onDelete: Cascade, map: "checkpoints_siteId_fkey")
+
+    @@index([siteId], name: "checkpoints_siteId_idx")
+    @@rls
+    @@map("checkpoints")
+  }
+
+  model ClientContract {
+    id             Int       @id(map: "client_contracts_pkey") @default(autoincrement())
+    clientId       Int
+    contractNumber String    @unique(map: "client_contracts_contractNumber_key")
+    createdAt      DateTime  @default(now())
+    endDate        DateTime?
+    hourlyRate     Numeric?
+    notes          String?
+    serviceType    String
+    startDate      DateTime
+    status         String    @default("ACTIVE")
+    updatedAt      DateTime  @default(now())
+    client         Client   @relation(fields: [clientId], references: [id], onDelete: Cascade, map: "client_contracts_clientId_fkey")
+
+    @@index([clientId], name: "client_contracts_clientId_idx")
+    @@check(expression: sql`("serviceType" = ANY (ARRAY['STATIC_GUARDING'::text, 'MOBILE_PATROL'::text, 'EVENT_SECURITY'::text, 'VIP_PROTECTION'::text, 'DOG_HANDLER'::text]))`, map: "client_contracts_serviceType_check_8cfda18d")
+    @@check(expression: sql`(status = ANY (ARRAY['ACTIVE'::text, 'EXPIRED'::text, 'TERMINATED'::text]))`, map: "client_contracts_status_check_814bd882")
+    @@rls
+    @@map("client_contracts")
+  }
+
+  model ContractServiceType {
+    id          String                 @id(map: "contract_service_types_pkey")
+    name        String
+    description String?
+    isActive    Boolean                @default(true) @map("is_active")
+    createdAt   DateTime(precision: 6) @default(now()) @map("created_at")
+    contracts   Contract[]
+
+    @@rls
+    @@map("contract_service_types")
+  }
+
+  model Contract {
+    id            Uuid                    @id(map: "contracts_pkey") @default(sql`gen_random_uuid()`)
+    serviceTypeId String                  @map("service_type_id")
+    status        pg.enum(ContractStatus) @default("ACTIVE")
+    clientName    String                  @map("client_name")
+    startDate     DateTime(precision: 6)  @map("start_date")
+    endDate       DateTime(precision: 6)? @map("end_date")
+    createdAt     DateTime(precision: 6)  @default(now()) @map("created_at")
+    serviceType   ContractServiceType    @relation(fields: [serviceTypeId], references: [id], map: "contracts_service_type_id_fkey", index: false)
+
+    @@rls
+    @@map("contracts")
+  }
+
+  model Equipment {
+    id                   Int                    @id(map: "equipment_pkey") @default(autoincrement())
+    category             String
+    code                 String                 @unique(map: "equipment_code_key")
+    createdAt            DateTime               @default(now())
+    lastInspectionDate   DateTime?
+    name                 String
+    purchaseDate         DateTime?
+    serialNumber         String?                @unique(map: "equipment_serialNumber_key")
+    status               String                 @default("AVAILABLE")
+    updatedAt            DateTime               @default(now())
+    equipmentAssignments EquipmentAssignment[]
+    siteEquipments       SiteEquipment[]
+
+    @@check(expression: sql`(category = ANY (ARRAY['RADIO_COMMUNICATION'::text, 'LIGHTING'::text, 'DEFENSE_AND_PPE'::text, 'DETECTION'::text, 'KEYS_AND_BADGES'::text, 'PTI_DEVICE'::text, 'VEHICLE'::text]))`, map: "equipment_category_check_03887e0a")
+    @@check(expression: sql`(status = ANY (ARRAY['AVAILABLE'::text, 'ASSIGNED'::text, 'UNDER_MAINTENANCE'::text, 'DAMAGED'::text, 'LOST'::text, 'RETIRED'::text]))`, map: "equipment_status_check_ca4725d1")
+    @@rls
+    @@map("equipment")
+  }
+
+  model EquipmentAssignment {
+    id                    Int       @id(map: "equipment_assignments_pkey") @default(autoincrement())
+    agentId               Int
+    anomalyReported       Boolean   @default(false)
+    assignedAt            DateTime  @default(now())
+    conditionOnAssignment String    @default("GOOD")
+    conditionOnReturn     String?
+    createdAt             DateTime  @default(now())
+    equipmentId           Int
+    notes                 String?
+    returnedAt            DateTime?
+    shiftId               Int?
+    updatedAt             DateTime  @default(now())
+    agent                 User     @relation(fields: [agentId], references: [id], map: "equipment_assignments_agentId_fkey")
+    equipment             Equipment @relation(fields: [equipmentId], references: [id], onDelete: Cascade, map: "equipment_assignments_equipmentId_fkey")
+    shift                 Shift?   @relation(fields: [shiftId], references: [id], map: "equipment_assignments_shiftId_fkey")
+
+    @@index([agentId], name: "equipment_assignments_agentId_idx")
+    @@index([equipmentId], name: "equipment_assignments_equipmentId_idx")
+    @@index([shiftId], name: "equipment_assignments_shiftId_idx")
+    @@check(expression: sql`("conditionOnAssignment" = ANY (ARRAY['EXCELLENT'::text, 'GOOD'::text, 'FAIR'::text, 'DAMAGED'::text]))`, map: "equipment_assignments_conditionOnAssignment_check_cd969df4")
+    @@check(expression: sql`("conditionOnReturn" = ANY (ARRAY['EXCELLENT'::text, 'GOOD'::text, 'FAIR'::text, 'DAMAGED'::text]))`, map: "equipment_assignments_conditionOnReturn_check_fc912f52")
+    @@rls
+    @@map("equipment_assignments")
+  }
+
+  model EquipmentCategory {
+    id          String                 @id(map: "equipment_categories_pkey")
+    name        String
+    description String?
+    isActive    Boolean                @default(true) @map("is_active")
+    createdAt   DateTime(precision: 6) @default(now()) @map("created_at")
+
+    @@rls
+    @@map("equipment_categories")
+  }
+
+  model Patrol {
+    id                 Int           @id(map: "patrols_pkey") @default(autoincrement())
+    agentId            Int
+    completedAt        DateTime?
+    createdAt          DateTime      @default(now())
+    notes              String?
+    scannedCheckpoints Int           @default(0)
+    scheduledStartTime DateTime?
+    shiftId            Int?
+    siteId             Int
+    startedAt          DateTime      @default(now())
+    status             String        @default("IN_PROGRESS")
+    title              String
+    totalCheckpoints   Int           @default(0)
+    updatedAt          DateTime      @default(now())
+    incidents          Incident[]
+    patrolScans        PatrolScan[]
+    agent              User         @relation(fields: [agentId], references: [id], map: "patrols_agentId_fkey")
+    shift              Shift?       @relation(fields: [shiftId], references: [id], map: "patrols_shiftId_fkey")
+    site               Site         @relation(fields: [siteId], references: [id], onDelete: Cascade, map: "patrols_siteId_fkey")
+
+    @@index([agentId], name: "patrols_agentId_idx")
+    @@index([shiftId], name: "patrols_shiftId_idx")
+    @@index([siteId], name: "patrols_siteId_idx")
+    @@check(expression: sql`(status = ANY (ARRAY['IN_PROGRESS'::text, 'COMPLETED'::text, 'INCOMPLETE'::text, 'ABORTED'::text]))`, map: "patrols_status_check_7f8da3e7")
+    @@rls
+    @@map("patrols")
+  }
+
+  model Incident {
+    id                  Int                   @id(map: "incidents_pkey") @default(autoincrement())
+    actionTaken         String?
+    assignedToId        Int?
+    category            String
+    clientNotified      Boolean               @default(false)
+    createdAt           DateTime              @default(now())
+    description         String
+    incidentNumber      String                @unique(map: "incidents_incidentNumber_key")
+    locationDetail      String?
+    occurredAt          DateTime
+    patrolId            Int?
+    policeCalled        Boolean               @default(false)
+    reportedAt          DateTime              @default(now())
+    reportedById        Int
+    resolutionSummary   String?
+    resolvedAt          DateTime?
+    severity            String                @default("MEDIUM")
+    shiftId             Int?
+    siteId              Int
+    status              String                @default("NEW")
+    title               String
+    updatedAt           DateTime              @default(now())
+    incidentAttachments IncidentAttachment[]
+    incidentComments    IncidentComment[]
+    assignedTo          User?                @relation(name: "incidents_assignedToId_fkey", fields: [assignedToId], references: [id], map: "incidents_assignedToId_fkey")
+    patrol              Patrol?              @relation(fields: [patrolId], references: [id], map: "incidents_patrolId_fkey")
+    reportedBy          User                 @relation(name: "incidents_reportedById_fkey", fields: [reportedById], references: [id], map: "incidents_reportedById_fkey")
+    shift               Shift?               @relation(fields: [shiftId], references: [id], map: "incidents_shiftId_fkey")
+    site                Site                 @relation(fields: [siteId], references: [id], onDelete: Cascade, map: "incidents_siteId_fkey")
+
+    @@index([assignedToId], name: "incidents_assignedToId_idx")
+    @@index([patrolId], name: "incidents_patrolId_idx")
+    @@index([reportedById], name: "incidents_reportedById_idx")
+    @@index([shiftId], name: "incidents_shiftId_idx")
+    @@index([siteId], name: "incidents_siteId_idx")
+    @@check(expression: sql`(category = ANY (ARRAY['INTRUSION'::text, 'FIRE_ALARM'::text, 'THEFT'::text, 'VANDALISM'::text, 'AGGRESSION'::text, 'TECHNICAL_FAILURE'::text, 'MEDICAL_EMERGENCY'::text, 'ACCESS_DENIAL'::text, 'SUSPICIOUS_PERSON'::text, 'OTHER'::text]))`, map: "incidents_category_check_c2d2dc6c")
+    @@check(expression: sql`(severity = ANY (ARRAY['LOW'::text, 'MEDIUM'::text, 'HIGH'::text, 'CRITICAL'::text]))`, map: "incidents_severity_check_5e5a5e80")
+    @@check(expression: sql`(status = ANY (ARRAY['NEW'::text, 'IN_PROGRESS'::text, 'RESOLVED'::text, 'CLOSED'::text]))`, map: "incidents_status_check_50d14964")
+    @@rls
+    @@map("incidents")
+  }
+
+  model IncidentAttachment {
+    id         Int       @id(map: "incident_attachments_pkey") @default(autoincrement())
+    caption    String?
+    fileName   String
+    fileSize   Int?
+    fileType   String
+    fileUrl    String
+    incidentId Int
+    uploadedAt DateTime  @default(now())
+    incident   Incident @relation(fields: [incidentId], references: [id], onDelete: Cascade, map: "incident_attachments_incidentId_fkey")
+
+    @@index([incidentId], name: "incident_attachments_incidentId_idx")
+    @@rls
+    @@map("incident_attachments")
+  }
+
+  model IncidentCategory {
+    id          String                 @id(map: "incident_categories_pkey")
+    name        String
+    description String?
+    isActive    Boolean                @default(true) @map("is_active")
+    createdAt   DateTime(precision: 6) @default(now()) @map("created_at")
+
+    @@rls
+    @@map("incident_categories")
+  }
+
+  model IncidentComment {
+    id         Int       @id(map: "incident_comments_pkey") @default(autoincrement())
+    authorId   Int
+    comment    String
+    createdAt  DateTime  @default(now())
+    incidentId Int
+    author     User     @relation(fields: [authorId], references: [id], map: "incident_comments_authorId_fkey")
+    incident   Incident @relation(fields: [incidentId], references: [id], onDelete: Cascade, map: "incident_comments_incidentId_fkey")
+
+    @@index([authorId], name: "incident_comments_authorId_idx")
+    @@index([incidentId], name: "incident_comments_incidentId_idx")
+    @@rls
+    @@map("incident_comments")
+  }
+
+  model Notification {
+    id        Int       @id(map: "notifications_pkey") @default(autoincrement())
+    createdAt DateTime  @default(now())
+    isRead    Boolean   @default(false)
+    message   String
+    readAt    DateTime?
+    title     String
+    type     String    @default("SYSTEM") @map("type")
+    userId    Int
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, map: "notifications_userId_fkey")
+
+    @@index([userId], name: "notifications_userId_idx")
+    @@check(expression: sql`(type = ANY (ARRAY['SOS_ALERT'::text, 'LATE_CLOCK_IN'::text, 'PATROL_MISSED'::text, 'INCIDENT_CRITICAL'::text, 'SHIFT_ASSIGNED'::text, 'SYSTEM'::text]))`, map: "notifications_type_check_c46f6706")
+    @@rls
+    @@map("notifications")
+  }
+
+  model PatrolScan {
+    id                 Int         @id(map: "patrol_scans_pkey") @default(autoincrement())
+    agentId            Int
+    anomalyDescription String?
+    checkpointId       Int
+    createdAt          DateTime    @default(now())
+    latitude           Float?
+    longitude          Float?
+    patrolId           Int
+    scanMethod         String      @default("QR")
+    scannedAt          DateTime    @default(now())
+    status             String      @default("OK")
+    agent              User       @relation(fields: [agentId], references: [id], map: "patrol_scans_agentId_fkey")
+    checkpoint         Checkpoint @relation(fields: [checkpointId], references: [id], onDelete: Cascade, map: "patrol_scans_checkpointId_fkey")
+    patrol             Patrol     @relation(fields: [patrolId], references: [id], onDelete: Cascade, map: "patrol_scans_patrolId_fkey")
+
+    @@index([agentId], name: "patrol_scans_agentId_idx")
+    @@index([checkpointId], name: "patrol_scans_checkpointId_idx")
+    @@index([patrolId], name: "patrol_scans_patrolId_idx")
+    @@check(expression: sql`(status = ANY (ARRAY['OK'::text, 'ANOMALY_DETECTED'::text, 'MISSED'::text]))`, map: "patrol_scans_status_check_4e0b1ed4")
+    @@rls
+    @@map("patrol_scans")
+  }
+
+  model RoleAssignment {
+    id         Int      @id(map: "role_assignments_pkey") @default(autoincrement())
+    assignedAt DateTime @default(now())
+    createdAt  DateTime @default(now())
+    role       String
+    updatedAt  DateTime @default(now())
+    userId     Int
+    user       User    @relation(fields: [userId], references: [id], onDelete: Cascade, map: "role_assignments_userId_fkey")
+
+    @@index([userId], name: "role_assignments_userId_idx")
+    @@check(expression: sql`(role = ANY (ARRAY['ADMIN'::text, 'MANAGER'::text, 'DIRECTOR'::text, 'SUPERVISOR'::text, 'AGENT'::text]))`, map: "role_assignments_role_check_3b8a4a49")
+    @@rls
+    @@map("role_assignments")
+  }
+
+  model SiteEquipment {
+    id          Int       @id(map: "site_equipments_pkey") @default(autoincrement())
+    createdAt   DateTime  @default(now())
+    equipmentId Int
+    installedAt DateTime  @default(now())
+    notes       String?
+    siteId      Int
+    equipment   Equipment @relation(fields: [equipmentId], references: [id], onDelete: Cascade, map: "site_equipments_equipmentId_fkey")
+    site        Site     @relation(fields: [siteId], references: [id], onDelete: Cascade, map: "site_equipments_siteId_fkey")
+
+    @@unique([siteId, equipmentId], map: "site_equipments_siteId_equipmentId_key")
+    @@index([equipmentId], name: "site_equipments_equipmentId_idx")
+    @@index([siteId], name: "site_equipments_siteId_idx")
+    @@rls
+    @@map("site_equipments")
+  }
+
+  model SiteInstruction {
+    id             Int       @id(map: "site_instructions_pkey") @default(autoincrement())
+    authorId       Int
+    content        String
+    createdAt      DateTime  @default(now())
+    effectiveFrom  DateTime  @default(now())
+    effectiveUntil DateTime?
+    isActive       Boolean   @default(true)
+    priority       String    @default("NORMAL")
+    siteId         Int
+    title          String
+    type          String    @default("PERMANENT") @map("type")
+    updatedAt      DateTime  @default(now())
+    author         User     @relation(fields: [authorId], references: [id], map: "site_instructions_authorId_fkey")
+    site           Site     @relation(fields: [siteId], references: [id], onDelete: Cascade, map: "site_instructions_siteId_fkey")
+
+    @@index([authorId], name: "site_instructions_authorId_idx")
+    @@index([siteId], name: "site_instructions_siteId_idx")
+    @@check(expression: sql`(priority = ANY (ARRAY['LOW'::text, 'NORMAL'::text, 'HIGH'::text, 'URGENT'::text]))`, map: "site_instructions_priority_check_72dbae57")
+    @@check(expression: sql`(type = ANY (ARRAY['PERMANENT'::text, 'TEMPORARY'::text, 'EMERGENCY_PROCEDURE'::text, 'ACCESS_CONTROL'::text]))`, map: "site_instructions_type_check_f1605544")
+    @@rls
+    @@map("site_instructions")
+  }
+
+  native_enum AttendanceStatus {
+    ON_TIME = "ON_TIME"
+    LATE = "LATE"
+    ABSENT = "ABSENT"
+    EARLY_DEPARTURE = "EARLY_DEPARTURE"
+    VERIFIED = "VERIFIED"
+  }
+
+  native_enum ClockMethod {
+    QR_SCAN = "QR_SCAN"
+    GPS_GEOFENCE = "GPS_GEOFENCE"
+    SUPERVISOR_OVERRIDE = "SUPERVISOR_OVERRIDE"
+  }
+
+  native_enum ContractStatus {
+    ACTIVE = "ACTIVE"
+    EXPIRED = "EXPIRED"
+    TERMINATED = "TERMINATED"
+  }
+
+  native_enum EquipmentCondition {
+    EXCELLENT = "EXCELLENT"
+    GOOD = "GOOD"
+    FAIR = "FAIR"
+    DAMAGED = "DAMAGED"
+  }
+
+  native_enum EquipmentStatus {
+    AVAILABLE = "AVAILABLE"
+    ASSIGNED = "ASSIGNED"
+    UNDER_MAINTENANCE = "UNDER_MAINTENANCE"
+    DAMAGED = "DAMAGED"
+    LOST = "LOST"
+    RETIRED = "RETIRED"
+  }
+
+  native_enum IncidentSeverity {
+    LOW = "LOW"
+    MEDIUM = "MEDIUM"
+    HIGH = "HIGH"
+    CRITICAL = "CRITICAL"
+  }
+
+  native_enum IncidentStatus {
+    NEW = "NEW"
+    IN_PROGRESS = "IN_PROGRESS"
+    RESOLVED = "RESOLVED"
+    CLOSED = "CLOSED"
+  }
+
+  native_enum InstructionType {
+    PERMANENT = "PERMANENT"
+    TEMPORARY = "TEMPORARY"
+    EMERGENCY_PROCEDURE = "EMERGENCY_PROCEDURE"
+    ACCESS_CONTROL = "ACCESS_CONTROL"
+  }
+
+  native_enum NotificationType {
+    SOS_ALERT = "SOS_ALERT"
+    LATE_CLOCK_IN = "LATE_CLOCK_IN"
+    PATROL_MISSED = "PATROL_MISSED"
+    INCIDENT_CRITICAL = "INCIDENT_CRITICAL"
+    SHIFT_ASSIGNED = "SHIFT_ASSIGNED"
+    SYSTEM = "SYSTEM"
+  }
+
+  native_enum PatrolStatus {
+    IN_PROGRESS = "IN_PROGRESS"
+    COMPLETED = "COMPLETED"
+    INCOMPLETE = "INCOMPLETE"
+    ABORTED = "ABORTED"
+  }
+
+  native_enum PriorityLevel {
+    LOW = "LOW"
+    NORMAL = "NORMAL"
+    HIGH = "HIGH"
+    URGENT = "URGENT"
+  }
+
+  native_enum Role {
+    SUPER_ADMIN = "SUPER_ADMIN"
+    ADMIN = "ADMIN"
+    MANAGER = "MANAGER"
+    SUPERVISOR = "SUPERVISOR"
+    TEAM_LEADER = "TEAM_LEADER"
+    AGENT = "AGENT"
+    USER = "USER"
+  }
+
+  native_enum ScanStatus {
+    OK = "OK"
+    ANOMALY_DETECTED = "ANOMALY_DETECTED"
+    MISSED = "MISSED"
+  }
+
+  native_enum ShiftStatus {
+    SCHEDULED = "SCHEDULED"
+    IN_PROGRESS = "IN_PROGRESS"
+    COMPLETED = "COMPLETED"
+    CANCELLED = "CANCELLED"
+    NO_SHOW = "NO_SHOW"
+    REPLACED = "REPLACED"
+  }
+
+  native_enum ShiftType {
+    HOUR = "HOUR"
+    DAY = "DAY"
+    NIGHT = "NIGHT"
+    WEEK_DAYS = "WEEK_DAYS"
+    WEEK_NIGHTS = "WEEK_NIGHTS"
+    FULL_DAY = "FULL_DAY"
+  }
+
+  native_enum UserStatus {
+    ACTIVE = "ACTIVE"
+    SUSPENDED = "SUSPENDED"
+    DESERTER = "DESERTER"
+    DISMISSED = "DISMISSED"
+    ARCHIVED = "ARCHIVED"
+  }
 }
 
-enum ContractServiceKind {
-  @@type("pg/text@1")
-  STATIC_GUARDING = "STATIC_GUARDING"
-  MOBILE_PATROL   = "MOBILE_PATROL"
-  EVENT_SECURITY  = "EVENT_SECURITY"
-  VIP_PROTECTION  = "VIP_PROTECTION"
-  DOG_HANDLER     = "DOG_HANDLER"
-}
-
-enum ContractStatus {
-  @@type("pg/text@1")
-  ACTIVE     = "ACTIVE"
-  EXPIRED    = "EXPIRED"
-  TERMINATED = "TERMINATED"
-}
-
-enum ShiftType {
-  @@type("pg/text@1")
-  DAY           = "DAY"
-  NIGHT         = "NIGHT"
-  WEEKEND       = "WEEKEND"
-  WEEKDAY       = "WEEKDAY"
-  FULL_TIME     = "FULL_TIME"
-  PART_TIME     = "PART_TIME"
-  REINFORCEMENT = "REINFORCEMENT"
-  DOG_PATROL    = "DOG_PATROL"
-}
-
-enum ShiftStatus {
-  @@type("pg/text@1")
-  SCHEDULED   = "SCHEDULED"
-  IN_PROGRESS = "IN_PROGRESS"
-  COMPLETED   = "COMPLETED"
-  CANCELLED   = "CANCELLED"
-  NO_SHOW     = "NO_SHOW"
-  REPLACED    = "REPLACED"
-}
-
-enum AttendanceStatus {
-  @@type("pg/text@1")
-  ON_TIME         = "ON_TIME"
-  LATE            = "LATE"
-  PRESENT        = "PRESENT"
-  ABSENT          = "ABSENT"
-  EARLY_DEPARTURE = "EARLY_DEPARTURE"
-  VERIFIED        = "VERIFIED"
-}
-
-enum ClockMethod {
-  @@type("pg/text@1")
-  QR_SCAN             = "QR_SCAN"
-  GPS_GEOFENCE        = "GPS_GEOFENCE"
-  SUPERVISOR_OVERRIDE = "SUPERVISOR_OVERRIDE"
-}
-
-enum PatrolStatus {
-  @@type("pg/text@1")
-  IN_PROGRESS = "IN_PROGRESS"
-  COMPLETED   = "COMPLETED"
-  INCOMPLETE  = "INCOMPLETE"
-  ABORTED     = "ABORTED"
-}
-
-enum ScanStatus {
-  @@type("pg/text@1")
-  OK               = "OK"
-  ANOMALY_DETECTED = "ANOMALY_DETECTED"
-  MISSED           = "MISSED"
-}
-
-enum IncidentCategoryKind {
-  @@type("pg/text@1")
-  INTRUSION         = "INTRUSION"
-  FIRE_ALARM        = "FIRE_ALARM"
-  THEFT             = "THEFT"
-  VANDALISM         = "VANDALISM"
-  AGGRESSION        = "AGGRESSION"
-  TECHNICAL_FAILURE = "TECHNICAL_FAILURE"
-  MEDICAL_EMERGENCY = "MEDICAL_EMERGENCY"
-  ACCESS_DENIAL     = "ACCESS_DENIAL"
-  SUSPICIOUS_PERSON = "SUSPICIOUS_PERSON"
-  OTHER             = "OTHER"
-}
-
-enum IncidentSeverity {
-  @@type("pg/text@1")
-  LOW      = "LOW"
-  MEDIUM   = "MEDIUM"
-  HIGH     = "HIGH"
-  CRITICAL = "CRITICAL"
-}
-
-enum IncidentStatus {
-  @@type("pg/text@1")
-  NEW         = "NEW"
-  IN_PROGRESS = "IN_PROGRESS"
-  RESOLVED    = "RESOLVED"
-  CLOSED      = "CLOSED"
-}
-
-enum EquipmentCategoryKind {
-  @@type("pg/text@1")
-  RADIO_COMMUNICATION = "RADIO_COMMUNICATION"
-  LIGHTING            = "LIGHTING"
-  DEFENSE_AND_PPE     = "DEFENSE_AND_PPE"
-  DETECTION           = "DETECTION"
-  KEYS_AND_BADGES     = "KEYS_AND_BADGES"
-  PTI_DEVICE          = "PTI_DEVICE"
-  VEHICLE             = "VEHICLE"
-}
-
-enum EquipmentStatus {
-  @@type("pg/text@1")
-  AVAILABLE         = "AVAILABLE"
-  ASSIGNED          = "ASSIGNED"
-  UNDER_MAINTENANCE = "UNDER_MAINTENANCE"
-  DAMAGED           = "DAMAGED"
-  LOST              = "LOST"
-  RETIRED            = "RETIRED"
-}
-
-enum EquipmentCondition {
-  @@type("pg/text@1")
-  EXCELLENT = "EXCELLENT"
-  GOOD      = "GOOD"
-  FAIR      = "FAIR"
-  DAMAGED   = "DAMAGED"
-}
-
-enum InstructionType {
-  @@type("pg/text@1")
-  PERMANENT           = "PERMANENT"
-  TEMPORARY           = "TEMPORARY"
-  EMERGENCY_PROCEDURE = "EMERGENCY_PROCEDURE"
-  ACCESS_CONTROL      = "ACCESS_CONTROL"
-}
-
-enum PriorityLevel {
-  @@type("pg/text@1")
-  LOW    = "LOW"
-  NORMAL = "NORMAL"
-  HIGH   = "HIGH"
-  URGENT = "URGENT"
-}
-
-enum NotificationType {
-  @@type("pg/text@1")
-  SOS_ALERT         = "SOS_ALERT"
-  LATE_CLOCK_IN     = "LATE_CLOCK_IN"
-  PATROL_MISSED     = "PATROL_MISSED"
-  INCIDENT_CRITICAL = "INCIDENT_CRITICAL"
-  SHIFT_ASSIGNED    = "SHIFT_ASSIGNED"
-  SYSTEM            = "SYSTEM"
-}
-
-model ContractServiceType {
-  id          String     @id
-  name        String
-  description String?
-  isActive    Boolean    @default(true) @map("is_active")
-  createdAt   DateTime   @default(now()) @map("created_at")
-  contracts   Contract[]
-
-  @@map("contract_service_types")
-}
-
-model IncidentCategory {
-  id          String     @id
-  name        String
-  description String?
-  isActive    Boolean    @default(true) @map("is_active")
-  createdAt   DateTime   @default(now()) @map("created_at")
-  incidents   CoreIncident[]
-
-  @@map("incident_categories")
-}
-
-model EquipmentCategory {
-  id          String     @id
-  name        String
-  description String?
-  isActive    Boolean    @default(true) @map("is_active")
-  createdAt   DateTime   @default(now()) @map("created_at")
-  equipment   CoreEquipment[]
-
-  @@map("equipment_categories")
-}
-
-model Contract {
-  id            Uuid                 @id @default(sql`gen_random_uuid()`)
-  serviceTypeId String               @map("service_type_id")
-  serviceType   ContractServiceType @relation(fields: [serviceTypeId], references: [id])
-  status        ContractStatus      @default(ACTIVE)
-  clientName    String               @map("client_name")
-  startDate     DateTime             @map("start_date")
-  endDate       DateTime?            @map("end_date")
-  createdAt     DateTime             @default(now()) @map("created_at")
-
-  @@map("contracts")
-}
-
-model CoreIncident {
-  id          Uuid              @id @default(sql`gen_random_uuid()`)
-  categoryId  String            @map("category_id")
-  category    IncidentCategory @relation(fields: [categoryId], references: [id])
-  severity    IncidentSeverity
-  status      IncidentStatus   @default(NEW)
-  description String
-  reportedAt  DateTime          @default(now()) @map("reported_at")
-
-  @@map("core_incidents")
-}
-
-model CoreEquipment {
-  id           Uuid                 @id @default(sql`gen_random_uuid()`)
-  categoryId   String               @map("category_id")
-  category     EquipmentCategory  @relation(fields: [categoryId], references: [id])
-  status       EquipmentStatus    @default(AVAILABLE)
-  condition    EquipmentCondition @default(EXCELLENT)
-  serialNumber String?              @unique @map("serial_number")
-  createdAt    DateTime             @default(now()) @map("created_at")
-
-  @@map("core_equipment")
-}
-
-model User {
-  id                  Int                   @id @default(autoincrement())
-  email               String                @unique
-  passwordHash        String
-  firstName           String
-  lastName            String
-  phone               String?
-  matricule           String                @unique
-  role                Role                  @default(AGENT)
-  status              UserStatus            @default(ACTIVE)
-  adminLock           String?               @unique // Enforces single ADMIN (e.g. 'GLOBAL_ADMIN' only on the sole admin)
-  mustChangePassword  Boolean               @default(false)
-  cnapsNumber         String?               // Carte professionnelle de sécurité
-  cnapsExpiration     DateTime?
-  supervisorId        Int?
-  teamLeaderId        Int?
-  supervisor          User?                 @relation("SupervisorAgents", fields: [supervisorId], references: [id])
-  supervisedAgents    User[]                @relation("SupervisorAgents")
-  teamLeader          User?                 @relation("TeamLeaderAgents", fields: [teamLeaderId], references: [id])
-  teamAgents          User[]                @relation("TeamLeaderAgents")
-  managedSites        Site[]                @relation("SiteManager")
-  supervisedSites     Site[]                @relation("SiteSupervisor")
-  shifts              Shift[]               @relation("AgentShifts")
-  supervisedShifts    Shift[]               @relation("SupervisorShifts")
-  teamLeaderShifts    Shift[]               @relation("TeamLeaderShifts")
-  attendances         Attendance[]          @relation("AgentAttendances")
-  verifiedAttendances Attendance[]          @relation("SupervisorVerifiedAttendances")
-  patrols             Patrol[]              @relation("AgentPatrols")
-  patrolScans         PatrolScan[]          @relation("AgentPatrolScans")
-  reportedIncidents   Incident[]            @relation("ReportedIncidents")
-  assignedIncidents   Incident[]            @relation("AssignedIncidents")
-  incidentComments    IncidentComment[]     @relation("AuthorComments")
-  authoredInstructions SiteInstruction[]    @relation("AuthorInstructions")
-  equipmentAssignments EquipmentAssignment[] @relation("AgentEquipmentAssignments")
-  notifications       Notification[]        @relation("UserNotifications")
-  createdAt           DateTime              @default(now())
-  updatedAt           DateTime              @default(now()) @onUpdate(now())
-
-  @@map("users")
-}
-
-model Client {
-  id             Int              @id @default(autoincrement())
-  name           String
-  code           String           @unique
-  contactName    String
-  contactEmail   String
-  contactPhone   String
-  billingAddress String
-  city           String
-  postalCode     String
-  isActive       Boolean          @default(true)
-  sites          Site[]
-  contracts      ClientContract[]
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @default(now()) @onUpdate(now())
-
-  @@map("clients")
-}
-
-model ClientContract {
-  id             Int       @id @default(autoincrement())
-  clientId       Int
-  client         Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  contractNumber String    @unique
-  startDate      DateTime
-  endDate        DateTime?
-  serviceType    ContractServiceKind
-  status         ContractStatus      @default(ACTIVE)
-  hourlyRate     Numeric(10, 2)?
-  notes          String?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @default(now()) @onUpdate(now())
-
-  @@map("client_contracts")
-}
-
-model Site {
-  id                  Int               @id @default(autoincrement())
-  clientId            Int
-  client              Client            @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  managerId           Int?
-  manager             User?             @relation("SiteManager", fields: [managerId], references: [id])
-  supervisorId        Int?
-  supervisor          User?             @relation("SiteSupervisor", fields: [supervisorId], references: [id])
-  name                String
-  code                String            @unique
-  address             String
-  city                String
-  postalCode          String
-  latitude            Float?
-  longitude           Float?
-  geofenceRadius      Int               @default(100) // radius in meters
-  emergencyPhone      String?
-  accessCode          String?
-  generalInstructions String?
-  isActive            Boolean           @default(true)
-  checkpoints         Checkpoint[]
-  shifts              Shift[]
-  patrols             Patrol[]
-  incidents           Incident[]
-  siteInstructions    SiteInstruction[]
-  siteEquipments      SiteEquipment[]
-  createdAt           DateTime          @default(now())
-  updatedAt           DateTime          @default(now()) @onUpdate(now())
-
-  @@map("sites")
-}
-
-model Checkpoint {
-  id                  Int          @id @default(autoincrement())
-  siteId              Int
-  site                Site         @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  name                String
-  code                String
-  qrCodeData          String       @unique
-  nfcTagId            String?
-  floorLocation       String?
-  latitude            Float?
-  longitude           Float?
-  orderIndex          Int          @default(0)
-  isRequired          Boolean      @default(true)
-  scans               PatrolScan[]
-  createdAt           DateTime     @default(now())
-  updatedAt           DateTime     @default(now()) @onUpdate(now())
-
-  @@map("checkpoints")
-}
-
-model Shift {
-  id                   Int                   @id @default(autoincrement())
-  siteId               Int
-  site                 Site                  @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  agentId              Int
-  agent                User                  @relation("AgentShifts", fields: [agentId], references: [id])
-  teamLeaderId         Int?
-  teamLeader           User?                 @relation("TeamLeaderShifts", fields: [teamLeaderId], references: [id])
-  supervisorId         Int?
-  supervisor           User?                 @relation("SupervisorShifts", fields: [supervisorId], references: [id])
-  title                String
-  shiftType            ShiftType
-  startTime            DateTime
-  endTime              DateTime
-  status               ShiftStatus           @default(SCHEDULED)
-  hourlyRate           Numeric(10, 2)?
-  notes                String?
-  attendance           Attendance?
-  patrols              Patrol[]
-  incidents            Incident[]
-  equipmentAssignments EquipmentAssignment[]
-  createdAt            DateTime              @default(now())
-  updatedAt            DateTime              @default(now()) @onUpdate(now())
-
-  @@map("shifts")
-}
-
-model Attendance {
-  id                 Int       @id @default(autoincrement())
-  shiftId            Int       @unique
-  shift              Shift     @relation(fields: [shiftId], references: [id], onDelete: Cascade)
-  agentId            Int
-  agent              User      @relation("AgentAttendances", fields: [agentId], references: [id])
-  clockInTime        DateTime
-  clockInLatitude    Float?
-  clockInLongitude   Float?
-  clockInMethod      ClockMethod       @default(QR_SCAN)
-  clockOutTime       DateTime?
-  clockOutLatitude   Float?
-  clockOutLongitude  Float?
-  status             AttendanceStatus @default(ON_TIME)
-  lateMinutes        Int       @default(0)
-  verifiedById       Int?
-  verifiedBy         User?     @relation("SupervisorVerifiedAttendances", fields: [verifiedById], references: [id])
-  verificationNotes  String?
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @default(now()) @onUpdate(now())
-
-  @@map("attendances")
-}
-
-model Patrol {
-  id                   Int          @id @default(autoincrement())
-  siteId               Int
-  site                 Site         @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  agentId              Int
-  agent                User         @relation("AgentPatrols", fields: [agentId], references: [id])
-  shiftId              Int?
-  shift                Shift?       @relation(fields: [shiftId], references: [id])
-  title                String
-  scheduledStartTime   DateTime?
-  startedAt            DateTime     @default(now())
-  completedAt          DateTime?
-  status               PatrolStatus @default(IN_PROGRESS)
-  totalCheckpoints     Int          @default(0)
-  scannedCheckpoints   Int          @default(0)
-  notes                String?
-  scans                PatrolScan[]
-  incidents            Incident[]
-  createdAt            DateTime     @default(now())
-  updatedAt            DateTime     @default(now()) @onUpdate(now())
-
-  @@map("patrols")
-}
-
-model PatrolScan {
-  id                 Int        @id @default(autoincrement())
-  patrolId           Int
-  patrol             Patrol     @relation(fields: [patrolId], references: [id], onDelete: Cascade)
-  checkpointId       Int
-  checkpoint         Checkpoint @relation(fields: [checkpointId], references: [id], onDelete: Cascade)
-  agentId            Int
-  agent              User       @relation("AgentPatrolScans", fields: [agentId], references: [id])
-  scannedAt          DateTime   @default(now())
-  latitude           Float?
-  longitude          Float?
-  scanMethod         String     @default("QR") // QR, NFC, MANUAL
-  status             ScanStatus  @default(OK)
-  anomalyDescription String?
-  createdAt          DateTime   @default(now())
-
-  @@map("patrol_scans")
-}
-
-model Incident {
-  id                Int                  @id @default(autoincrement())
-  siteId            Int
-  site              Site                 @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  shiftId           Int?
-  shift             Shift?               @relation(fields: [shiftId], references: [id])
-  patrolId          Int?
-  patrol            Patrol?              @relation(fields: [patrolId], references: [id])
-  reportedById      Int
-  reportedBy        User                 @relation("ReportedIncidents", fields: [reportedById], references: [id])
-  assignedToId      Int?
-  assignedTo        User?                @relation("AssignedIncidents", fields: [assignedToId], references: [id])
-  incidentNumber    String               @unique
-  title             String
-  category          IncidentCategoryKind
-  severity          IncidentSeverity     @default(MEDIUM)
-  status            IncidentStatus       @default(NEW)
-  occurredAt        DateTime
-  reportedAt        DateTime             @default(now())
-  locationDetail    String?
-  description       String
-  actionTaken       String?
-  policeCalled      Boolean              @default(false)
-  clientNotified    Boolean              @default(false)
-  resolutionSummary String?
-  resolvedAt        DateTime?
-  attachments       IncidentAttachment[]
-  comments          IncidentComment[]
-  createdAt         DateTime             @default(now())
-  updatedAt         DateTime             @default(now()) @onUpdate(now())
-
-  @@map("incidents")
-}
-
-model IncidentAttachment {
-  id         Int      @id @default(autoincrement())
-  incidentId Int
-  incident   Incident @relation(fields: [incidentId], references: [id], onDelete: Cascade)
-  fileUrl    String
-  fileName   String
-  fileType   String
-  fileSize   Int?
-  caption    String?
-  uploadedAt DateTime @default(now())
-
-  @@map("incident_attachments")
-}
-
-model IncidentComment {
-  id         Int      @id @default(autoincrement())
-  incidentId Int
-  incident   Incident @relation(fields: [incidentId], references: [id], onDelete: Cascade)
-  authorId   Int
-  author     User     @relation("AuthorComments", fields: [authorId], references: [id])
-  comment    String
-  createdAt  DateTime @default(now())
-
-  @@map("incident_comments")
-}
-
-model Equipment {
-  id                 Int                   @id @default(autoincrement())
-  name               String
-  code               String                @unique
-  serialNumber       String?               @unique
-  category           EquipmentCategoryKind
-  status             EquipmentStatus       @default(AVAILABLE)
-  purchaseDate       DateTime?
-  lastInspectionDate DateTime?
-  assignments        EquipmentAssignment[]
-  siteEquipments     SiteEquipment[]
-  createdAt          DateTime              @default(now())
-  updatedAt          DateTime              @default(now()) @onUpdate(now())
-
-  @@map("equipment")
-}
-
-model EquipmentAssignment {
-  id                   Int       @id @default(autoincrement())
-  equipmentId          Int
-  equipment            Equipment @relation(fields: [equipmentId], references: [id], onDelete: Cascade)
-  agentId              Int
-  agent                User      @relation("AgentEquipmentAssignments", fields: [agentId], references: [id])
-  shiftId              Int?
-  shift                Shift?    @relation(fields: [shiftId], references: [id])
-  assignedAt           DateTime  @default(now())
-  returnedAt           DateTime?
-  conditionOnAssignment EquipmentCondition  @default(GOOD)
-  conditionOnReturn    EquipmentCondition?
-  anomalyReported      Boolean   @default(false)
-  notes                String?
-  createdAt            DateTime  @default(now())
-  updatedAt            DateTime  @default(now()) @onUpdate(now())
-
-  @@map("equipment_assignments")
-}
-
-model SiteInstruction {
-  id             Int       @id @default(autoincrement())
-  siteId         Int
-  site           Site      @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  authorId       Int
-  author         User      @relation("AuthorInstructions", fields: [authorId], references: [id])
-  title          String
-  content        String
-  type           InstructionType @default(PERMANENT)
-  priority       PriorityLevel   @default(NORMAL)
-  effectiveFrom  DateTime  @default(now())
-  effectiveUntil DateTime?
-  isActive       Boolean   @default(true)
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @default(now()) @onUpdate(now())
-
-  @@map("site_instructions")
-}
-
-model SiteEquipment {
-  id          Int       @id @default(autoincrement())
-  siteId      Int
-  site        Site      @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  equipmentId Int
-  equipment   Equipment @relation(fields: [equipmentId], references: [id], onDelete: Cascade)
-  installedAt DateTime  @default(now())
-  notes       String?
-  createdAt   DateTime  @default(now())
-
-  @@unique([siteId, equipmentId])
-  @@map("site_equipments")
-}
-
-model Notification {
-  id        Int       @id @default(autoincrement())
-  userId    Int
-  user      User      @relation("UserNotifications", fields: [userId], references: [id], onDelete: Cascade)
-  title     String
-  message   String
-  type      NotificationType @default(SYSTEM)
-  isRead    Boolean   @default(false)
-  readAt    DateTime?
-  createdAt DateTime  @default(now())
-
-  @@map("notifications")
+namespace vault {
+  extension supabase_vault {
+  }
 }

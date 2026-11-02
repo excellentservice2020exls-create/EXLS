@@ -78,6 +78,44 @@ export async function getSites() {
     .all();
 }
 
+export async function getSitesForManagement() {
+  noStore();
+  return db.orm.public.Site
+    .select(
+      "id",
+      "name",
+      "code",
+      "clientId",
+      "address",
+      "city",
+      "postalCode",
+      "isActive",
+      "geofenceRadius",
+    )
+    .orderBy((site) => site.name.asc())
+    .all();
+}
+
+export async function getSiteForManagement(siteId: number) {
+  noStore();
+  return db.orm.public.Site
+    .where({ id: siteId })
+    .select(
+      "id",
+      "name",
+      "code",
+      "clientId",
+      "address",
+      "city",
+      "postalCode",
+      "latitude",
+      "longitude",
+      "isActive",
+      "geofenceRadius",
+    )
+    .first();
+}
+
 export async function getSiteById(siteId: number) {
   noStore();
   return db.orm.public.Site.where({ id: siteId }).select("id", "name", "code").first();

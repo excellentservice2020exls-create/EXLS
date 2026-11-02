@@ -21,6 +21,7 @@ export function Sidebar({
     { href: "/profile", label: "Mon profil", permission: "profile:read:self" },
     { href: "/employees", label: "Personnel", permission: "employees:read" },
     { href: "/clients", label: "Abonnés / Clients", permission: "clients:read" },
+    { href: "/sites", label: "Sites", permission: "sites:read" },
     { href: "/missions", label: "Missions", permission: "missions:read" },
     { href: "/attendance", label: "Présences", permission: "attendance:read" },
     { href: "/reports/day", label: "Rapports", permission: "reports:read" },

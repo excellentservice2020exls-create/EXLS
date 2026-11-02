@@ -28,14 +28,6 @@
       "model": "Contract",
       "namespace": "public"
     },
-    "core_equipment": {
-      "model": "CoreEquipment",
-      "namespace": "public"
-    },
-    "core_incidents": {
-      "model": "CoreIncident",
-      "namespace": "public"
-    },
     "equipment": {
       "model": "Equipment",
       "namespace": "public"
@@ -76,6 +68,10 @@
       "model": "Patrol",
       "namespace": "public"
     },
+    "role_assignments": {
+      "model": "RoleAssignment",
+      "namespace": "public"
+    },
     "shifts": {
       "model": "Shift",
       "namespace": "public"
@@ -100,499 +96,6 @@
   "domain": {
     "namespaces": {
       "public": {
-        "enum": {
-          "AttendanceStatus": {
-            "codecId": "pg/text@1",
-            "members": [
-              {
-                "name": "ON_TIME",
-                "value": "ON_TIME"
-              },
-              {
-                "name": "LATE",
-                "value": "LATE"
-              },
-              {
-                "name": "PRESENT",
-                "value": "PRESENT"
-              },
-              {
-                "name": "ABSENT",
-                "value": "ABSENT"
-              },
-              {
-                "name": "EARLY_DEPARTURE",
-                "value": "EARLY_DEPARTURE"
-              },
-              {
-                "name": "VERIFIED",
-                "value": "VERIFIED"
-              }
-            ]
-          },
-          "ClockMethod": {
-            "codecId": "pg/text@1",
-            "members": [
-              {
-                "name": "QR_SCAN",
-                "value": "QR_SCAN"
-              },
-              {
-                "name": "GPS_GEOFENCE",
-                "value": "GPS_GEOFENCE"
-              },
-              {
-                "name": "SUPERVISOR_OVERRIDE",
-                "value": "SUPERVISOR_OVERRIDE"
-              }
-            ]
-          },
-          "ContractServiceKind": {
-            "codecId": "pg/text@1",
-            "members": [
-              {
-                "name": "STATIC_GUARDING",
-                "value": "STATIC_GUARDING"
-              },
-              {
-                "name": "MOBILE_PATROL",
-                "value": "MOBILE_PATROL"
-              },
-              {
-                "name": "EVENT_SECURITY",
-                "value": "EVENT_SECURITY"
-              },
-              {
-                "name": "VIP_PROTECTION",
-                "value": "VIP_PROTECTION"
-              },
-              {
-                "name": "DOG_HANDLER",
-                "value": "DOG_HANDLER"
-              }
-            ]
-          },
-          "ContractStatus": {
-            "codecId": "pg/text@1",
-            "members": [
-              {
-                "name": "ACTIVE",
-                "value": "ACTIVE"
-              },
-              {
-                "name": "EXPIRED",
-                "value": "EXPIRED"
-              },
-              {
-                "name": "TERMINATED",
-                "value": "TERMINATED"
-              }
-            ]
-          },
-          "EquipmentCategoryKind": {
-            "codecId": "pg/text@1",
-            "members": [
-              {
-                "name": "RADIO_COMMUNICATION",
-                "value": "RADIO_COMMUNICATION"
-              },
-              {
-                "name": "LIGHTING",
-                "value": "LIGHTING"
-              },
-              {
-                "name": "DEFENSE_AND_PPE",
-                "value": "DEFENSE_AND_PPE"
-              },
-              {
-                "name": "DETECTION",
-                "value": "DETECTION"
-              },
-              {
-                "name": "KEYS_AND_BADGES",
-                "value": "KEYS_AND_BADGES"
-              },
-              {
-                "name": "PTI_DEVICE",
-                "value": "PTI_DEVICE"
-              },
-              {
-                "name": "VEHICLE",
-                "value": "VEHICLE"
-              }
-            ]
-          },
-          "EquipmentCondition": {
-            "codecId": "pg/text@1",
-            "members": [
-              {
-                "name": "EXCELLENT",
-                "value": "EXCELLENT"
-              },
-              {
-                "name": "GOOD",
-                "value": "GOOD"
-              },
-              {
-                "name": "FAIR",
-                "value": "FAIR"
-              },
-              {
-                "name": "DAMAGED",
-                "value": "DAMAGED"
-              }
-            ]
-          },
-          "EquipmentStatus": {
-            "codecId": "pg/text@1",
-            "members": [
-              {
-                "name": "AVAILABLE",
-                "value": "AVAILABLE"
-              },
-              {
-                "name": "ASSIGNED",
-                "value": "ASSIGNED"
-              },
-              {
-                "name": "UNDER_MAINTENANCE",
-                "value": "UNDER_MAINTENANCE"
-              },
-              {
-                "name": "DAMAGED",
-                "value": "DAMAGED"
-              },
-              {
-                "name": "LOST",
-                "value": "LOST"
-              },
-              {
-                "name": "RETIRED",
-                "value": "RETIRED"
-              }
-            ]
-          },
-          "IncidentCategoryKind": {
-            "codecId": "pg/text@1",
-            "members": [
-              {
-                "name": "INTRUSION",
-                "value": "INTRUSION"
-              },
-              {
-                "name": "FIRE_ALARM",
-                "value": "FIRE_ALARM"
-              },
-              {
-                "name": "THEFT",
-                "value": "THEFT"
-              },
-              {
-                "name": "VANDALISM",
-                "value": "VANDALISM"
-              },
-              {
-                "name": "AGGRESSION",
-                "value": "AGGRESSION"
-              },
-              {
-                "name": "TECHNICAL_FAILURE",
-                "value": "TECHNICAL_FAILURE"
-              },
-              {
-                "name": "MEDICAL_EMERGENCY",
-                "value": "MEDICAL_EMERGENCY"
-              },
-              {
-                "name": "ACCESS_DENIAL",
-                "value": "ACCESS_DENIAL"
-              },
-              {
-                "name": "SUSPICIOUS_PERSON",
-                "value": "SUSPICIOUS_PERSON"
-              },
-              {
-                "name": "OTHER",
-                "value": "OTHER"
-              }
-            ]
-          },
-          "IncidentSeverity": {
-            "codecId": "pg/text@1",
-            "members": [
-              {
-                "name": "LOW",
-                "value": "LOW"
-              },
-              {
-                "name": "MEDIUM",
-                "value": "MEDIUM"
-              },
-              {
-                "name": "HIGH",
-                "value": "HIGH"
-              },
-              {
-                "name": "CRITICAL",
-                "value": "CRITICAL"
-              }
-            ]
-          },
-          "IncidentStatus": {
-            "codecId": "pg/text@1",
-            "members": [
-              {
-                "name": "NEW",
-                "value": "NEW"
-              },
-              {
-                "name": "IN_PROGRESS",
-                "value": "IN_PROGRESS"
-              },
-              {
-                "name": "RESOLVED",
-                "value": "RESOLVED"
-              },
-              {
-                "name": "CLOSED",
-                "value": "CLOSED"
-              }
-            ]
-          },
-          "InstructionType": {
-            "codecId": "pg/text@1",
-            "members": [
-              {
-                "name": "PERMANENT",
-                "value": "PERMANENT"
-              },
-              {
-                "name": "TEMPORARY",
-                "value": "TEMPORARY"
-              },
-              {
-                "name": "EMERGENCY_PROCEDURE",
-                "value": "EMERGENCY_PROCEDURE"
-              },
-              {
-                "name": "ACCESS_CONTROL",
-                "value": "ACCESS_CONTROL"
-              }
-            ]
-          },
-          "NotificationType": {
-            "codecId": "pg/text@1",
-            "members": [
-              {
-                "name": "SOS_ALERT",
-                "value": "SOS_ALERT"
-              },
-              {
-                "name": "LATE_CLOCK_IN",
-                "value": "LATE_CLOCK_IN"
-              },
-              {
-                "name": "PATROL_MISSED",
-                "value": "PATROL_MISSED"
-              },
-              {
-                "name": "INCIDENT_CRITICAL",
-                "value": "INCIDENT_CRITICAL"
-              },
-              {
-                "name": "SHIFT_ASSIGNED",
-                "value": "SHIFT_ASSIGNED"
-              },
-              {
-                "name": "SYSTEM",
-                "value": "SYSTEM"
-              }
-            ]
-          },
-          "PatrolStatus": {
-            "codecId": "pg/text@1",
-            "members": [
-              {
-                "name": "IN_PROGRESS",
-                "value": "IN_PROGRESS"
-              },
-              {
-                "name": "COMPLETED",
-                "value": "COMPLETED"
-              },
-              {
-                "name": "INCOMPLETE",
-                "value": "INCOMPLETE"
-              },
-              {
-                "name": "ABORTED",
-                "value": "ABORTED"
-              }
-            ]
-          },
-          "PriorityLevel": {
-            "codecId": "pg/text@1",
-            "members": [
-              {
-                "name": "LOW",
-                "value": "LOW"
-              },
-              {
-                "name": "NORMAL",
-                "value": "NORMAL"
-              },
-              {
-                "name": "HIGH",
-                "value": "HIGH"
-              },
-              {
-                "name": "URGENT",
-                "value": "URGENT"
-              }
-            ]
-          },
-          "Role": {
-            "codecId": "pg/text@1",
-            "members": [
-              {
-                "name": "SUPER_ADMIN",
-                "value": "SUPER_ADMIN"
-              },
-              {
-                "name": "ADMIN",
-                "value": "ADMIN"
-              },
-              {
-                "name": "MANAGER",
-                "value": "MANAGER"
-              },
-              {
-                "name": "SUPERVISOR",
-                "value": "SUPERVISOR"
-              },
-              {
-                "name": "TEAM_LEADER",
-                "value": "TEAM_LEADER"
-              },
-              {
-                "name": "AGENT",
-                "value": "AGENT"
-              },
-              {
-                "name": "USER",
-                "value": "USER"
-              }
-            ]
-          },
-          "ScanStatus": {
-            "codecId": "pg/text@1",
-            "members": [
-              {
-                "name": "OK",
-                "value": "OK"
-              },
-              {
-                "name": "ANOMALY_DETECTED",
-                "value": "ANOMALY_DETECTED"
-              },
-              {
-                "name": "MISSED",
-                "value": "MISSED"
-              }
-            ]
-          },
-          "ShiftStatus": {
-            "codecId": "pg/text@1",
-            "members": [
-              {
-                "name": "SCHEDULED",
-                "value": "SCHEDULED"
-              },
-              {
-                "name": "IN_PROGRESS",
-                "value": "IN_PROGRESS"
-              },
-              {
-                "name": "COMPLETED",
-                "value": "COMPLETED"
-              },
-              {
-                "name": "CANCELLED",
-                "value": "CANCELLED"
-              },
-              {
-                "name": "NO_SHOW",
-                "value": "NO_SHOW"
-              },
-              {
-                "name": "REPLACED",
-                "value": "REPLACED"
-              }
-            ]
-          },
-          "ShiftType": {
-            "codecId": "pg/text@1",
-            "members": [
-              {
-                "name": "DAY",
-                "value": "DAY"
-              },
-              {
-                "name": "NIGHT",
-                "value": "NIGHT"
-              },
-              {
-                "name": "WEEKEND",
-                "value": "WEEKEND"
-              },
-              {
-                "name": "WEEKDAY",
-                "value": "WEEKDAY"
-              },
-              {
-                "name": "FULL_TIME",
-                "value": "FULL_TIME"
-              },
-              {
-                "name": "PART_TIME",
-                "value": "PART_TIME"
-              },
-              {
-                "name": "REINFORCEMENT",
-                "value": "REINFORCEMENT"
-              },
-              {
-                "name": "DOG_PATROL",
-                "value": "DOG_PATROL"
-              }
-            ]
-          },
-          "UserStatus": {
-            "codecId": "pg/text@1",
-            "members": [
-              {
-                "name": "ACTIVE",
-                "value": "ACTIVE"
-              },
-              {
-                "name": "SUSPENDED",
-                "value": "SUSPENDED"
-              },
-              {
-                "name": "DESERTER",
-                "value": "DESERTER"
-              },
-              {
-                "name": "DISMISSED",
-                "value": "DISMISSED"
-              },
-              {
-                "name": "ARCHIVED",
-                "value": "ARCHIVED"
-              }
-            ]
-          }
-        },
         "models": {
           "Attendance": {
             "fields": {
@@ -622,12 +125,6 @@
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
-                },
-                "valueSet": {
-                  "entityKind": "enum",
-                  "entityName": "ClockMethod",
-                  "namespaceId": "public",
-                  "plane": "domain"
                 }
               },
               "clockInTime": {
@@ -700,12 +197,6 @@
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
-                },
-                "valueSet": {
-                  "entityKind": "enum",
-                  "entityName": "AttendanceStatus",
-                  "namespaceId": "public",
-                  "plane": "domain"
                 }
               },
               "updatedAt": {
@@ -939,7 +430,7 @@
               }
             },
             "relations": {
-              "scans": {
+              "patrolScans": {
                 "cardinality": "1:N",
                 "on": {
                   "localFields": [
@@ -1111,7 +602,7 @@
               }
             },
             "relations": {
-              "contracts": {
+              "clientContracts": {
                 "cardinality": "1:N",
                 "on": {
                   "localFields": [
@@ -1225,11 +716,7 @@
                 "nullable": true,
                 "type": {
                   "codecId": "pg/numeric@1",
-                  "kind": "scalar",
-                  "typeParams": {
-                    "precision": 10,
-                    "scale": 2
-                  }
+                  "kind": "scalar"
                 }
               },
               "id": {
@@ -1251,12 +738,6 @@
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
-                },
-                "valueSet": {
-                  "entityKind": "enum",
-                  "entityName": "ContractServiceKind",
-                  "namespaceId": "public",
-                  "plane": "domain"
                 }
               },
               "startDate": {
@@ -1274,12 +755,6 @@
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
-                },
-                "valueSet": {
-                  "entityKind": "enum",
-                  "entityName": "ContractStatus",
-                  "namespaceId": "public",
-                  "plane": "domain"
                 }
               },
               "updatedAt": {
@@ -1366,7 +841,7 @@
                   "codecId": "pg/timestamptz-date@1",
                   "kind": "scalar",
                   "typeParams": {
-                    "precision": 3
+                    "precision": 6
                   }
                 }
               },
@@ -1376,7 +851,7 @@
                   "codecId": "pg/timestamptz-date@1",
                   "kind": "scalar",
                   "typeParams": {
-                    "precision": 3
+                    "precision": 6
                   }
                 }
               },
@@ -1400,21 +875,18 @@
                   "codecId": "pg/timestamptz-date@1",
                   "kind": "scalar",
                   "typeParams": {
-                    "precision": 3
+                    "precision": 6
                   }
                 }
               },
               "status": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/text@1",
-                  "kind": "scalar"
-                },
-                "valueSet": {
-                  "entityKind": "enum",
-                  "entityName": "ContractStatus",
-                  "namespaceId": "public",
-                  "plane": "domain"
+                  "codecId": "pg/enum@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "typeName": "ContractStatus"
+                  }
                 }
               }
             },
@@ -1472,7 +944,7 @@
                   "codecId": "pg/timestamptz-date@1",
                   "kind": "scalar",
                   "typeParams": {
-                    "precision": 3
+                    "precision": 6
                   }
                 }
               },
@@ -1544,212 +1016,6 @@
               "table": "contract_service_types"
             }
           },
-          "CoreEquipment": {
-            "fields": {
-              "categoryId": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/text@1",
-                  "kind": "scalar"
-                }
-              },
-              "condition": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/text@1",
-                  "kind": "scalar"
-                },
-                "valueSet": {
-                  "entityKind": "enum",
-                  "entityName": "EquipmentCondition",
-                  "namespaceId": "public",
-                  "plane": "domain"
-                }
-              },
-              "createdAt": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/timestamptz-date@1",
-                  "kind": "scalar",
-                  "typeParams": {
-                    "precision": 3
-                  }
-                }
-              },
-              "id": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/uuid@1",
-                  "kind": "scalar"
-                }
-              },
-              "serialNumber": {
-                "nullable": true,
-                "type": {
-                  "codecId": "pg/text@1",
-                  "kind": "scalar"
-                }
-              },
-              "status": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/text@1",
-                  "kind": "scalar"
-                },
-                "valueSet": {
-                  "entityKind": "enum",
-                  "entityName": "EquipmentStatus",
-                  "namespaceId": "public",
-                  "plane": "domain"
-                }
-              }
-            },
-            "relations": {
-              "category": {
-                "cardinality": "N:1",
-                "nullable": false,
-                "on": {
-                  "localFields": [
-                    "categoryId"
-                  ],
-                  "targetFields": [
-                    "id"
-                  ]
-                },
-                "to": {
-                  "model": "EquipmentCategory",
-                  "namespace": "public"
-                }
-              }
-            },
-            "storage": {
-              "fields": {
-                "categoryId": {
-                  "column": "category_id"
-                },
-                "condition": {
-                  "column": "condition"
-                },
-                "createdAt": {
-                  "column": "created_at"
-                },
-                "id": {
-                  "column": "id"
-                },
-                "serialNumber": {
-                  "column": "serial_number"
-                },
-                "status": {
-                  "column": "status"
-                }
-              },
-              "namespaceId": "public",
-              "table": "core_equipment"
-            }
-          },
-          "CoreIncident": {
-            "fields": {
-              "categoryId": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/text@1",
-                  "kind": "scalar"
-                }
-              },
-              "description": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/text@1",
-                  "kind": "scalar"
-                }
-              },
-              "id": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/uuid@1",
-                  "kind": "scalar"
-                }
-              },
-              "reportedAt": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/timestamptz-date@1",
-                  "kind": "scalar",
-                  "typeParams": {
-                    "precision": 3
-                  }
-                }
-              },
-              "severity": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/text@1",
-                  "kind": "scalar"
-                },
-                "valueSet": {
-                  "entityKind": "enum",
-                  "entityName": "IncidentSeverity",
-                  "namespaceId": "public",
-                  "plane": "domain"
-                }
-              },
-              "status": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/text@1",
-                  "kind": "scalar"
-                },
-                "valueSet": {
-                  "entityKind": "enum",
-                  "entityName": "IncidentStatus",
-                  "namespaceId": "public",
-                  "plane": "domain"
-                }
-              }
-            },
-            "relations": {
-              "category": {
-                "cardinality": "N:1",
-                "nullable": false,
-                "on": {
-                  "localFields": [
-                    "categoryId"
-                  ],
-                  "targetFields": [
-                    "id"
-                  ]
-                },
-                "to": {
-                  "model": "IncidentCategory",
-                  "namespace": "public"
-                }
-              }
-            },
-            "storage": {
-              "fields": {
-                "categoryId": {
-                  "column": "category_id"
-                },
-                "description": {
-                  "column": "description"
-                },
-                "id": {
-                  "column": "id"
-                },
-                "reportedAt": {
-                  "column": "reported_at"
-                },
-                "severity": {
-                  "column": "severity"
-                },
-                "status": {
-                  "column": "status"
-                }
-              },
-              "namespaceId": "public",
-              "table": "core_incidents"
-            }
-          },
           "Equipment": {
             "fields": {
               "category": {
@@ -1757,12 +1023,6 @@
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
-                },
-                "valueSet": {
-                  "entityKind": "enum",
-                  "entityName": "EquipmentCategoryKind",
-                  "namespaceId": "public",
-                  "plane": "domain"
                 }
               },
               "code": {
@@ -1828,12 +1088,6 @@
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
-                },
-                "valueSet": {
-                  "entityKind": "enum",
-                  "entityName": "EquipmentStatus",
-                  "namespaceId": "public",
-                  "plane": "domain"
                 }
               },
               "updatedAt": {
@@ -1848,7 +1102,7 @@
               }
             },
             "relations": {
-              "assignments": {
+              "equipmentAssignments": {
                 "cardinality": "1:N",
                 "on": {
                   "localFields": [
@@ -1947,12 +1201,6 @@
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
-                },
-                "valueSet": {
-                  "entityKind": "enum",
-                  "entityName": "EquipmentCondition",
-                  "namespaceId": "public",
-                  "plane": "domain"
                 }
               },
               "conditionOnReturn": {
@@ -1960,12 +1208,6 @@
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
-                },
-                "valueSet": {
-                  "entityKind": "enum",
-                  "entityName": "EquipmentCondition",
-                  "namespaceId": "public",
-                  "plane": "domain"
                 }
               },
               "createdAt": {
@@ -2128,7 +1370,7 @@
                   "codecId": "pg/timestamptz-date@1",
                   "kind": "scalar",
                   "typeParams": {
-                    "precision": 3
+                    "precision": 6
                   }
                 }
               },
@@ -2161,23 +1403,7 @@
                 }
               }
             },
-            "relations": {
-              "equipment": {
-                "cardinality": "1:N",
-                "on": {
-                  "localFields": [
-                    "id"
-                  ],
-                  "targetFields": [
-                    "categoryId"
-                  ]
-                },
-                "to": {
-                  "model": "CoreEquipment",
-                  "namespace": "public"
-                }
-              }
-            },
+            "relations": {},
             "storage": {
               "fields": {
                 "createdAt": {
@@ -2221,12 +1447,6 @@
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
-                },
-                "valueSet": {
-                  "entityKind": "enum",
-                  "entityName": "IncidentCategoryKind",
-                  "namespaceId": "public",
-                  "plane": "domain"
                 }
               },
               "clientNotified": {
@@ -2337,12 +1557,6 @@
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
-                },
-                "valueSet": {
-                  "entityKind": "enum",
-                  "entityName": "IncidentSeverity",
-                  "namespaceId": "public",
-                  "plane": "domain"
                 }
               },
               "shiftId": {
@@ -2364,12 +1578,6 @@
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
-                },
-                "valueSet": {
-                  "entityKind": "enum",
-                  "entityName": "IncidentStatus",
-                  "namespaceId": "public",
-                  "plane": "domain"
                 }
               },
               "title": {
@@ -2407,7 +1615,7 @@
                   "namespace": "public"
                 }
               },
-              "attachments": {
+              "incidentAttachments": {
                 "cardinality": "1:N",
                 "on": {
                   "localFields": [
@@ -2422,7 +1630,7 @@
                   "namespace": "public"
                 }
               },
-              "comments": {
+              "incidentComments": {
                 "cardinality": "1:N",
                 "on": {
                   "localFields": [
@@ -2694,7 +1902,7 @@
                   "codecId": "pg/timestamptz-date@1",
                   "kind": "scalar",
                   "typeParams": {
-                    "precision": 3
+                    "precision": 6
                   }
                 }
               },
@@ -2727,23 +1935,7 @@
                 }
               }
             },
-            "relations": {
-              "incidents": {
-                "cardinality": "1:N",
-                "on": {
-                  "localFields": [
-                    "id"
-                  ],
-                  "targetFields": [
-                    "categoryId"
-                  ]
-                },
-                "to": {
-                  "model": "CoreIncident",
-                  "namespace": "public"
-                }
-              }
-            },
+            "relations": {},
             "storage": {
               "fields": {
                 "createdAt": {
@@ -2918,12 +2110,6 @@
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
-                },
-                "valueSet": {
-                  "entityKind": "enum",
-                  "entityName": "NotificationType",
-                  "namespaceId": "public",
-                  "plane": "domain"
                 }
               },
               "userId": {
@@ -3072,12 +2258,6 @@
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
-                },
-                "valueSet": {
-                  "entityKind": "enum",
-                  "entityName": "PatrolStatus",
-                  "namespaceId": "public",
-                  "plane": "domain"
                 }
               },
               "title": {
@@ -3137,7 +2317,7 @@
                   "namespace": "public"
                 }
               },
-              "scans": {
+              "patrolScans": {
                 "cardinality": "1:N",
                 "on": {
                   "localFields": [
@@ -3317,12 +2497,6 @@
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
-                },
-                "valueSet": {
-                  "entityKind": "enum",
-                  "entityName": "ScanStatus",
-                  "namespaceId": "public",
-                  "plane": "domain"
                 }
               }
             },
@@ -3416,6 +2590,103 @@
               "table": "patrol_scans"
             }
           },
+          "RoleAssignment": {
+            "fields": {
+              "assignedAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "createdAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "role": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "updatedAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "userId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "user": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "userId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "User",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "assignedAt": {
+                  "column": "assignedAt"
+                },
+                "createdAt": {
+                  "column": "createdAt"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "role": {
+                  "column": "role"
+                },
+                "updatedAt": {
+                  "column": "updatedAt"
+                },
+                "userId": {
+                  "column": "userId"
+                }
+              },
+              "namespaceId": "public",
+              "table": "role_assignments"
+            }
+          },
           "Shift": {
             "fields": {
               "agentId": {
@@ -3449,11 +2720,7 @@
                 "nullable": true,
                 "type": {
                   "codecId": "pg/numeric@1",
-                  "kind": "scalar",
-                  "typeParams": {
-                    "precision": 10,
-                    "scale": 2
-                  }
+                  "kind": "scalar"
                 }
               },
               "id": {
@@ -3475,12 +2742,6 @@
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
-                },
-                "valueSet": {
-                  "entityKind": "enum",
-                  "entityName": "ShiftType",
-                  "namespaceId": "public",
-                  "plane": "domain"
                 }
               },
               "siteId": {
@@ -3505,12 +2766,6 @@
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
-                },
-                "valueSet": {
-                  "entityKind": "enum",
-                  "entityName": "ShiftStatus",
-                  "namespaceId": "public",
-                  "plane": "domain"
                 }
               },
               "supervisorId": {
@@ -3562,7 +2817,7 @@
                   "namespace": "public"
                 }
               },
-              "attendance": {
+              "attendances": {
                 "cardinality": "1:1",
                 "nullable": true,
                 "on": {
@@ -4232,12 +3487,6 @@
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
-                },
-                "valueSet": {
-                  "entityKind": "enum",
-                  "entityName": "PriorityLevel",
-                  "namespaceId": "public",
-                  "plane": "domain"
                 }
               },
               "siteId": {
@@ -4259,12 +3508,6 @@
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
-                },
-                "valueSet": {
-                  "entityKind": "enum",
-                  "entityName": "InstructionType",
-                  "namespaceId": "public",
-                  "plane": "domain"
                 }
               },
               "updatedAt": {
@@ -4452,12 +3695,6 @@
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
-                },
-                "valueSet": {
-                  "entityKind": "enum",
-                  "entityName": "Role",
-                  "namespaceId": "public",
-                  "plane": "domain"
                 }
               },
               "status": {
@@ -4465,12 +3702,6 @@
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
-                },
-                "valueSet": {
-                  "entityKind": "enum",
-                  "entityName": "UserStatus",
-                  "namespaceId": "public",
-                  "plane": "domain"
                 }
               },
               "supervisorId": {
@@ -4499,21 +3730,6 @@
               }
             },
             "relations": {
-              "assignedIncidents": {
-                "cardinality": "1:N",
-                "on": {
-                  "localFields": [
-                    "id"
-                  ],
-                  "targetFields": [
-                    "assignedToId"
-                  ]
-                },
-                "to": {
-                  "model": "Incident",
-                  "namespace": "public"
-                }
-              },
               "attendances": {
                 "cardinality": "1:N",
                 "on": {
@@ -4529,18 +3745,18 @@
                   "namespace": "public"
                 }
               },
-              "authoredInstructions": {
+              "attendancesAttendances": {
                 "cardinality": "1:N",
                 "on": {
                   "localFields": [
                     "id"
                   ],
                   "targetFields": [
-                    "authorId"
+                    "verifiedById"
                   ]
                 },
                 "to": {
-                  "model": "SiteInstruction",
+                  "model": "Attendance",
                   "namespace": "public"
                 }
               },
@@ -4574,18 +3790,33 @@
                   "namespace": "public"
                 }
               },
-              "managedSites": {
+              "incidents": {
                 "cardinality": "1:N",
                 "on": {
                   "localFields": [
                     "id"
                   ],
                   "targetFields": [
-                    "managerId"
+                    "assignedToId"
                   ]
                 },
                 "to": {
-                  "model": "Site",
+                  "model": "Incident",
+                  "namespace": "public"
+                }
+              },
+              "incidentsIncidents": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "reportedById"
+                  ]
+                },
+                "to": {
+                  "model": "Incident",
                   "namespace": "public"
                 }
               },
@@ -4634,18 +3865,18 @@
                   "namespace": "public"
                 }
               },
-              "reportedIncidents": {
+              "roleAssignments": {
                 "cardinality": "1:N",
                 "on": {
                   "localFields": [
                     "id"
                   ],
                   "targetFields": [
-                    "reportedById"
+                    "userId"
                   ]
                 },
                 "to": {
-                  "model": "Incident",
+                  "model": "RoleAssignment",
                   "namespace": "public"
                 }
               },
@@ -4664,22 +3895,22 @@
                   "namespace": "public"
                 }
               },
-              "supervisedAgents": {
+              "shifts2": {
                 "cardinality": "1:N",
                 "on": {
                   "localFields": [
                     "id"
                   ],
                   "targetFields": [
-                    "supervisorId"
+                    "teamLeaderId"
                   ]
                 },
                 "to": {
-                  "model": "User",
+                  "model": "Shift",
                   "namespace": "public"
                 }
               },
-              "supervisedShifts": {
+              "shiftsShifts": {
                 "cardinality": "1:N",
                 "on": {
                   "localFields": [
@@ -4694,7 +3925,37 @@
                   "namespace": "public"
                 }
               },
-              "supervisedSites": {
+              "siteInstructions": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "authorId"
+                  ]
+                },
+                "to": {
+                  "model": "SiteInstruction",
+                  "namespace": "public"
+                }
+              },
+              "sites": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "managerId"
+                  ]
+                },
+                "to": {
+                  "model": "Site",
+                  "namespace": "public"
+                }
+              },
+              "sitesSites": {
                 "cardinality": "1:N",
                 "on": {
                   "localFields": [
@@ -4725,21 +3986,6 @@
                   "namespace": "public"
                 }
               },
-              "teamAgents": {
-                "cardinality": "1:N",
-                "on": {
-                  "localFields": [
-                    "id"
-                  ],
-                  "targetFields": [
-                    "teamLeaderId"
-                  ]
-                },
-                "to": {
-                  "model": "User",
-                  "namespace": "public"
-                }
-              },
               "teamLeader": {
                 "cardinality": "N:1",
                 "nullable": true,
@@ -4756,7 +4002,22 @@
                   "namespace": "public"
                 }
               },
-              "teamLeaderShifts": {
+              "users": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "supervisorId"
+                  ]
+                },
+                "to": {
+                  "model": "User",
+                  "namespace": "public"
+                }
+              },
+              "usersUsers": {
                 "cardinality": "1:N",
                 "on": {
                   "localFields": [
@@ -4767,22 +4028,7 @@
                   ]
                 },
                 "to": {
-                  "model": "Shift",
-                  "namespace": "public"
-                }
-              },
-              "verifiedAttendances": {
-                "cardinality": "1:N",
-                "on": {
-                  "localFields": [
-                    "id"
-                  ],
-                  "targetFields": [
-                    "verifiedById"
-                  ]
-                },
-                "to": {
-                  "model": "Attendance",
+                  "model": "User",
                   "namespace": "public"
                 }
               }
@@ -4851,20 +4097,323 @@
   },
   "storage": {
     "namespaces": {
+      "extensions": {
+        "entries": {
+          "extension": {
+            "pg_stat_statements": {
+              "kind": "extension",
+              "name": "pg_stat_statements"
+            },
+            "pgcrypto": {
+              "kind": "extension",
+              "name": "pgcrypto"
+            },
+            "uuid-ossp": {
+              "kind": "extension",
+              "name": "uuid-ossp"
+            }
+          },
+          "table": {}
+        },
+        "id": "extensions",
+        "kind": "postgres-schema"
+      },
       "public": {
         "entries": {
+          "native_enum": {
+            "AttendanceStatus": {
+              "kind": "postgres-enum",
+              "members": [
+                "ON_TIME",
+                "LATE",
+                "ABSENT",
+                "EARLY_DEPARTURE",
+                "VERIFIED"
+              ],
+              "typeName": "AttendanceStatus"
+            },
+            "ClockMethod": {
+              "kind": "postgres-enum",
+              "members": [
+                "QR_SCAN",
+                "GPS_GEOFENCE",
+                "SUPERVISOR_OVERRIDE"
+              ],
+              "typeName": "ClockMethod"
+            },
+            "ContractStatus": {
+              "kind": "postgres-enum",
+              "members": [
+                "ACTIVE",
+                "EXPIRED",
+                "TERMINATED"
+              ],
+              "typeName": "ContractStatus"
+            },
+            "EquipmentCondition": {
+              "kind": "postgres-enum",
+              "members": [
+                "EXCELLENT",
+                "GOOD",
+                "FAIR",
+                "DAMAGED"
+              ],
+              "typeName": "EquipmentCondition"
+            },
+            "EquipmentStatus": {
+              "kind": "postgres-enum",
+              "members": [
+                "AVAILABLE",
+                "ASSIGNED",
+                "UNDER_MAINTENANCE",
+                "DAMAGED",
+                "LOST",
+                "RETIRED"
+              ],
+              "typeName": "EquipmentStatus"
+            },
+            "IncidentSeverity": {
+              "kind": "postgres-enum",
+              "members": [
+                "LOW",
+                "MEDIUM",
+                "HIGH",
+                "CRITICAL"
+              ],
+              "typeName": "IncidentSeverity"
+            },
+            "IncidentStatus": {
+              "kind": "postgres-enum",
+              "members": [
+                "NEW",
+                "IN_PROGRESS",
+                "RESOLVED",
+                "CLOSED"
+              ],
+              "typeName": "IncidentStatus"
+            },
+            "InstructionType": {
+              "kind": "postgres-enum",
+              "members": [
+                "PERMANENT",
+                "TEMPORARY",
+                "EMERGENCY_PROCEDURE",
+                "ACCESS_CONTROL"
+              ],
+              "typeName": "InstructionType"
+            },
+            "NotificationType": {
+              "kind": "postgres-enum",
+              "members": [
+                "SOS_ALERT",
+                "LATE_CLOCK_IN",
+                "PATROL_MISSED",
+                "INCIDENT_CRITICAL",
+                "SHIFT_ASSIGNED",
+                "SYSTEM"
+              ],
+              "typeName": "NotificationType"
+            },
+            "PatrolStatus": {
+              "kind": "postgres-enum",
+              "members": [
+                "IN_PROGRESS",
+                "COMPLETED",
+                "INCOMPLETE",
+                "ABORTED"
+              ],
+              "typeName": "PatrolStatus"
+            },
+            "PriorityLevel": {
+              "kind": "postgres-enum",
+              "members": [
+                "LOW",
+                "NORMAL",
+                "HIGH",
+                "URGENT"
+              ],
+              "typeName": "PriorityLevel"
+            },
+            "Role": {
+              "kind": "postgres-enum",
+              "members": [
+                "SUPER_ADMIN",
+                "ADMIN",
+                "MANAGER",
+                "SUPERVISOR",
+                "TEAM_LEADER",
+                "AGENT",
+                "USER"
+              ],
+              "typeName": "Role"
+            },
+            "ScanStatus": {
+              "kind": "postgres-enum",
+              "members": [
+                "OK",
+                "ANOMALY_DETECTED",
+                "MISSED"
+              ],
+              "typeName": "ScanStatus"
+            },
+            "ShiftStatus": {
+              "kind": "postgres-enum",
+              "members": [
+                "SCHEDULED",
+                "IN_PROGRESS",
+                "COMPLETED",
+                "CANCELLED",
+                "NO_SHOW",
+                "REPLACED"
+              ],
+              "typeName": "ShiftStatus"
+            },
+            "ShiftType": {
+              "kind": "postgres-enum",
+              "members": [
+                "HOUR",
+                "DAY",
+                "NIGHT",
+                "WEEK_DAYS",
+                "WEEK_NIGHTS",
+                "FULL_DAY"
+              ],
+              "typeName": "ShiftType"
+            },
+            "UserStatus": {
+              "kind": "postgres-enum",
+              "members": [
+                "ACTIVE",
+                "SUSPENDED",
+                "DESERTER",
+                "DISMISSED",
+                "ARCHIVED"
+              ],
+              "typeName": "UserStatus"
+            }
+          },
+          "rls": {
+            "attendances": {
+              "kind": "rls",
+              "namespaceId": "public",
+              "tableName": "attendances"
+            },
+            "checkpoints": {
+              "kind": "rls",
+              "namespaceId": "public",
+              "tableName": "checkpoints"
+            },
+            "client_contracts": {
+              "kind": "rls",
+              "namespaceId": "public",
+              "tableName": "client_contracts"
+            },
+            "clients": {
+              "kind": "rls",
+              "namespaceId": "public",
+              "tableName": "clients"
+            },
+            "contract_service_types": {
+              "kind": "rls",
+              "namespaceId": "public",
+              "tableName": "contract_service_types"
+            },
+            "contracts": {
+              "kind": "rls",
+              "namespaceId": "public",
+              "tableName": "contracts"
+            },
+            "equipment": {
+              "kind": "rls",
+              "namespaceId": "public",
+              "tableName": "equipment"
+            },
+            "equipment_assignments": {
+              "kind": "rls",
+              "namespaceId": "public",
+              "tableName": "equipment_assignments"
+            },
+            "equipment_categories": {
+              "kind": "rls",
+              "namespaceId": "public",
+              "tableName": "equipment_categories"
+            },
+            "incident_attachments": {
+              "kind": "rls",
+              "namespaceId": "public",
+              "tableName": "incident_attachments"
+            },
+            "incident_categories": {
+              "kind": "rls",
+              "namespaceId": "public",
+              "tableName": "incident_categories"
+            },
+            "incident_comments": {
+              "kind": "rls",
+              "namespaceId": "public",
+              "tableName": "incident_comments"
+            },
+            "incidents": {
+              "kind": "rls",
+              "namespaceId": "public",
+              "tableName": "incidents"
+            },
+            "notifications": {
+              "kind": "rls",
+              "namespaceId": "public",
+              "tableName": "notifications"
+            },
+            "patrol_scans": {
+              "kind": "rls",
+              "namespaceId": "public",
+              "tableName": "patrol_scans"
+            },
+            "patrols": {
+              "kind": "rls",
+              "namespaceId": "public",
+              "tableName": "patrols"
+            },
+            "role_assignments": {
+              "kind": "rls",
+              "namespaceId": "public",
+              "tableName": "role_assignments"
+            },
+            "shifts": {
+              "kind": "rls",
+              "namespaceId": "public",
+              "tableName": "shifts"
+            },
+            "site_equipments": {
+              "kind": "rls",
+              "namespaceId": "public",
+              "tableName": "site_equipments"
+            },
+            "site_instructions": {
+              "kind": "rls",
+              "namespaceId": "public",
+              "tableName": "site_instructions"
+            },
+            "sites": {
+              "kind": "rls",
+              "namespaceId": "public",
+              "tableName": "sites"
+            },
+            "users": {
+              "kind": "rls",
+              "namespaceId": "public",
+              "tableName": "users"
+            }
+          },
           "table": {
             "attendances": {
               "checks": [
                 {
-                  "expression": "\"clockInMethod\" IN ('QR_SCAN', 'GPS_GEOFENCE', 'SUPERVISOR_OVERRIDE')",
-                  "name": "attendances_clockInMethod_check_f1817fd0",
-                  "prefix": "attendances_clockInMethod_check"
+                  "expression": "(\"clockInMethod\" = ANY (ARRAY['QR_SCAN'::text, 'GPS_GEOFENCE'::text, 'SUPERVISOR_OVERRIDE'::text]))",
+                  "name": "attendances_clockInMethod_check_f1817fd0"
                 },
                 {
-                  "expression": "\"status\" IN ('ON_TIME', 'LATE', 'PRESENT', 'ABSENT', 'EARLY_DEPARTURE', 'VERIFIED')",
-                  "name": "attendances_status_check_acacb634",
-                  "prefix": "attendances_status_check"
+                  "expression": "(status = ANY (ARRAY['ON_TIME'::text, 'LATE'::text, 'ABSENT'::text, 'EARLY_DEPARTURE'::text, 'VERIFIED'::text]))",
+                  "name": "attendances_status_check_02d150d7"
                 }
               ],
               "columns": {
@@ -4890,13 +4439,7 @@
                     "kind": "literal",
                     "value": "QR_SCAN"
                   },
-                  "nullable": false,
-                  "valueSet": {
-                    "entityKind": "valueSet",
-                    "entityName": "ClockMethod",
-                    "namespaceId": "public",
-                    "plane": "storage"
-                  }
+                  "nullable": false
                 },
                 "clockInTime": {
                   "codecId": "pg/timestamptz-date@1",
@@ -4966,13 +4509,7 @@
                     "kind": "literal",
                     "value": "ON_TIME"
                   },
-                  "nullable": false,
-                  "valueSet": {
-                    "entityKind": "valueSet",
-                    "entityName": "AttendanceStatus",
-                    "namespaceId": "public",
-                    "plane": "storage"
-                  }
+                  "nullable": false
                 },
                 "updatedAt": {
                   "codecId": "pg/timestamptz-date@1",
@@ -5000,10 +4537,31 @@
               "foreignKeys": [
                 {
                   "index": {
+                    "name": "attendances_agentId_idx_8d0ba4f0"
+                  },
+                  "name": "attendances_agentId_fkey",
+                  "source": {
+                    "columns": [
+                      "agentId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "attendances"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "users"
+                  }
+                },
+                {
+                  "index": {
                     "unique": [
                       "shiftId"
                     ]
                   },
+                  "name": "attendances_shiftId_fkey",
                   "onDelete": "cascade",
                   "source": {
                     "columns": [
@@ -5022,27 +4580,9 @@
                 },
                 {
                   "index": {
-                    "name": "attendances_agentId_idx_8d0ba4f0"
-                  },
-                  "source": {
-                    "columns": [
-                      "agentId"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "attendances"
-                  },
-                  "target": {
-                    "columns": [
-                      "id"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "users"
-                  }
-                },
-                {
-                  "index": {
                     "name": "attendances_verifiedById_idx_dfd74b37"
                   },
+                  "name": "attendances_verifiedById_fkey",
                   "source": {
                     "columns": [
                       "verifiedById"
@@ -5080,13 +4620,15 @@
               "primaryKey": {
                 "columns": [
                   "id"
-                ]
+                ],
+                "name": "attendances_pkey"
               },
               "uniques": [
                 {
                   "columns": [
                     "shiftId"
-                  ]
+                  ],
+                  "name": "attendances_shiftId_key"
                 }
               ]
             },
@@ -5189,6 +4731,7 @@
                   "index": {
                     "name": "checkpoints_siteId_idx_cabdc5ab"
                   },
+                  "name": "checkpoints_siteId_fkey",
                   "onDelete": "cascade",
                   "source": {
                     "columns": [
@@ -5219,27 +4762,27 @@
               "primaryKey": {
                 "columns": [
                   "id"
-                ]
+                ],
+                "name": "checkpoints_pkey"
               },
               "uniques": [
                 {
                   "columns": [
                     "qrCodeData"
-                  ]
+                  ],
+                  "name": "checkpoints_qrCodeData_key"
                 }
               ]
             },
             "client_contracts": {
               "checks": [
                 {
-                  "expression": "\"serviceType\" IN ('STATIC_GUARDING', 'MOBILE_PATROL', 'EVENT_SECURITY', 'VIP_PROTECTION', 'DOG_HANDLER')",
-                  "name": "client_contracts_serviceType_check_8cfda18d",
-                  "prefix": "client_contracts_serviceType_check"
+                  "expression": "(\"serviceType\" = ANY (ARRAY['STATIC_GUARDING'::text, 'MOBILE_PATROL'::text, 'EVENT_SECURITY'::text, 'VIP_PROTECTION'::text, 'DOG_HANDLER'::text]))",
+                  "name": "client_contracts_serviceType_check_8cfda18d"
                 },
                 {
-                  "expression": "\"status\" IN ('ACTIVE', 'EXPIRED', 'TERMINATED')",
-                  "name": "client_contracts_status_check_814bd882",
-                  "prefix": "client_contracts_status_check"
+                  "expression": "(status = ANY (ARRAY['ACTIVE'::text, 'EXPIRED'::text, 'TERMINATED'::text]))",
+                  "name": "client_contracts_status_check_814bd882"
                 }
               ],
               "columns": {
@@ -5276,11 +4819,7 @@
                 "hourlyRate": {
                   "codecId": "pg/numeric@1",
                   "dataType": "pg/numeric",
-                  "nullable": true,
-                  "typeParams": {
-                    "precision": 10,
-                    "scale": 2
-                  }
+                  "nullable": true
                 },
                 "id": {
                   "codecId": "pg/int4@1",
@@ -5299,13 +4838,7 @@
                 "serviceType": {
                   "codecId": "pg/text@1",
                   "dataType": "pg/text",
-                  "nullable": false,
-                  "valueSet": {
-                    "entityKind": "valueSet",
-                    "entityName": "ContractServiceKind",
-                    "namespaceId": "public",
-                    "plane": "storage"
-                  }
+                  "nullable": false
                 },
                 "startDate": {
                   "codecId": "pg/timestamptz-date@1",
@@ -5322,13 +4855,7 @@
                     "kind": "literal",
                     "value": "ACTIVE"
                   },
-                  "nullable": false,
-                  "valueSet": {
-                    "entityKind": "valueSet",
-                    "entityName": "ContractStatus",
-                    "namespaceId": "public",
-                    "plane": "storage"
-                  }
+                  "nullable": false
                 },
                 "updatedAt": {
                   "codecId": "pg/timestamptz-date@1",
@@ -5348,6 +4875,7 @@
                   "index": {
                     "name": "client_contracts_clientId_idx_153a9a49"
                   },
+                  "name": "client_contracts_clientId_fkey",
                   "onDelete": "cascade",
                   "source": {
                     "columns": [
@@ -5378,13 +4906,15 @@
               "primaryKey": {
                 "columns": [
                   "id"
-                ]
+                ],
+                "name": "client_contracts_pkey"
               },
               "uniques": [
                 {
                   "columns": [
                     "contractNumber"
-                  ]
+                  ],
+                  "name": "client_contracts_contractNumber_key"
                 }
               ]
             },
@@ -5478,13 +5008,15 @@
               "primaryKey": {
                 "columns": [
                   "id"
-                ]
+                ],
+                "name": "clients_pkey"
               },
               "uniques": [
                 {
                   "columns": [
                     "code"
-                  ]
+                  ],
+                  "name": "clients_code_key"
                 }
               ]
             },
@@ -5499,7 +5031,7 @@
                   },
                   "nullable": false,
                   "typeParams": {
-                    "precision": 3
+                    "precision": 6
                   }
                 },
                 "description": {
@@ -5532,18 +5064,12 @@
               "primaryKey": {
                 "columns": [
                   "id"
-                ]
+                ],
+                "name": "contract_service_types_pkey"
               },
               "uniques": []
             },
             "contracts": {
-              "checks": [
-                {
-                  "expression": "\"status\" IN ('ACTIVE', 'EXPIRED', 'TERMINATED')",
-                  "name": "contracts_status_check_814bd882",
-                  "prefix": "contracts_status_check"
-                }
-              ],
               "columns": {
                 "client_name": {
                   "codecId": "pg/text@1",
@@ -5559,7 +5085,7 @@
                   },
                   "nullable": false,
                   "typeParams": {
-                    "precision": 3
+                    "precision": 6
                   }
                 },
                 "end_date": {
@@ -5567,7 +5093,7 @@
                   "dataType": "pg/timestamptz",
                   "nullable": true,
                   "typeParams": {
-                    "precision": 3
+                    "precision": 6
                   }
                 },
                 "id": {
@@ -5589,17 +5115,20 @@
                   "dataType": "pg/timestamptz",
                   "nullable": false,
                   "typeParams": {
-                    "precision": 3
+                    "precision": 6
                   }
                 },
                 "status": {
-                  "codecId": "pg/text@1",
-                  "dataType": "pg/text",
+                  "codecId": "pg/enum@1",
+                  "dataType": "pg/enum",
                   "default": {
                     "kind": "literal",
                     "value": "ACTIVE"
                   },
                   "nullable": false,
+                  "typeParams": {
+                    "typeName": "ContractStatus"
+                  },
                   "valueSet": {
                     "entityKind": "valueSet",
                     "entityName": "ContractStatus",
@@ -5610,9 +5139,7 @@
               },
               "foreignKeys": [
                 {
-                  "index": {
-                    "name": "contracts_service_type_id_idx_2ed171c9"
-                  },
+                  "name": "contracts_service_type_id_fkey",
                   "source": {
                     "columns": [
                       "service_type_id"
@@ -5629,277 +5156,31 @@
                   }
                 }
               ],
-              "indexes": [
-                {
-                  "columns": [
-                    "service_type_id"
-                  ],
-                  "name": "contracts_service_type_id_idx_2ed171c9",
-                  "prefix": "contracts_service_type_id_idx",
-                  "unique": false
-                }
-              ],
+              "indexes": [],
               "primaryKey": {
                 "columns": [
                   "id"
-                ]
-              },
-              "uniques": []
-            },
-            "core_equipment": {
-              "checks": [
-                {
-                  "expression": "\"condition\" IN ('EXCELLENT', 'GOOD', 'FAIR', 'DAMAGED')",
-                  "name": "core_equipment_condition_check_c3464631",
-                  "prefix": "core_equipment_condition_check"
-                },
-                {
-                  "expression": "\"status\" IN ('AVAILABLE', 'ASSIGNED', 'UNDER_MAINTENANCE', 'DAMAGED', 'LOST', 'RETIRED')",
-                  "name": "core_equipment_status_check_ca4725d1",
-                  "prefix": "core_equipment_status_check"
-                }
-              ],
-              "columns": {
-                "category_id": {
-                  "codecId": "pg/text@1",
-                  "dataType": "pg/text",
-                  "nullable": false
-                },
-                "condition": {
-                  "codecId": "pg/text@1",
-                  "dataType": "pg/text",
-                  "default": {
-                    "kind": "literal",
-                    "value": "EXCELLENT"
-                  },
-                  "nullable": false,
-                  "valueSet": {
-                    "entityKind": "valueSet",
-                    "entityName": "EquipmentCondition",
-                    "namespaceId": "public",
-                    "plane": "storage"
-                  }
-                },
-                "created_at": {
-                  "codecId": "pg/timestamptz-date@1",
-                  "dataType": "pg/timestamptz",
-                  "default": {
-                    "expression": "now()",
-                    "kind": "function"
-                  },
-                  "nullable": false,
-                  "typeParams": {
-                    "precision": 3
-                  }
-                },
-                "id": {
-                  "codecId": "pg/uuid@1",
-                  "dataType": "pg/uuid",
-                  "default": {
-                    "expression": "gen_random_uuid()",
-                    "kind": "function"
-                  },
-                  "nullable": false
-                },
-                "serial_number": {
-                  "codecId": "pg/text@1",
-                  "dataType": "pg/text",
-                  "nullable": true
-                },
-                "status": {
-                  "codecId": "pg/text@1",
-                  "dataType": "pg/text",
-                  "default": {
-                    "kind": "literal",
-                    "value": "AVAILABLE"
-                  },
-                  "nullable": false,
-                  "valueSet": {
-                    "entityKind": "valueSet",
-                    "entityName": "EquipmentStatus",
-                    "namespaceId": "public",
-                    "plane": "storage"
-                  }
-                }
-              },
-              "foreignKeys": [
-                {
-                  "index": {
-                    "name": "core_equipment_category_id_idx_da7213d4"
-                  },
-                  "source": {
-                    "columns": [
-                      "category_id"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "core_equipment"
-                  },
-                  "target": {
-                    "columns": [
-                      "id"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "equipment_categories"
-                  }
-                }
-              ],
-              "indexes": [
-                {
-                  "columns": [
-                    "category_id"
-                  ],
-                  "name": "core_equipment_category_id_idx_da7213d4",
-                  "prefix": "core_equipment_category_id_idx",
-                  "unique": false
-                }
-              ],
-              "primaryKey": {
-                "columns": [
-                  "id"
-                ]
-              },
-              "uniques": [
-                {
-                  "columns": [
-                    "serial_number"
-                  ]
-                }
-              ]
-            },
-            "core_incidents": {
-              "checks": [
-                {
-                  "expression": "\"severity\" IN ('LOW', 'MEDIUM', 'HIGH', 'CRITICAL')",
-                  "name": "core_incidents_severity_check_5e5a5e80",
-                  "prefix": "core_incidents_severity_check"
-                },
-                {
-                  "expression": "\"status\" IN ('NEW', 'IN_PROGRESS', 'RESOLVED', 'CLOSED')",
-                  "name": "core_incidents_status_check_50d14964",
-                  "prefix": "core_incidents_status_check"
-                }
-              ],
-              "columns": {
-                "category_id": {
-                  "codecId": "pg/text@1",
-                  "dataType": "pg/text",
-                  "nullable": false
-                },
-                "description": {
-                  "codecId": "pg/text@1",
-                  "dataType": "pg/text",
-                  "nullable": false
-                },
-                "id": {
-                  "codecId": "pg/uuid@1",
-                  "dataType": "pg/uuid",
-                  "default": {
-                    "expression": "gen_random_uuid()",
-                    "kind": "function"
-                  },
-                  "nullable": false
-                },
-                "reported_at": {
-                  "codecId": "pg/timestamptz-date@1",
-                  "dataType": "pg/timestamptz",
-                  "default": {
-                    "expression": "now()",
-                    "kind": "function"
-                  },
-                  "nullable": false,
-                  "typeParams": {
-                    "precision": 3
-                  }
-                },
-                "severity": {
-                  "codecId": "pg/text@1",
-                  "dataType": "pg/text",
-                  "nullable": false,
-                  "valueSet": {
-                    "entityKind": "valueSet",
-                    "entityName": "IncidentSeverity",
-                    "namespaceId": "public",
-                    "plane": "storage"
-                  }
-                },
-                "status": {
-                  "codecId": "pg/text@1",
-                  "dataType": "pg/text",
-                  "default": {
-                    "kind": "literal",
-                    "value": "NEW"
-                  },
-                  "nullable": false,
-                  "valueSet": {
-                    "entityKind": "valueSet",
-                    "entityName": "IncidentStatus",
-                    "namespaceId": "public",
-                    "plane": "storage"
-                  }
-                }
-              },
-              "foreignKeys": [
-                {
-                  "index": {
-                    "name": "core_incidents_category_id_idx_da7213d4"
-                  },
-                  "source": {
-                    "columns": [
-                      "category_id"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "core_incidents"
-                  },
-                  "target": {
-                    "columns": [
-                      "id"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "incident_categories"
-                  }
-                }
-              ],
-              "indexes": [
-                {
-                  "columns": [
-                    "category_id"
-                  ],
-                  "name": "core_incidents_category_id_idx_da7213d4",
-                  "prefix": "core_incidents_category_id_idx",
-                  "unique": false
-                }
-              ],
-              "primaryKey": {
-                "columns": [
-                  "id"
-                ]
+                ],
+                "name": "contracts_pkey"
               },
               "uniques": []
             },
             "equipment": {
               "checks": [
                 {
-                  "expression": "\"category\" IN ('RADIO_COMMUNICATION', 'LIGHTING', 'DEFENSE_AND_PPE', 'DETECTION', 'KEYS_AND_BADGES', 'PTI_DEVICE', 'VEHICLE')",
-                  "name": "equipment_category_check_03887e0a",
-                  "prefix": "equipment_category_check"
+                  "expression": "(category = ANY (ARRAY['RADIO_COMMUNICATION'::text, 'LIGHTING'::text, 'DEFENSE_AND_PPE'::text, 'DETECTION'::text, 'KEYS_AND_BADGES'::text, 'PTI_DEVICE'::text, 'VEHICLE'::text]))",
+                  "name": "equipment_category_check_03887e0a"
                 },
                 {
-                  "expression": "\"status\" IN ('AVAILABLE', 'ASSIGNED', 'UNDER_MAINTENANCE', 'DAMAGED', 'LOST', 'RETIRED')",
-                  "name": "equipment_status_check_ca4725d1",
-                  "prefix": "equipment_status_check"
+                  "expression": "(status = ANY (ARRAY['AVAILABLE'::text, 'ASSIGNED'::text, 'UNDER_MAINTENANCE'::text, 'DAMAGED'::text, 'LOST'::text, 'RETIRED'::text]))",
+                  "name": "equipment_status_check_ca4725d1"
                 }
               ],
               "columns": {
                 "category": {
                   "codecId": "pg/text@1",
                   "dataType": "pg/text",
-                  "nullable": false,
-                  "valueSet": {
-                    "entityKind": "valueSet",
-                    "entityName": "EquipmentCategoryKind",
-                    "namespaceId": "public",
-                    "plane": "storage"
-                  }
+                  "nullable": false
                 },
                 "code": {
                   "codecId": "pg/text@1",
@@ -5960,13 +5241,7 @@
                     "kind": "literal",
                     "value": "AVAILABLE"
                   },
-                  "nullable": false,
-                  "valueSet": {
-                    "entityKind": "valueSet",
-                    "entityName": "EquipmentStatus",
-                    "namespaceId": "public",
-                    "plane": "storage"
-                  }
+                  "nullable": false
                 },
                 "updatedAt": {
                   "codecId": "pg/timestamptz-date@1",
@@ -5986,32 +5261,33 @@
               "primaryKey": {
                 "columns": [
                   "id"
-                ]
+                ],
+                "name": "equipment_pkey"
               },
               "uniques": [
                 {
                   "columns": [
                     "code"
-                  ]
+                  ],
+                  "name": "equipment_code_key"
                 },
                 {
                   "columns": [
                     "serialNumber"
-                  ]
+                  ],
+                  "name": "equipment_serialNumber_key"
                 }
               ]
             },
             "equipment_assignments": {
               "checks": [
                 {
-                  "expression": "\"conditionOnAssignment\" IN ('EXCELLENT', 'GOOD', 'FAIR', 'DAMAGED')",
-                  "name": "equipment_assignments_conditionOnAssignment_check_cd969df4",
-                  "prefix": "equipment_assignments_conditionOnAssignment_check"
+                  "expression": "(\"conditionOnAssignment\" = ANY (ARRAY['EXCELLENT'::text, 'GOOD'::text, 'FAIR'::text, 'DAMAGED'::text]))",
+                  "name": "equipment_assignments_conditionOnAssignment_check_cd969df4"
                 },
                 {
-                  "expression": "\"conditionOnReturn\" IN ('EXCELLENT', 'GOOD', 'FAIR', 'DAMAGED')",
-                  "name": "equipment_assignments_conditionOnReturn_check_fc912f52",
-                  "prefix": "equipment_assignments_conditionOnReturn_check"
+                  "expression": "(\"conditionOnReturn\" = ANY (ARRAY['EXCELLENT'::text, 'GOOD'::text, 'FAIR'::text, 'DAMAGED'::text]))",
+                  "name": "equipment_assignments_conditionOnReturn_check_fc912f52"
                 }
               ],
               "columns": {
@@ -6048,24 +5324,12 @@
                     "kind": "literal",
                     "value": "GOOD"
                   },
-                  "nullable": false,
-                  "valueSet": {
-                    "entityKind": "valueSet",
-                    "entityName": "EquipmentCondition",
-                    "namespaceId": "public",
-                    "plane": "storage"
-                  }
+                  "nullable": false
                 },
                 "conditionOnReturn": {
                   "codecId": "pg/text@1",
                   "dataType": "pg/text",
-                  "nullable": true,
-                  "valueSet": {
-                    "entityKind": "valueSet",
-                    "entityName": "EquipmentCondition",
-                    "namespaceId": "public",
-                    "plane": "storage"
-                  }
+                  "nullable": true
                 },
                 "createdAt": {
                   "codecId": "pg/timestamptz-date@1",
@@ -6127,8 +5391,29 @@
               "foreignKeys": [
                 {
                   "index": {
+                    "name": "equipment_assignments_agentId_idx_8d0ba4f0"
+                  },
+                  "name": "equipment_assignments_agentId_fkey",
+                  "source": {
+                    "columns": [
+                      "agentId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "equipment_assignments"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "users"
+                  }
+                },
+                {
+                  "index": {
                     "name": "equipment_assignments_equipmentId_idx_e1548594"
                   },
+                  "name": "equipment_assignments_equipmentId_fkey",
                   "onDelete": "cascade",
                   "source": {
                     "columns": [
@@ -6147,27 +5432,9 @@
                 },
                 {
                   "index": {
-                    "name": "equipment_assignments_agentId_idx_8d0ba4f0"
-                  },
-                  "source": {
-                    "columns": [
-                      "agentId"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "equipment_assignments"
-                  },
-                  "target": {
-                    "columns": [
-                      "id"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "users"
-                  }
-                },
-                {
-                  "index": {
                     "name": "equipment_assignments_shiftId_idx_fee8a58d"
                   },
+                  "name": "equipment_assignments_shiftId_fkey",
                   "source": {
                     "columns": [
                       "shiftId"
@@ -6213,7 +5480,8 @@
               "primaryKey": {
                 "columns": [
                   "id"
-                ]
+                ],
+                "name": "equipment_assignments_pkey"
               },
               "uniques": []
             },
@@ -6228,7 +5496,7 @@
                   },
                   "nullable": false,
                   "typeParams": {
-                    "precision": 3
+                    "precision": 6
                   }
                 },
                 "description": {
@@ -6261,7 +5529,8 @@
               "primaryKey": {
                 "columns": [
                   "id"
-                ]
+                ],
+                "name": "equipment_categories_pkey"
               },
               "uniques": []
             },
@@ -6324,6 +5593,7 @@
                   "index": {
                     "name": "incident_attachments_incidentId_idx_20b6f3c9"
                   },
+                  "name": "incident_attachments_incidentId_fkey",
                   "onDelete": "cascade",
                   "source": {
                     "columns": [
@@ -6354,7 +5624,8 @@
               "primaryKey": {
                 "columns": [
                   "id"
-                ]
+                ],
+                "name": "incident_attachments_pkey"
               },
               "uniques": []
             },
@@ -6369,7 +5640,7 @@
                   },
                   "nullable": false,
                   "typeParams": {
-                    "precision": 3
+                    "precision": 6
                   }
                 },
                 "description": {
@@ -6402,7 +5673,8 @@
               "primaryKey": {
                 "columns": [
                   "id"
-                ]
+                ],
+                "name": "incident_categories_pkey"
               },
               "uniques": []
             },
@@ -6448,8 +5720,29 @@
               "foreignKeys": [
                 {
                   "index": {
+                    "name": "incident_comments_authorId_idx_e47547ed"
+                  },
+                  "name": "incident_comments_authorId_fkey",
+                  "source": {
+                    "columns": [
+                      "authorId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "incident_comments"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "users"
+                  }
+                },
+                {
+                  "index": {
                     "name": "incident_comments_incidentId_idx_20b6f3c9"
                   },
+                  "name": "incident_comments_incidentId_fkey",
                   "onDelete": "cascade",
                   "source": {
                     "columns": [
@@ -6464,25 +5757,6 @@
                     ],
                     "namespaceId": "public",
                     "tableName": "incidents"
-                  }
-                },
-                {
-                  "index": {
-                    "name": "incident_comments_authorId_idx_e47547ed"
-                  },
-                  "source": {
-                    "columns": [
-                      "authorId"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "incident_comments"
-                  },
-                  "target": {
-                    "columns": [
-                      "id"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "users"
                   }
                 }
               ],
@@ -6507,26 +5781,24 @@
               "primaryKey": {
                 "columns": [
                   "id"
-                ]
+                ],
+                "name": "incident_comments_pkey"
               },
               "uniques": []
             },
             "incidents": {
               "checks": [
                 {
-                  "expression": "\"category\" IN ('INTRUSION', 'FIRE_ALARM', 'THEFT', 'VANDALISM', 'AGGRESSION', 'TECHNICAL_FAILURE', 'MEDICAL_EMERGENCY', 'ACCESS_DENIAL', 'SUSPICIOUS_PERSON', 'OTHER')",
-                  "name": "incidents_category_check_c2d2dc6c",
-                  "prefix": "incidents_category_check"
+                  "expression": "(category = ANY (ARRAY['INTRUSION'::text, 'FIRE_ALARM'::text, 'THEFT'::text, 'VANDALISM'::text, 'AGGRESSION'::text, 'TECHNICAL_FAILURE'::text, 'MEDICAL_EMERGENCY'::text, 'ACCESS_DENIAL'::text, 'SUSPICIOUS_PERSON'::text, 'OTHER'::text]))",
+                  "name": "incidents_category_check_c2d2dc6c"
                 },
                 {
-                  "expression": "\"severity\" IN ('LOW', 'MEDIUM', 'HIGH', 'CRITICAL')",
-                  "name": "incidents_severity_check_5e5a5e80",
-                  "prefix": "incidents_severity_check"
+                  "expression": "(severity = ANY (ARRAY['LOW'::text, 'MEDIUM'::text, 'HIGH'::text, 'CRITICAL'::text]))",
+                  "name": "incidents_severity_check_5e5a5e80"
                 },
                 {
-                  "expression": "\"status\" IN ('NEW', 'IN_PROGRESS', 'RESOLVED', 'CLOSED')",
-                  "name": "incidents_status_check_50d14964",
-                  "prefix": "incidents_status_check"
+                  "expression": "(status = ANY (ARRAY['NEW'::text, 'IN_PROGRESS'::text, 'RESOLVED'::text, 'CLOSED'::text]))",
+                  "name": "incidents_status_check_50d14964"
                 }
               ],
               "columns": {
@@ -6543,13 +5815,7 @@
                 "category": {
                   "codecId": "pg/text@1",
                   "dataType": "pg/text",
-                  "nullable": false,
-                  "valueSet": {
-                    "entityKind": "valueSet",
-                    "entityName": "IncidentCategoryKind",
-                    "namespaceId": "public",
-                    "plane": "storage"
-                  }
+                  "nullable": false
                 },
                 "clientNotified": {
                   "codecId": "pg/bool@1",
@@ -6655,13 +5921,7 @@
                     "kind": "literal",
                     "value": "MEDIUM"
                   },
-                  "nullable": false,
-                  "valueSet": {
-                    "entityKind": "valueSet",
-                    "entityName": "IncidentSeverity",
-                    "namespaceId": "public",
-                    "plane": "storage"
-                  }
+                  "nullable": false
                 },
                 "shiftId": {
                   "codecId": "pg/int4@1",
@@ -6680,13 +5940,7 @@
                     "kind": "literal",
                     "value": "NEW"
                   },
-                  "nullable": false,
-                  "valueSet": {
-                    "entityKind": "valueSet",
-                    "entityName": "IncidentStatus",
-                    "namespaceId": "public",
-                    "plane": "storage"
-                  }
+                  "nullable": false
                 },
                 "title": {
                   "codecId": "pg/text@1",
@@ -6709,12 +5963,12 @@
               "foreignKeys": [
                 {
                   "index": {
-                    "name": "incidents_siteId_idx_cabdc5ab"
+                    "name": "incidents_assignedToId_idx_45a131c2"
                   },
-                  "onDelete": "cascade",
+                  "name": "incidents_assignedToId_fkey",
                   "source": {
                     "columns": [
-                      "siteId"
+                      "assignedToId"
                     ],
                     "namespaceId": "public",
                     "tableName": "incidents"
@@ -6724,32 +5978,14 @@
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "sites"
-                  }
-                },
-                {
-                  "index": {
-                    "name": "incidents_shiftId_idx_fee8a58d"
-                  },
-                  "source": {
-                    "columns": [
-                      "shiftId"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "incidents"
-                  },
-                  "target": {
-                    "columns": [
-                      "id"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "shifts"
+                    "tableName": "users"
                   }
                 },
                 {
                   "index": {
                     "name": "incidents_patrolId_idx_d6f44378"
                   },
+                  "name": "incidents_patrolId_fkey",
                   "source": {
                     "columns": [
                       "patrolId"
@@ -6769,6 +6005,7 @@
                   "index": {
                     "name": "incidents_reportedById_idx_4bd24876"
                   },
+                  "name": "incidents_reportedById_fkey",
                   "source": {
                     "columns": [
                       "reportedById"
@@ -6786,11 +6023,12 @@
                 },
                 {
                   "index": {
-                    "name": "incidents_assignedToId_idx_45a131c2"
+                    "name": "incidents_shiftId_idx_fee8a58d"
                   },
+                  "name": "incidents_shiftId_fkey",
                   "source": {
                     "columns": [
-                      "assignedToId"
+                      "shiftId"
                     ],
                     "namespaceId": "public",
                     "tableName": "incidents"
@@ -6800,7 +6038,28 @@
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "users"
+                    "tableName": "shifts"
+                  }
+                },
+                {
+                  "index": {
+                    "name": "incidents_siteId_idx_cabdc5ab"
+                  },
+                  "name": "incidents_siteId_fkey",
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "siteId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "incidents"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "sites"
                   }
                 }
               ],
@@ -6849,22 +6108,23 @@
               "primaryKey": {
                 "columns": [
                   "id"
-                ]
+                ],
+                "name": "incidents_pkey"
               },
               "uniques": [
                 {
                   "columns": [
                     "incidentNumber"
-                  ]
+                  ],
+                  "name": "incidents_incidentNumber_key"
                 }
               ]
             },
             "notifications": {
               "checks": [
                 {
-                  "expression": "\"type\" IN ('SOS_ALERT', 'LATE_CLOCK_IN', 'PATROL_MISSED', 'INCIDENT_CRITICAL', 'SHIFT_ASSIGNED', 'SYSTEM')",
-                  "name": "notifications_type_check_c46f6706",
-                  "prefix": "notifications_type_check"
+                  "expression": "(type = ANY (ARRAY['SOS_ALERT'::text, 'LATE_CLOCK_IN'::text, 'PATROL_MISSED'::text, 'INCIDENT_CRITICAL'::text, 'SHIFT_ASSIGNED'::text, 'SYSTEM'::text]))",
+                  "name": "notifications_type_check_c46f6706"
                 }
               ],
               "columns": {
@@ -6923,13 +6183,7 @@
                     "kind": "literal",
                     "value": "SYSTEM"
                   },
-                  "nullable": false,
-                  "valueSet": {
-                    "entityKind": "valueSet",
-                    "entityName": "NotificationType",
-                    "namespaceId": "public",
-                    "plane": "storage"
-                  }
+                  "nullable": false
                 },
                 "userId": {
                   "codecId": "pg/int4@1",
@@ -6942,6 +6196,7 @@
                   "index": {
                     "name": "notifications_userId_idx_a489d58a"
                   },
+                  "name": "notifications_userId_fkey",
                   "onDelete": "cascade",
                   "source": {
                     "columns": [
@@ -6972,16 +6227,16 @@
               "primaryKey": {
                 "columns": [
                   "id"
-                ]
+                ],
+                "name": "notifications_pkey"
               },
               "uniques": []
             },
             "patrol_scans": {
               "checks": [
                 {
-                  "expression": "\"status\" IN ('OK', 'ANOMALY_DETECTED', 'MISSED')",
-                  "name": "patrol_scans_status_check_4e0b1ed4",
-                  "prefix": "patrol_scans_status_check"
+                  "expression": "(status = ANY (ARRAY['OK'::text, 'ANOMALY_DETECTED'::text, 'MISSED'::text]))",
+                  "name": "patrol_scans_status_check_4e0b1ed4"
                 }
               ],
               "columns": {
@@ -7064,24 +6319,18 @@
                     "kind": "literal",
                     "value": "OK"
                   },
-                  "nullable": false,
-                  "valueSet": {
-                    "entityKind": "valueSet",
-                    "entityName": "ScanStatus",
-                    "namespaceId": "public",
-                    "plane": "storage"
-                  }
+                  "nullable": false
                 }
               },
               "foreignKeys": [
                 {
                   "index": {
-                    "name": "patrol_scans_patrolId_idx_d6f44378"
+                    "name": "patrol_scans_agentId_idx_8d0ba4f0"
                   },
-                  "onDelete": "cascade",
+                  "name": "patrol_scans_agentId_fkey",
                   "source": {
                     "columns": [
-                      "patrolId"
+                      "agentId"
                     ],
                     "namespaceId": "public",
                     "tableName": "patrol_scans"
@@ -7091,13 +6340,14 @@
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "patrols"
+                    "tableName": "users"
                   }
                 },
                 {
                   "index": {
                     "name": "patrol_scans_checkpointId_idx_4eb4c383"
                   },
+                  "name": "patrol_scans_checkpointId_fkey",
                   "onDelete": "cascade",
                   "source": {
                     "columns": [
@@ -7116,11 +6366,13 @@
                 },
                 {
                   "index": {
-                    "name": "patrol_scans_agentId_idx_8d0ba4f0"
+                    "name": "patrol_scans_patrolId_idx_d6f44378"
                   },
+                  "name": "patrol_scans_patrolId_fkey",
+                  "onDelete": "cascade",
                   "source": {
                     "columns": [
-                      "agentId"
+                      "patrolId"
                     ],
                     "namespaceId": "public",
                     "tableName": "patrol_scans"
@@ -7130,7 +6382,7 @@
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "users"
+                    "tableName": "patrols"
                   }
                 }
               ],
@@ -7163,16 +6415,16 @@
               "primaryKey": {
                 "columns": [
                   "id"
-                ]
+                ],
+                "name": "patrol_scans_pkey"
               },
               "uniques": []
             },
             "patrols": {
               "checks": [
                 {
-                  "expression": "\"status\" IN ('IN_PROGRESS', 'COMPLETED', 'INCOMPLETE', 'ABORTED')",
-                  "name": "patrols_status_check_7f8da3e7",
-                  "prefix": "patrols_status_check"
+                  "expression": "(status = ANY (ARRAY['IN_PROGRESS'::text, 'COMPLETED'::text, 'INCOMPLETE'::text, 'ABORTED'::text]))",
+                  "name": "patrols_status_check_7f8da3e7"
                 }
               ],
               "columns": {
@@ -7261,13 +6513,7 @@
                     "kind": "literal",
                     "value": "IN_PROGRESS"
                   },
-                  "nullable": false,
-                  "valueSet": {
-                    "entityKind": "valueSet",
-                    "entityName": "PatrolStatus",
-                    "namespaceId": "public",
-                    "plane": "storage"
-                  }
+                  "nullable": false
                 },
                 "title": {
                   "codecId": "pg/text@1",
@@ -7299,28 +6545,9 @@
               "foreignKeys": [
                 {
                   "index": {
-                    "name": "patrols_siteId_idx_cabdc5ab"
-                  },
-                  "onDelete": "cascade",
-                  "source": {
-                    "columns": [
-                      "siteId"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "patrols"
-                  },
-                  "target": {
-                    "columns": [
-                      "id"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "sites"
-                  }
-                },
-                {
-                  "index": {
                     "name": "patrols_agentId_idx_8d0ba4f0"
                   },
+                  "name": "patrols_agentId_fkey",
                   "source": {
                     "columns": [
                       "agentId"
@@ -7340,6 +6567,7 @@
                   "index": {
                     "name": "patrols_shiftId_idx_fee8a58d"
                   },
+                  "name": "patrols_shiftId_fkey",
                   "source": {
                     "columns": [
                       "shiftId"
@@ -7353,6 +6581,27 @@
                     ],
                     "namespaceId": "public",
                     "tableName": "shifts"
+                  }
+                },
+                {
+                  "index": {
+                    "name": "patrols_siteId_idx_cabdc5ab"
+                  },
+                  "name": "patrols_siteId_fkey",
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "siteId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "patrols"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "sites"
                   }
                 }
               ],
@@ -7385,21 +6634,125 @@
               "primaryKey": {
                 "columns": [
                   "id"
-                ]
+                ],
+                "name": "patrols_pkey"
+              },
+              "uniques": []
+            },
+            "role_assignments": {
+              "checks": [
+                {
+                  "expression": "(role = ANY (ARRAY['ADMIN'::text, 'MANAGER'::text, 'DIRECTOR'::text, 'SUPERVISOR'::text, 'AGENT'::text]))",
+                  "name": "role_assignments_role_check_3b8a4a49"
+                }
+              ],
+              "columns": {
+                "assignedAt": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "createdAt": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nullable": false
+                },
+                "role": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "updatedAt": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "userId": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "index": {
+                    "name": "role_assignments_userId_idx_a489d58a"
+                  },
+                  "name": "role_assignments_userId_fkey",
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "userId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "role_assignments"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "users"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "userId"
+                  ],
+                  "name": "role_assignments_userId_idx_a489d58a",
+                  "prefix": "role_assignments_userId_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ],
+                "name": "role_assignments_pkey"
               },
               "uniques": []
             },
             "shifts": {
               "checks": [
                 {
-                  "expression": "\"shiftType\" IN ('DAY', 'NIGHT', 'WEEKEND', 'WEEKDAY', 'FULL_TIME', 'PART_TIME', 'REINFORCEMENT', 'DOG_PATROL')",
-                  "name": "shifts_shiftType_check_5a43ab5b",
-                  "prefix": "shifts_shiftType_check"
+                  "expression": "(\"shiftType\" = ANY (ARRAY['DAY'::text, 'NIGHT'::text, 'WEEKEND'::text, 'REINFORCEMENT'::text, 'DOG_PATROL'::text]))",
+                  "name": "shifts_shiftType_check_ba185ef3"
                 },
                 {
-                  "expression": "\"status\" IN ('SCHEDULED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED', 'NO_SHOW', 'REPLACED')",
-                  "name": "shifts_status_check_51c56842",
-                  "prefix": "shifts_status_check"
+                  "expression": "(status = ANY (ARRAY['SCHEDULED'::text, 'IN_PROGRESS'::text, 'COMPLETED'::text, 'CANCELLED'::text, 'NO_SHOW'::text, 'REPLACED'::text]))",
+                  "name": "shifts_status_check_51c56842"
                 }
               ],
               "columns": {
@@ -7431,11 +6784,7 @@
                 "hourlyRate": {
                   "codecId": "pg/numeric@1",
                   "dataType": "pg/numeric",
-                  "nullable": true,
-                  "typeParams": {
-                    "precision": 10,
-                    "scale": 2
-                  }
+                  "nullable": true
                 },
                 "id": {
                   "codecId": "pg/int4@1",
@@ -7454,13 +6803,7 @@
                 "shiftType": {
                   "codecId": "pg/text@1",
                   "dataType": "pg/text",
-                  "nullable": false,
-                  "valueSet": {
-                    "entityKind": "valueSet",
-                    "entityName": "ShiftType",
-                    "namespaceId": "public",
-                    "plane": "storage"
-                  }
+                  "nullable": false
                 },
                 "siteId": {
                   "codecId": "pg/int4@1",
@@ -7482,13 +6825,7 @@
                     "kind": "literal",
                     "value": "SCHEDULED"
                   },
-                  "nullable": false,
-                  "valueSet": {
-                    "entityKind": "valueSet",
-                    "entityName": "ShiftStatus",
-                    "namespaceId": "public",
-                    "plane": "storage"
-                  }
+                  "nullable": false
                 },
                 "supervisorId": {
                   "codecId": "pg/int4@1",
@@ -7521,8 +6858,29 @@
               "foreignKeys": [
                 {
                   "index": {
+                    "name": "shifts_agentId_idx_8d0ba4f0"
+                  },
+                  "name": "shifts_agentId_fkey",
+                  "source": {
+                    "columns": [
+                      "agentId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "shifts"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "users"
+                  }
+                },
+                {
+                  "index": {
                     "name": "shifts_siteId_idx_cabdc5ab"
                   },
+                  "name": "shifts_siteId_fkey",
                   "onDelete": "cascade",
                   "source": {
                     "columns": [
@@ -7541,11 +6899,12 @@
                 },
                 {
                   "index": {
-                    "name": "shifts_agentId_idx_8d0ba4f0"
+                    "name": "shifts_supervisorId_idx_fe423ed5"
                   },
+                  "name": "shifts_supervisorId_fkey",
                   "source": {
                     "columns": [
-                      "agentId"
+                      "supervisorId"
                     ],
                     "namespaceId": "public",
                     "tableName": "shifts"
@@ -7562,28 +6921,10 @@
                   "index": {
                     "name": "shifts_teamLeaderId_idx_1d5c7be0"
                   },
+                  "name": "shifts_teamLeaderId_fkey",
                   "source": {
                     "columns": [
                       "teamLeaderId"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "shifts"
-                  },
-                  "target": {
-                    "columns": [
-                      "id"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "users"
-                  }
-                },
-                {
-                  "index": {
-                    "name": "shifts_supervisorId_idx_fe423ed5"
-                  },
-                  "source": {
-                    "columns": [
-                      "supervisorId"
                     ],
                     "namespaceId": "public",
                     "tableName": "shifts"
@@ -7634,7 +6975,8 @@
               "primaryKey": {
                 "columns": [
                   "id"
-                ]
+                ],
+                "name": "shifts_pkey"
               },
               "uniques": []
             },
@@ -7692,28 +7034,9 @@
               "foreignKeys": [
                 {
                   "index": {
-                    "name": "site_equipments_siteId_idx_cabdc5ab"
-                  },
-                  "onDelete": "cascade",
-                  "source": {
-                    "columns": [
-                      "siteId"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "site_equipments"
-                  },
-                  "target": {
-                    "columns": [
-                      "id"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "sites"
-                  }
-                },
-                {
-                  "index": {
                     "name": "site_equipments_equipmentId_idx_e1548594"
                   },
+                  "name": "site_equipments_equipmentId_fkey",
                   "onDelete": "cascade",
                   "source": {
                     "columns": [
@@ -7728,6 +7051,27 @@
                     ],
                     "namespaceId": "public",
                     "tableName": "equipment"
+                  }
+                },
+                {
+                  "index": {
+                    "name": "site_equipments_siteId_idx_cabdc5ab"
+                  },
+                  "name": "site_equipments_siteId_fkey",
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "siteId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "site_equipments"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "sites"
                   }
                 }
               ],
@@ -7752,28 +7096,28 @@
               "primaryKey": {
                 "columns": [
                   "id"
-                ]
+                ],
+                "name": "site_equipments_pkey"
               },
               "uniques": [
                 {
                   "columns": [
                     "siteId",
                     "equipmentId"
-                  ]
+                  ],
+                  "name": "site_equipments_siteId_equipmentId_key"
                 }
               ]
             },
             "site_instructions": {
               "checks": [
                 {
-                  "expression": "\"priority\" IN ('LOW', 'NORMAL', 'HIGH', 'URGENT')",
-                  "name": "site_instructions_priority_check_72dbae57",
-                  "prefix": "site_instructions_priority_check"
+                  "expression": "(priority = ANY (ARRAY['LOW'::text, 'NORMAL'::text, 'HIGH'::text, 'URGENT'::text]))",
+                  "name": "site_instructions_priority_check_72dbae57"
                 },
                 {
-                  "expression": "\"type\" IN ('PERMANENT', 'TEMPORARY', 'EMERGENCY_PROCEDURE', 'ACCESS_CONTROL')",
-                  "name": "site_instructions_type_check_f1605544",
-                  "prefix": "site_instructions_type_check"
+                  "expression": "(type = ANY (ARRAY['PERMANENT'::text, 'TEMPORARY'::text, 'EMERGENCY_PROCEDURE'::text, 'ACCESS_CONTROL'::text]))",
+                  "name": "site_instructions_type_check_f1605544"
                 }
               ],
               "columns": {
@@ -7844,13 +7188,7 @@
                     "kind": "literal",
                     "value": "NORMAL"
                   },
-                  "nullable": false,
-                  "valueSet": {
-                    "entityKind": "valueSet",
-                    "entityName": "PriorityLevel",
-                    "namespaceId": "public",
-                    "plane": "storage"
-                  }
+                  "nullable": false
                 },
                 "siteId": {
                   "codecId": "pg/int4@1",
@@ -7869,13 +7207,7 @@
                     "kind": "literal",
                     "value": "PERMANENT"
                   },
-                  "nullable": false,
-                  "valueSet": {
-                    "entityKind": "valueSet",
-                    "entityName": "InstructionType",
-                    "namespaceId": "public",
-                    "plane": "storage"
-                  }
+                  "nullable": false
                 },
                 "updatedAt": {
                   "codecId": "pg/timestamptz-date@1",
@@ -7893,8 +7225,29 @@
               "foreignKeys": [
                 {
                   "index": {
+                    "name": "site_instructions_authorId_idx_e47547ed"
+                  },
+                  "name": "site_instructions_authorId_fkey",
+                  "source": {
+                    "columns": [
+                      "authorId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "site_instructions"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "users"
+                  }
+                },
+                {
+                  "index": {
                     "name": "site_instructions_siteId_idx_cabdc5ab"
                   },
+                  "name": "site_instructions_siteId_fkey",
                   "onDelete": "cascade",
                   "source": {
                     "columns": [
@@ -7909,25 +7262,6 @@
                     ],
                     "namespaceId": "public",
                     "tableName": "sites"
-                  }
-                },
-                {
-                  "index": {
-                    "name": "site_instructions_authorId_idx_e47547ed"
-                  },
-                  "source": {
-                    "columns": [
-                      "authorId"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "site_instructions"
-                  },
-                  "target": {
-                    "columns": [
-                      "id"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "users"
                   }
                 }
               ],
@@ -7952,7 +7286,8 @@
               "primaryKey": {
                 "columns": [
                   "id"
-                ]
+                ],
+                "name": "site_instructions_pkey"
               },
               "uniques": []
             },
@@ -8080,6 +7415,7 @@
                   "index": {
                     "name": "sites_clientId_idx_153a9a49"
                   },
+                  "name": "sites_clientId_fkey",
                   "onDelete": "cascade",
                   "source": {
                     "columns": [
@@ -8100,6 +7436,7 @@
                   "index": {
                     "name": "sites_managerId_idx_f8369ba6"
                   },
+                  "name": "sites_managerId_fkey",
                   "source": {
                     "columns": [
                       "managerId"
@@ -8119,6 +7456,7 @@
                   "index": {
                     "name": "sites_supervisorId_idx_fe423ed5"
                   },
+                  "name": "sites_supervisorId_fkey",
                   "source": {
                     "columns": [
                       "supervisorId"
@@ -8164,27 +7502,27 @@
               "primaryKey": {
                 "columns": [
                   "id"
-                ]
+                ],
+                "name": "sites_pkey"
               },
               "uniques": [
                 {
                   "columns": [
                     "code"
-                  ]
+                  ],
+                  "name": "sites_code_key"
                 }
               ]
             },
             "users": {
               "checks": [
                 {
-                  "expression": "\"role\" IN ('SUPER_ADMIN', 'ADMIN', 'MANAGER', 'SUPERVISOR', 'TEAM_LEADER', 'AGENT', 'USER')",
-                  "name": "users_role_check_3f12cb29",
-                  "prefix": "users_role_check"
+                  "expression": "(role = ANY (ARRAY['ADMIN'::text, 'MANAGER'::text, 'DIRECTOR'::text, 'SUPERVISOR'::text, 'AGENT'::text]))",
+                  "name": "users_role_check_3b8a4a49"
                 },
                 {
-                  "expression": "\"status\" IN ('ACTIVE', 'SUSPENDED', 'DESERTER', 'DISMISSED', 'ARCHIVED')",
-                  "name": "users_status_check_299522e6",
-                  "prefix": "users_status_check"
+                  "expression": "(status = ANY (ARRAY['ACTIVE'::text, 'SUSPENDED'::text, 'ARCHIVED'::text]))",
+                  "name": "users_status_check_0f44f6b1"
                 }
               ],
               "columns": {
@@ -8269,17 +7607,7 @@
                 "role": {
                   "codecId": "pg/text@1",
                   "dataType": "pg/text",
-                  "default": {
-                    "kind": "literal",
-                    "value": "AGENT"
-                  },
-                  "nullable": false,
-                  "valueSet": {
-                    "entityKind": "valueSet",
-                    "entityName": "Role",
-                    "namespaceId": "public",
-                    "plane": "storage"
-                  }
+                  "nullable": false
                 },
                 "status": {
                   "codecId": "pg/text@1",
@@ -8288,13 +7616,7 @@
                     "kind": "literal",
                     "value": "ACTIVE"
                   },
-                  "nullable": false,
-                  "valueSet": {
-                    "entityKind": "valueSet",
-                    "entityName": "UserStatus",
-                    "namespaceId": "public",
-                    "plane": "storage"
-                  }
+                  "nullable": false
                 },
                 "supervisorId": {
                   "codecId": "pg/int4@1",
@@ -8324,6 +7646,7 @@
                   "index": {
                     "name": "users_supervisorId_idx_fe423ed5"
                   },
+                  "name": "users_supervisorId_fkey",
                   "source": {
                     "columns": [
                       "supervisorId"
@@ -8343,6 +7666,7 @@
                   "index": {
                     "name": "users_teamLeaderId_idx_1d5c7be0"
                   },
+                  "name": "users_teamLeaderId_fkey",
                   "source": {
                     "columns": [
                       "teamLeaderId"
@@ -8380,23 +7704,27 @@
               "primaryKey": {
                 "columns": [
                   "id"
-                ]
+                ],
+                "name": "users_pkey"
               },
               "uniques": [
                 {
                   "columns": [
+                    "adminLock"
+                  ],
+                  "name": "users_adminLock_key"
+                },
+                {
+                  "columns": [
                     "email"
-                  ]
+                  ],
+                  "name": "users_email_key"
                 },
                 {
                   "columns": [
                     "matricule"
-                  ]
-                },
-                {
-                  "columns": [
-                    "adminLock"
-                  ]
+                  ],
+                  "name": "users_matricule_key"
                 }
               ]
             }
@@ -8407,7 +7735,6 @@
               "values": [
                 "ON_TIME",
                 "LATE",
-                "PRESENT",
                 "ABSENT",
                 "EARLY_DEPARTURE",
                 "VERIFIED"
@@ -8421,34 +7748,12 @@
                 "SUPERVISOR_OVERRIDE"
               ]
             },
-            "ContractServiceKind": {
-              "kind": "valueSet",
-              "values": [
-                "STATIC_GUARDING",
-                "MOBILE_PATROL",
-                "EVENT_SECURITY",
-                "VIP_PROTECTION",
-                "DOG_HANDLER"
-              ]
-            },
             "ContractStatus": {
               "kind": "valueSet",
               "values": [
                 "ACTIVE",
                 "EXPIRED",
                 "TERMINATED"
-              ]
-            },
-            "EquipmentCategoryKind": {
-              "kind": "valueSet",
-              "values": [
-                "RADIO_COMMUNICATION",
-                "LIGHTING",
-                "DEFENSE_AND_PPE",
-                "DETECTION",
-                "KEYS_AND_BADGES",
-                "PTI_DEVICE",
-                "VEHICLE"
               ]
             },
             "EquipmentCondition": {
@@ -8469,21 +7774,6 @@
                 "DAMAGED",
                 "LOST",
                 "RETIRED"
-              ]
-            },
-            "IncidentCategoryKind": {
-              "kind": "valueSet",
-              "values": [
-                "INTRUSION",
-                "FIRE_ALARM",
-                "THEFT",
-                "VANDALISM",
-                "AGGRESSION",
-                "TECHNICAL_FAILURE",
-                "MEDICAL_EMERGENCY",
-                "ACCESS_DENIAL",
-                "SUSPICIOUS_PERSON",
-                "OTHER"
               ]
             },
             "IncidentSeverity": {
@@ -8576,14 +7866,12 @@
             "ShiftType": {
               "kind": "valueSet",
               "values": [
+                "HOUR",
                 "DAY",
                 "NIGHT",
-                "WEEKEND",
-                "WEEKDAY",
-                "FULL_TIME",
-                "PART_TIME",
-                "REINFORCEMENT",
-                "DOG_PATROL"
+                "WEEK_DAYS",
+                "WEEK_NIGHTS",
+                "FULL_DAY"
               ]
             },
             "UserStatus": {
@@ -8600,184 +7888,22 @@
         },
         "id": "public",
         "kind": "postgres-schema"
+      },
+      "vault": {
+        "entries": {
+          "extension": {
+            "supabase_vault": {
+              "kind": "extension",
+              "name": "supabase_vault"
+            }
+          },
+          "table": {}
+        },
+        "id": "vault",
+        "kind": "postgres-schema"
       }
     },
-    "storageHash": "56ee8d8239480e425db4af4bb825ef86a709b5b0dc5d5780400c34f87df585c7"
-  },
-  "execution": {
-    "executionHash": "dbff7740df8ab98b6106fac674466b7469a10d8524532698b075e8944ac474ab",
-    "mutations": {
-      "defaults": [
-        {
-          "onUpdate": {
-            "id": "timestampNow",
-            "kind": "generator",
-            "params": {
-              "precision": 3
-            }
-          },
-          "ref": {
-            "entry": "attendances",
-            "field": "updatedAt",
-            "namespace": "public"
-          }
-        },
-        {
-          "onUpdate": {
-            "id": "timestampNow",
-            "kind": "generator",
-            "params": {
-              "precision": 3
-            }
-          },
-          "ref": {
-            "entry": "checkpoints",
-            "field": "updatedAt",
-            "namespace": "public"
-          }
-        },
-        {
-          "onUpdate": {
-            "id": "timestampNow",
-            "kind": "generator",
-            "params": {
-              "precision": 3
-            }
-          },
-          "ref": {
-            "entry": "client_contracts",
-            "field": "updatedAt",
-            "namespace": "public"
-          }
-        },
-        {
-          "onUpdate": {
-            "id": "timestampNow",
-            "kind": "generator",
-            "params": {
-              "precision": 3
-            }
-          },
-          "ref": {
-            "entry": "clients",
-            "field": "updatedAt",
-            "namespace": "public"
-          }
-        },
-        {
-          "onUpdate": {
-            "id": "timestampNow",
-            "kind": "generator",
-            "params": {
-              "precision": 3
-            }
-          },
-          "ref": {
-            "entry": "equipment",
-            "field": "updatedAt",
-            "namespace": "public"
-          }
-        },
-        {
-          "onUpdate": {
-            "id": "timestampNow",
-            "kind": "generator",
-            "params": {
-              "precision": 3
-            }
-          },
-          "ref": {
-            "entry": "equipment_assignments",
-            "field": "updatedAt",
-            "namespace": "public"
-          }
-        },
-        {
-          "onUpdate": {
-            "id": "timestampNow",
-            "kind": "generator",
-            "params": {
-              "precision": 3
-            }
-          },
-          "ref": {
-            "entry": "incidents",
-            "field": "updatedAt",
-            "namespace": "public"
-          }
-        },
-        {
-          "onUpdate": {
-            "id": "timestampNow",
-            "kind": "generator",
-            "params": {
-              "precision": 3
-            }
-          },
-          "ref": {
-            "entry": "patrols",
-            "field": "updatedAt",
-            "namespace": "public"
-          }
-        },
-        {
-          "onUpdate": {
-            "id": "timestampNow",
-            "kind": "generator",
-            "params": {
-              "precision": 3
-            }
-          },
-          "ref": {
-            "entry": "shifts",
-            "field": "updatedAt",
-            "namespace": "public"
-          }
-        },
-        {
-          "onUpdate": {
-            "id": "timestampNow",
-            "kind": "generator",
-            "params": {
-              "precision": 3
-            }
-          },
-          "ref": {
-            "entry": "site_instructions",
-            "field": "updatedAt",
-            "namespace": "public"
-          }
-        },
-        {
-          "onUpdate": {
-            "id": "timestampNow",
-            "kind": "generator",
-            "params": {
-              "precision": 3
-            }
-          },
-          "ref": {
-            "entry": "sites",
-            "field": "updatedAt",
-            "namespace": "public"
-          }
-        },
-        {
-          "onUpdate": {
-            "id": "timestampNow",
-            "kind": "generator",
-            "params": {
-              "precision": 3
-            }
-          },
-          "ref": {
-            "entry": "users",
-            "field": "updatedAt",
-            "namespace": "public"
-          }
-        }
-      ]
-    }
+    "storageHash": "266ebdec44d64cb93785e6783d3d747f50d0d9bd5661544e983a176aa4044c1d"
   },
   "capabilities": {
     "postgres": {

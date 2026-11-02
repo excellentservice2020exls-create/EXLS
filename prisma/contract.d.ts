@@ -23,7 +23,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'f12d7848390b6e8aa72c859e70100eed3e3f6cec31f40aa44a137430b961bc2e'>;
+  StorageHashBase<'56ee8d8239480e425db4af4bb825ef86a709b5b0dc5d5780400c34f87df585c7'>;
 export type ExecutionHash =
   ExecutionHashBase<'dbff7740df8ab98b6106fac674466b7469a10d8524532698b075e8944ac474ab'>;
 export type ProfileHash =
@@ -284,8 +284,10 @@ type FieldTypeOverrides = {
           readonly input: 'QR_SCAN' | 'GPS_GEOFENCE' | 'SUPERVISOR_OVERRIDE';
         };
         readonly status: {
-          readonly output: 'ON_TIME' | 'LATE' | 'ABSENT' | 'EARLY_DEPARTURE' | 'VERIFIED';
-          readonly input: 'ON_TIME' | 'LATE' | 'ABSENT' | 'EARLY_DEPARTURE' | 'VERIFIED';
+          readonly output:
+            'ON_TIME' | 'LATE' | 'PRESENT' | 'ABSENT' | 'EARLY_DEPARTURE' | 'VERIFIED';
+          readonly input:
+            'ON_TIME' | 'LATE' | 'PRESENT' | 'ABSENT' | 'EARLY_DEPARTURE' | 'VERIFIED';
         };
       };
       readonly ClientContract: {
@@ -438,8 +440,24 @@ type FieldTypeOverrides = {
       };
       readonly Shift: {
         readonly shiftType: {
-          readonly output: 'DAY' | 'NIGHT' | 'WEEKEND' | 'REINFORCEMENT' | 'DOG_PATROL';
-          readonly input: 'DAY' | 'NIGHT' | 'WEEKEND' | 'REINFORCEMENT' | 'DOG_PATROL';
+          readonly output:
+            | 'DAY'
+            | 'NIGHT'
+            | 'WEEKEND'
+            | 'WEEKDAY'
+            | 'FULL_TIME'
+            | 'PART_TIME'
+            | 'REINFORCEMENT'
+            | 'DOG_PATROL';
+          readonly input:
+            | 'DAY'
+            | 'NIGHT'
+            | 'WEEKEND'
+            | 'WEEKDAY'
+            | 'FULL_TIME'
+            | 'PART_TIME'
+            | 'REINFORCEMENT'
+            | 'DOG_PATROL';
         };
         readonly status: {
           readonly output:
@@ -460,12 +478,14 @@ type FieldTypeOverrides = {
       };
       readonly User: {
         readonly role: {
-          readonly output: 'ADMIN' | 'MANAGER' | 'DIRECTOR' | 'SUPERVISOR' | 'AGENT';
-          readonly input: 'ADMIN' | 'MANAGER' | 'DIRECTOR' | 'SUPERVISOR' | 'AGENT';
+          readonly output:
+            'SUPER_ADMIN' | 'ADMIN' | 'MANAGER' | 'SUPERVISOR' | 'TEAM_LEADER' | 'AGENT' | 'USER';
+          readonly input:
+            'SUPER_ADMIN' | 'ADMIN' | 'MANAGER' | 'SUPERVISOR' | 'TEAM_LEADER' | 'AGENT' | 'USER';
         };
         readonly status: {
-          readonly output: 'ACTIVE' | 'SUSPENDED' | 'ARCHIVED';
-          readonly input: 'ACTIVE' | 'SUSPENDED' | 'ARCHIVED';
+          readonly output: 'ACTIVE' | 'SUSPENDED' | 'DESERTER' | 'DISMISSED' | 'ARCHIVED';
+          readonly input: 'ACTIVE' | 'SUSPENDED' | 'DESERTER' | 'DISMISSED' | 'ARCHIVED';
         };
       };
     };
@@ -495,8 +515,8 @@ type ColumnTypeOverrides = {
         readonly input: 'QR_SCAN' | 'GPS_GEOFENCE' | 'SUPERVISOR_OVERRIDE';
       };
       readonly status: {
-        readonly output: 'ON_TIME' | 'LATE' | 'ABSENT' | 'EARLY_DEPARTURE' | 'VERIFIED';
-        readonly input: 'ON_TIME' | 'LATE' | 'ABSENT' | 'EARLY_DEPARTURE' | 'VERIFIED';
+        readonly output: 'ON_TIME' | 'LATE' | 'PRESENT' | 'ABSENT' | 'EARLY_DEPARTURE' | 'VERIFIED';
+        readonly input: 'ON_TIME' | 'LATE' | 'PRESENT' | 'ABSENT' | 'EARLY_DEPARTURE' | 'VERIFIED';
       };
     };
     readonly client_contracts: {
@@ -641,8 +661,24 @@ type ColumnTypeOverrides = {
     };
     readonly shifts: {
       readonly shiftType: {
-        readonly output: 'DAY' | 'NIGHT' | 'WEEKEND' | 'REINFORCEMENT' | 'DOG_PATROL';
-        readonly input: 'DAY' | 'NIGHT' | 'WEEKEND' | 'REINFORCEMENT' | 'DOG_PATROL';
+        readonly output:
+          | 'DAY'
+          | 'NIGHT'
+          | 'WEEKEND'
+          | 'WEEKDAY'
+          | 'FULL_TIME'
+          | 'PART_TIME'
+          | 'REINFORCEMENT'
+          | 'DOG_PATROL';
+        readonly input:
+          | 'DAY'
+          | 'NIGHT'
+          | 'WEEKEND'
+          | 'WEEKDAY'
+          | 'FULL_TIME'
+          | 'PART_TIME'
+          | 'REINFORCEMENT'
+          | 'DOG_PATROL';
       };
       readonly status: {
         readonly output:
@@ -663,12 +699,14 @@ type ColumnTypeOverrides = {
     };
     readonly users: {
       readonly role: {
-        readonly output: 'ADMIN' | 'MANAGER' | 'DIRECTOR' | 'SUPERVISOR' | 'AGENT';
-        readonly input: 'ADMIN' | 'MANAGER' | 'DIRECTOR' | 'SUPERVISOR' | 'AGENT';
+        readonly output:
+          'SUPER_ADMIN' | 'ADMIN' | 'MANAGER' | 'SUPERVISOR' | 'TEAM_LEADER' | 'AGENT' | 'USER';
+        readonly input:
+          'SUPER_ADMIN' | 'ADMIN' | 'MANAGER' | 'SUPERVISOR' | 'TEAM_LEADER' | 'AGENT' | 'USER';
       };
       readonly status: {
-        readonly output: 'ACTIVE' | 'SUSPENDED' | 'ARCHIVED';
-        readonly input: 'ACTIVE' | 'SUSPENDED' | 'ARCHIVED';
+        readonly output: 'ACTIVE' | 'SUSPENDED' | 'DESERTER' | 'DISMISSED' | 'ARCHIVED';
+        readonly input: 'ACTIVE' | 'SUSPENDED' | 'DESERTER' | 'DISMISSED' | 'ARCHIVED';
       };
     };
   };
@@ -3882,6 +3920,7 @@ type ContractBase = Omit<
               readonly values: readonly [
                 'ON_TIME',
                 'LATE',
+                'PRESENT',
                 'ABSENT',
                 'EARLY_DEPARTURE',
                 'VERIFIED',
@@ -3985,7 +4024,15 @@ type ContractBase = Omit<
             };
             readonly Role: {
               readonly kind: 'valueSet';
-              readonly values: readonly ['ADMIN', 'MANAGER', 'DIRECTOR', 'SUPERVISOR', 'AGENT'];
+              readonly values: readonly [
+                'SUPER_ADMIN',
+                'ADMIN',
+                'MANAGER',
+                'SUPERVISOR',
+                'TEAM_LEADER',
+                'AGENT',
+                'USER',
+              ];
             };
             readonly ScanStatus: {
               readonly kind: 'valueSet';
@@ -4004,11 +4051,26 @@ type ContractBase = Omit<
             };
             readonly ShiftType: {
               readonly kind: 'valueSet';
-              readonly values: readonly ['DAY', 'NIGHT', 'WEEKEND', 'REINFORCEMENT', 'DOG_PATROL'];
+              readonly values: readonly [
+                'DAY',
+                'NIGHT',
+                'WEEKEND',
+                'WEEKDAY',
+                'FULL_TIME',
+                'PART_TIME',
+                'REINFORCEMENT',
+                'DOG_PATROL',
+              ];
             };
             readonly UserStatus: {
               readonly kind: 'valueSet';
-              readonly values: readonly ['ACTIVE', 'SUSPENDED', 'ARCHIVED'];
+              readonly values: readonly [
+                'ACTIVE',
+                'SUSPENDED',
+                'DESERTER',
+                'DISMISSED',
+                'ARCHIVED',
+              ];
             };
           };
         };
@@ -6650,6 +6712,7 @@ type ContractBase = Omit<
             readonly members: readonly [
               { readonly name: 'ON_TIME'; readonly value: 'ON_TIME' },
               { readonly name: 'LATE'; readonly value: 'LATE' },
+              { readonly name: 'PRESENT'; readonly value: 'PRESENT' },
               { readonly name: 'ABSENT'; readonly value: 'ABSENT' },
               { readonly name: 'EARLY_DEPARTURE'; readonly value: 'EARLY_DEPARTURE' },
               { readonly name: 'VERIFIED'; readonly value: 'VERIFIED' },
@@ -6787,11 +6850,13 @@ type ContractBase = Omit<
           readonly Role: {
             readonly codecId: 'pg/text@1';
             readonly members: readonly [
+              { readonly name: 'SUPER_ADMIN'; readonly value: 'SUPER_ADMIN' },
               { readonly name: 'ADMIN'; readonly value: 'ADMIN' },
               { readonly name: 'MANAGER'; readonly value: 'MANAGER' },
-              { readonly name: 'DIRECTOR'; readonly value: 'DIRECTOR' },
               { readonly name: 'SUPERVISOR'; readonly value: 'SUPERVISOR' },
+              { readonly name: 'TEAM_LEADER'; readonly value: 'TEAM_LEADER' },
               { readonly name: 'AGENT'; readonly value: 'AGENT' },
+              { readonly name: 'USER'; readonly value: 'USER' },
             ];
           };
           readonly ScanStatus: {
@@ -6819,6 +6884,9 @@ type ContractBase = Omit<
               { readonly name: 'DAY'; readonly value: 'DAY' },
               { readonly name: 'NIGHT'; readonly value: 'NIGHT' },
               { readonly name: 'WEEKEND'; readonly value: 'WEEKEND' },
+              { readonly name: 'WEEKDAY'; readonly value: 'WEEKDAY' },
+              { readonly name: 'FULL_TIME'; readonly value: 'FULL_TIME' },
+              { readonly name: 'PART_TIME'; readonly value: 'PART_TIME' },
               { readonly name: 'REINFORCEMENT'; readonly value: 'REINFORCEMENT' },
               { readonly name: 'DOG_PATROL'; readonly value: 'DOG_PATROL' },
             ];
@@ -6828,6 +6896,8 @@ type ContractBase = Omit<
             readonly members: readonly [
               { readonly name: 'ACTIVE'; readonly value: 'ACTIVE' },
               { readonly name: 'SUSPENDED'; readonly value: 'SUSPENDED' },
+              { readonly name: 'DESERTER'; readonly value: 'DESERTER' },
+              { readonly name: 'DISMISSED'; readonly value: 'DISMISSED' },
               { readonly name: 'ARCHIVED'; readonly value: 'ARCHIVED' },
             ];
           };
@@ -6836,6 +6906,7 @@ type ContractBase = Omit<
           readonly AttendanceStatus: readonly [
             { readonly name: 'ON_TIME'; readonly value: 'ON_TIME' },
             { readonly name: 'LATE'; readonly value: 'LATE' },
+            { readonly name: 'PRESENT'; readonly value: 'PRESENT' },
             { readonly name: 'ABSENT'; readonly value: 'ABSENT' },
             { readonly name: 'EARLY_DEPARTURE'; readonly value: 'EARLY_DEPARTURE' },
             { readonly name: 'VERIFIED'; readonly value: 'VERIFIED' },
@@ -6931,11 +7002,13 @@ type ContractBase = Omit<
             { readonly name: 'URGENT'; readonly value: 'URGENT' },
           ];
           readonly Role: readonly [
+            { readonly name: 'SUPER_ADMIN'; readonly value: 'SUPER_ADMIN' },
             { readonly name: 'ADMIN'; readonly value: 'ADMIN' },
             { readonly name: 'MANAGER'; readonly value: 'MANAGER' },
-            { readonly name: 'DIRECTOR'; readonly value: 'DIRECTOR' },
             { readonly name: 'SUPERVISOR'; readonly value: 'SUPERVISOR' },
+            { readonly name: 'TEAM_LEADER'; readonly value: 'TEAM_LEADER' },
             { readonly name: 'AGENT'; readonly value: 'AGENT' },
+            { readonly name: 'USER'; readonly value: 'USER' },
           ];
           readonly ScanStatus: readonly [
             { readonly name: 'OK'; readonly value: 'OK' },
@@ -6954,12 +7027,17 @@ type ContractBase = Omit<
             { readonly name: 'DAY'; readonly value: 'DAY' },
             { readonly name: 'NIGHT'; readonly value: 'NIGHT' },
             { readonly name: 'WEEKEND'; readonly value: 'WEEKEND' },
+            { readonly name: 'WEEKDAY'; readonly value: 'WEEKDAY' },
+            { readonly name: 'FULL_TIME'; readonly value: 'FULL_TIME' },
+            { readonly name: 'PART_TIME'; readonly value: 'PART_TIME' },
             { readonly name: 'REINFORCEMENT'; readonly value: 'REINFORCEMENT' },
             { readonly name: 'DOG_PATROL'; readonly value: 'DOG_PATROL' },
           ];
           readonly UserStatus: readonly [
             { readonly name: 'ACTIVE'; readonly value: 'ACTIVE' },
             { readonly name: 'SUSPENDED'; readonly value: 'SUSPENDED' },
+            { readonly name: 'DESERTER'; readonly value: 'DESERTER' },
+            { readonly name: 'DISMISSED'; readonly value: 'DISMISSED' },
             { readonly name: 'ARCHIVED'; readonly value: 'ARCHIVED' },
           ];
         };

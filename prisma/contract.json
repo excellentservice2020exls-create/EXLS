@@ -113,6 +113,10 @@
                 "value": "LATE"
               },
               {
+                "name": "PRESENT",
+                "value": "PRESENT"
+              },
+              {
                 "name": "ABSENT",
                 "value": "ABSENT"
               },
@@ -451,6 +455,10 @@
             "codecId": "pg/text@1",
             "members": [
               {
+                "name": "SUPER_ADMIN",
+                "value": "SUPER_ADMIN"
+              },
+              {
                 "name": "ADMIN",
                 "value": "ADMIN"
               },
@@ -459,16 +467,20 @@
                 "value": "MANAGER"
               },
               {
-                "name": "DIRECTOR",
-                "value": "DIRECTOR"
-              },
-              {
                 "name": "SUPERVISOR",
                 "value": "SUPERVISOR"
               },
               {
+                "name": "TEAM_LEADER",
+                "value": "TEAM_LEADER"
+              },
+              {
                 "name": "AGENT",
                 "value": "AGENT"
+              },
+              {
+                "name": "USER",
+                "value": "USER"
               }
             ]
           },
@@ -534,6 +546,18 @@
                 "value": "WEEKEND"
               },
               {
+                "name": "WEEKDAY",
+                "value": "WEEKDAY"
+              },
+              {
+                "name": "FULL_TIME",
+                "value": "FULL_TIME"
+              },
+              {
+                "name": "PART_TIME",
+                "value": "PART_TIME"
+              },
+              {
                 "name": "REINFORCEMENT",
                 "value": "REINFORCEMENT"
               },
@@ -553,6 +577,14 @@
               {
                 "name": "SUSPENDED",
                 "value": "SUSPENDED"
+              },
+              {
+                "name": "DESERTER",
+                "value": "DESERTER"
+              },
+              {
+                "name": "DISMISSED",
+                "value": "DISMISSED"
               },
               {
                 "name": "ARCHIVED",
@@ -4830,8 +4862,8 @@
                   "prefix": "attendances_clockInMethod_check"
                 },
                 {
-                  "expression": "\"status\" IN ('ON_TIME', 'LATE', 'ABSENT', 'EARLY_DEPARTURE', 'VERIFIED')",
-                  "name": "attendances_status_check_02d150d7",
+                  "expression": "\"status\" IN ('ON_TIME', 'LATE', 'PRESENT', 'ABSENT', 'EARLY_DEPARTURE', 'VERIFIED')",
+                  "name": "attendances_status_check_acacb634",
                   "prefix": "attendances_status_check"
                 }
               ],
@@ -7360,8 +7392,8 @@
             "shifts": {
               "checks": [
                 {
-                  "expression": "\"shiftType\" IN ('DAY', 'NIGHT', 'WEEKEND', 'REINFORCEMENT', 'DOG_PATROL')",
-                  "name": "shifts_shiftType_check_ba185ef3",
+                  "expression": "\"shiftType\" IN ('DAY', 'NIGHT', 'WEEKEND', 'WEEKDAY', 'FULL_TIME', 'PART_TIME', 'REINFORCEMENT', 'DOG_PATROL')",
+                  "name": "shifts_shiftType_check_5a43ab5b",
                   "prefix": "shifts_shiftType_check"
                 },
                 {
@@ -8145,13 +8177,13 @@
             "users": {
               "checks": [
                 {
-                  "expression": "\"role\" IN ('ADMIN', 'MANAGER', 'DIRECTOR', 'SUPERVISOR', 'AGENT')",
-                  "name": "users_role_check_3b8a4a49",
+                  "expression": "\"role\" IN ('SUPER_ADMIN', 'ADMIN', 'MANAGER', 'SUPERVISOR', 'TEAM_LEADER', 'AGENT', 'USER')",
+                  "name": "users_role_check_3f12cb29",
                   "prefix": "users_role_check"
                 },
                 {
-                  "expression": "\"status\" IN ('ACTIVE', 'SUSPENDED', 'ARCHIVED')",
-                  "name": "users_status_check_0f44f6b1",
+                  "expression": "\"status\" IN ('ACTIVE', 'SUSPENDED', 'DESERTER', 'DISMISSED', 'ARCHIVED')",
+                  "name": "users_status_check_299522e6",
                   "prefix": "users_status_check"
                 }
               ],
@@ -8375,6 +8407,7 @@
               "values": [
                 "ON_TIME",
                 "LATE",
+                "PRESENT",
                 "ABSENT",
                 "EARLY_DEPARTURE",
                 "VERIFIED"
@@ -8512,11 +8545,13 @@
             "Role": {
               "kind": "valueSet",
               "values": [
+                "SUPER_ADMIN",
                 "ADMIN",
                 "MANAGER",
-                "DIRECTOR",
                 "SUPERVISOR",
-                "AGENT"
+                "TEAM_LEADER",
+                "AGENT",
+                "USER"
               ]
             },
             "ScanStatus": {
@@ -8544,6 +8579,9 @@
                 "DAY",
                 "NIGHT",
                 "WEEKEND",
+                "WEEKDAY",
+                "FULL_TIME",
+                "PART_TIME",
                 "REINFORCEMENT",
                 "DOG_PATROL"
               ]
@@ -8553,6 +8591,8 @@
               "values": [
                 "ACTIVE",
                 "SUSPENDED",
+                "DESERTER",
+                "DISMISSED",
                 "ARCHIVED"
               ]
             }
@@ -8562,7 +8602,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "f12d7848390b6e8aa72c859e70100eed3e3f6cec31f40aa44a137430b961bc2e"
+    "storageHash": "56ee8d8239480e425db4af4bb825ef86a709b5b0dc5d5780400c34f87df585c7"
   },
   "execution": {
     "executionHash": "dbff7740df8ab98b6106fac674466b7469a10d8524532698b075e8944ac474ab",

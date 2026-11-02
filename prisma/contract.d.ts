@@ -23,8 +23,9 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'eaa1ebf0fdbc3d258774bcb0514043e3063b51eeaabf1465e430d5bd286d3e90'>;
-export type ExecutionHash = ExecutionHashBase<string>;
+  StorageHashBase<'f12d7848390b6e8aa72c859e70100eed3e3f6cec31f40aa44a137430b961bc2e'>;
+export type ExecutionHash =
+  ExecutionHashBase<'dbff7740df8ab98b6106fac674466b7469a10d8524532698b075e8944ac474ab'>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
 
@@ -277,16 +278,194 @@ type ParameterizedOutputTypeFunctions = PgParameterizedOutputTypes;
 type FieldTypeOverrides = {
   readonly public: {
     readonly models: {
-      readonly RoleAssignment: {
-        readonly role: {
-          readonly output: 'ADMIN' | 'MANAGER' | 'DIRECTOR' | 'SUPERVISOR' | 'AGENT';
-          readonly input: 'ADMIN' | 'MANAGER' | 'DIRECTOR' | 'SUPERVISOR' | 'AGENT';
+      readonly Attendance: {
+        readonly clockInMethod: {
+          readonly output: 'QR_SCAN' | 'GPS_GEOFENCE' | 'SUPERVISOR_OVERRIDE';
+          readonly input: 'QR_SCAN' | 'GPS_GEOFENCE' | 'SUPERVISOR_OVERRIDE';
+        };
+        readonly status: {
+          readonly output: 'ON_TIME' | 'LATE' | 'ABSENT' | 'EARLY_DEPARTURE' | 'VERIFIED';
+          readonly input: 'ON_TIME' | 'LATE' | 'ABSENT' | 'EARLY_DEPARTURE' | 'VERIFIED';
+        };
+      };
+      readonly ClientContract: {
+        readonly serviceType: {
+          readonly output:
+            | 'STATIC_GUARDING'
+            | 'MOBILE_PATROL'
+            | 'EVENT_SECURITY'
+            | 'VIP_PROTECTION'
+            | 'DOG_HANDLER';
+          readonly input:
+            | 'STATIC_GUARDING'
+            | 'MOBILE_PATROL'
+            | 'EVENT_SECURITY'
+            | 'VIP_PROTECTION'
+            | 'DOG_HANDLER';
+        };
+        readonly status: {
+          readonly output: 'ACTIVE' | 'EXPIRED' | 'TERMINATED';
+          readonly input: 'ACTIVE' | 'EXPIRED' | 'TERMINATED';
+        };
+      };
+      readonly Contract: {
+        readonly status: {
+          readonly output: 'ACTIVE' | 'EXPIRED' | 'TERMINATED';
+          readonly input: 'ACTIVE' | 'EXPIRED' | 'TERMINATED';
+        };
+      };
+      readonly CoreEquipment: {
+        readonly condition: {
+          readonly output: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'DAMAGED';
+          readonly input: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'DAMAGED';
+        };
+        readonly status: {
+          readonly output:
+            'AVAILABLE' | 'ASSIGNED' | 'UNDER_MAINTENANCE' | 'DAMAGED' | 'LOST' | 'RETIRED';
+          readonly input:
+            'AVAILABLE' | 'ASSIGNED' | 'UNDER_MAINTENANCE' | 'DAMAGED' | 'LOST' | 'RETIRED';
+        };
+      };
+      readonly CoreIncident: {
+        readonly severity: {
+          readonly output: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+          readonly input: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+        };
+        readonly status: {
+          readonly output: 'NEW' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED';
+          readonly input: 'NEW' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED';
+        };
+      };
+      readonly Equipment: {
+        readonly category: {
+          readonly output:
+            | 'RADIO_COMMUNICATION'
+            | 'LIGHTING'
+            | 'DEFENSE_AND_PPE'
+            | 'DETECTION'
+            | 'KEYS_AND_BADGES'
+            | 'PTI_DEVICE'
+            | 'VEHICLE';
+          readonly input:
+            | 'RADIO_COMMUNICATION'
+            | 'LIGHTING'
+            | 'DEFENSE_AND_PPE'
+            | 'DETECTION'
+            | 'KEYS_AND_BADGES'
+            | 'PTI_DEVICE'
+            | 'VEHICLE';
+        };
+        readonly status: {
+          readonly output:
+            'AVAILABLE' | 'ASSIGNED' | 'UNDER_MAINTENANCE' | 'DAMAGED' | 'LOST' | 'RETIRED';
+          readonly input:
+            'AVAILABLE' | 'ASSIGNED' | 'UNDER_MAINTENANCE' | 'DAMAGED' | 'LOST' | 'RETIRED';
+        };
+      };
+      readonly EquipmentAssignment: {
+        readonly conditionOnAssignment: {
+          readonly output: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'DAMAGED';
+          readonly input: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'DAMAGED';
+        };
+        readonly conditionOnReturn: {
+          readonly output: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'DAMAGED';
+          readonly input: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'DAMAGED';
+        };
+      };
+      readonly Incident: {
+        readonly category: {
+          readonly output:
+            | 'INTRUSION'
+            | 'FIRE_ALARM'
+            | 'THEFT'
+            | 'VANDALISM'
+            | 'AGGRESSION'
+            | 'TECHNICAL_FAILURE'
+            | 'MEDICAL_EMERGENCY'
+            | 'ACCESS_DENIAL'
+            | 'SUSPICIOUS_PERSON'
+            | 'OTHER';
+          readonly input:
+            | 'INTRUSION'
+            | 'FIRE_ALARM'
+            | 'THEFT'
+            | 'VANDALISM'
+            | 'AGGRESSION'
+            | 'TECHNICAL_FAILURE'
+            | 'MEDICAL_EMERGENCY'
+            | 'ACCESS_DENIAL'
+            | 'SUSPICIOUS_PERSON'
+            | 'OTHER';
+        };
+        readonly severity: {
+          readonly output: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+          readonly input: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+        };
+        readonly status: {
+          readonly output: 'NEW' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED';
+          readonly input: 'NEW' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED';
+        };
+      };
+      readonly Notification: {
+        readonly type: {
+          readonly output:
+            | 'SOS_ALERT'
+            | 'LATE_CLOCK_IN'
+            | 'PATROL_MISSED'
+            | 'INCIDENT_CRITICAL'
+            | 'SHIFT_ASSIGNED'
+            | 'SYSTEM';
+          readonly input:
+            | 'SOS_ALERT'
+            | 'LATE_CLOCK_IN'
+            | 'PATROL_MISSED'
+            | 'INCIDENT_CRITICAL'
+            | 'SHIFT_ASSIGNED'
+            | 'SYSTEM';
+        };
+      };
+      readonly Patrol: {
+        readonly status: {
+          readonly output: 'IN_PROGRESS' | 'COMPLETED' | 'INCOMPLETE' | 'ABORTED';
+          readonly input: 'IN_PROGRESS' | 'COMPLETED' | 'INCOMPLETE' | 'ABORTED';
+        };
+      };
+      readonly PatrolScan: {
+        readonly status: {
+          readonly output: 'OK' | 'ANOMALY_DETECTED' | 'MISSED';
+          readonly input: 'OK' | 'ANOMALY_DETECTED' | 'MISSED';
+        };
+      };
+      readonly Shift: {
+        readonly shiftType: {
+          readonly output: 'DAY' | 'NIGHT' | 'WEEKEND' | 'REINFORCEMENT' | 'DOG_PATROL';
+          readonly input: 'DAY' | 'NIGHT' | 'WEEKEND' | 'REINFORCEMENT' | 'DOG_PATROL';
+        };
+        readonly status: {
+          readonly output:
+            'SCHEDULED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED' | 'NO_SHOW' | 'REPLACED';
+          readonly input:
+            'SCHEDULED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED' | 'NO_SHOW' | 'REPLACED';
+        };
+      };
+      readonly SiteInstruction: {
+        readonly priority: {
+          readonly output: 'LOW' | 'NORMAL' | 'HIGH' | 'URGENT';
+          readonly input: 'LOW' | 'NORMAL' | 'HIGH' | 'URGENT';
+        };
+        readonly type: {
+          readonly output: 'PERMANENT' | 'TEMPORARY' | 'EMERGENCY_PROCEDURE' | 'ACCESS_CONTROL';
+          readonly input: 'PERMANENT' | 'TEMPORARY' | 'EMERGENCY_PROCEDURE' | 'ACCESS_CONTROL';
         };
       };
       readonly User: {
         readonly role: {
           readonly output: 'ADMIN' | 'MANAGER' | 'DIRECTOR' | 'SUPERVISOR' | 'AGENT';
           readonly input: 'ADMIN' | 'MANAGER' | 'DIRECTOR' | 'SUPERVISOR' | 'AGENT';
+        };
+        readonly status: {
+          readonly output: 'ACTIVE' | 'SUSPENDED' | 'ARCHIVED';
+          readonly input: 'ACTIVE' | 'SUSPENDED' | 'ARCHIVED';
         };
       };
     };
@@ -310,16 +489,186 @@ export type FieldInputTypes = FieldTypesFromDomain<
 >;
 type ColumnTypeOverrides = {
   readonly public: {
-    readonly role_assignments: {
-      readonly role: {
-        readonly output: 'ADMIN' | 'MANAGER' | 'DIRECTOR' | 'SUPERVISOR' | 'AGENT';
-        readonly input: 'ADMIN' | 'MANAGER' | 'DIRECTOR' | 'SUPERVISOR' | 'AGENT';
+    readonly attendances: {
+      readonly clockInMethod: {
+        readonly output: 'QR_SCAN' | 'GPS_GEOFENCE' | 'SUPERVISOR_OVERRIDE';
+        readonly input: 'QR_SCAN' | 'GPS_GEOFENCE' | 'SUPERVISOR_OVERRIDE';
+      };
+      readonly status: {
+        readonly output: 'ON_TIME' | 'LATE' | 'ABSENT' | 'EARLY_DEPARTURE' | 'VERIFIED';
+        readonly input: 'ON_TIME' | 'LATE' | 'ABSENT' | 'EARLY_DEPARTURE' | 'VERIFIED';
+      };
+    };
+    readonly client_contracts: {
+      readonly serviceType: {
+        readonly output:
+          'STATIC_GUARDING' | 'MOBILE_PATROL' | 'EVENT_SECURITY' | 'VIP_PROTECTION' | 'DOG_HANDLER';
+        readonly input:
+          'STATIC_GUARDING' | 'MOBILE_PATROL' | 'EVENT_SECURITY' | 'VIP_PROTECTION' | 'DOG_HANDLER';
+      };
+      readonly status: {
+        readonly output: 'ACTIVE' | 'EXPIRED' | 'TERMINATED';
+        readonly input: 'ACTIVE' | 'EXPIRED' | 'TERMINATED';
+      };
+    };
+    readonly contracts: {
+      readonly status: {
+        readonly output: 'ACTIVE' | 'EXPIRED' | 'TERMINATED';
+        readonly input: 'ACTIVE' | 'EXPIRED' | 'TERMINATED';
+      };
+    };
+    readonly core_equipment: {
+      readonly condition: {
+        readonly output: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'DAMAGED';
+        readonly input: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'DAMAGED';
+      };
+      readonly status: {
+        readonly output:
+          'AVAILABLE' | 'ASSIGNED' | 'UNDER_MAINTENANCE' | 'DAMAGED' | 'LOST' | 'RETIRED';
+        readonly input:
+          'AVAILABLE' | 'ASSIGNED' | 'UNDER_MAINTENANCE' | 'DAMAGED' | 'LOST' | 'RETIRED';
+      };
+    };
+    readonly core_incidents: {
+      readonly severity: {
+        readonly output: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+        readonly input: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+      };
+      readonly status: {
+        readonly output: 'NEW' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED';
+        readonly input: 'NEW' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED';
+      };
+    };
+    readonly equipment: {
+      readonly category: {
+        readonly output:
+          | 'RADIO_COMMUNICATION'
+          | 'LIGHTING'
+          | 'DEFENSE_AND_PPE'
+          | 'DETECTION'
+          | 'KEYS_AND_BADGES'
+          | 'PTI_DEVICE'
+          | 'VEHICLE';
+        readonly input:
+          | 'RADIO_COMMUNICATION'
+          | 'LIGHTING'
+          | 'DEFENSE_AND_PPE'
+          | 'DETECTION'
+          | 'KEYS_AND_BADGES'
+          | 'PTI_DEVICE'
+          | 'VEHICLE';
+      };
+      readonly status: {
+        readonly output:
+          'AVAILABLE' | 'ASSIGNED' | 'UNDER_MAINTENANCE' | 'DAMAGED' | 'LOST' | 'RETIRED';
+        readonly input:
+          'AVAILABLE' | 'ASSIGNED' | 'UNDER_MAINTENANCE' | 'DAMAGED' | 'LOST' | 'RETIRED';
+      };
+    };
+    readonly equipment_assignments: {
+      readonly conditionOnAssignment: {
+        readonly output: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'DAMAGED';
+        readonly input: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'DAMAGED';
+      };
+      readonly conditionOnReturn: {
+        readonly output: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'DAMAGED';
+        readonly input: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'DAMAGED';
+      };
+    };
+    readonly incidents: {
+      readonly category: {
+        readonly output:
+          | 'INTRUSION'
+          | 'FIRE_ALARM'
+          | 'THEFT'
+          | 'VANDALISM'
+          | 'AGGRESSION'
+          | 'TECHNICAL_FAILURE'
+          | 'MEDICAL_EMERGENCY'
+          | 'ACCESS_DENIAL'
+          | 'SUSPICIOUS_PERSON'
+          | 'OTHER';
+        readonly input:
+          | 'INTRUSION'
+          | 'FIRE_ALARM'
+          | 'THEFT'
+          | 'VANDALISM'
+          | 'AGGRESSION'
+          | 'TECHNICAL_FAILURE'
+          | 'MEDICAL_EMERGENCY'
+          | 'ACCESS_DENIAL'
+          | 'SUSPICIOUS_PERSON'
+          | 'OTHER';
+      };
+      readonly severity: {
+        readonly output: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+        readonly input: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+      };
+      readonly status: {
+        readonly output: 'NEW' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED';
+        readonly input: 'NEW' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED';
+      };
+    };
+    readonly notifications: {
+      readonly type: {
+        readonly output:
+          | 'SOS_ALERT'
+          | 'LATE_CLOCK_IN'
+          | 'PATROL_MISSED'
+          | 'INCIDENT_CRITICAL'
+          | 'SHIFT_ASSIGNED'
+          | 'SYSTEM';
+        readonly input:
+          | 'SOS_ALERT'
+          | 'LATE_CLOCK_IN'
+          | 'PATROL_MISSED'
+          | 'INCIDENT_CRITICAL'
+          | 'SHIFT_ASSIGNED'
+          | 'SYSTEM';
+      };
+    };
+    readonly patrol_scans: {
+      readonly status: {
+        readonly output: 'OK' | 'ANOMALY_DETECTED' | 'MISSED';
+        readonly input: 'OK' | 'ANOMALY_DETECTED' | 'MISSED';
+      };
+    };
+    readonly patrols: {
+      readonly status: {
+        readonly output: 'IN_PROGRESS' | 'COMPLETED' | 'INCOMPLETE' | 'ABORTED';
+        readonly input: 'IN_PROGRESS' | 'COMPLETED' | 'INCOMPLETE' | 'ABORTED';
+      };
+    };
+    readonly shifts: {
+      readonly shiftType: {
+        readonly output: 'DAY' | 'NIGHT' | 'WEEKEND' | 'REINFORCEMENT' | 'DOG_PATROL';
+        readonly input: 'DAY' | 'NIGHT' | 'WEEKEND' | 'REINFORCEMENT' | 'DOG_PATROL';
+      };
+      readonly status: {
+        readonly output:
+          'SCHEDULED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED' | 'NO_SHOW' | 'REPLACED';
+        readonly input:
+          'SCHEDULED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED' | 'NO_SHOW' | 'REPLACED';
+      };
+    };
+    readonly site_instructions: {
+      readonly priority: {
+        readonly output: 'LOW' | 'NORMAL' | 'HIGH' | 'URGENT';
+        readonly input: 'LOW' | 'NORMAL' | 'HIGH' | 'URGENT';
+      };
+      readonly type: {
+        readonly output: 'PERMANENT' | 'TEMPORARY' | 'EMERGENCY_PROCEDURE' | 'ACCESS_CONTROL';
+        readonly input: 'PERMANENT' | 'TEMPORARY' | 'EMERGENCY_PROCEDURE' | 'ACCESS_CONTROL';
       };
     };
     readonly users: {
       readonly role: {
         readonly output: 'ADMIN' | 'MANAGER' | 'DIRECTOR' | 'SUPERVISOR' | 'AGENT';
         readonly input: 'ADMIN' | 'MANAGER' | 'DIRECTOR' | 'SUPERVISOR' | 'AGENT';
+      };
+      readonly status: {
+        readonly output: 'ACTIVE' | 'SUSPENDED' | 'ARCHIVED';
+        readonly input: 'ACTIVE' | 'SUSPENDED' | 'ARCHIVED';
       };
     };
   };
@@ -412,6 +761,46 @@ export namespace Models {
     client: public_Client;
     readonly [RelationKeys]?: 'client';
   };
+  export type public_Contract = {
+    clientName: FieldOutputTypes['public']['Contract']['clientName'];
+    createdAt: FieldOutputTypes['public']['Contract']['createdAt'];
+    endDate: FieldOutputTypes['public']['Contract']['endDate'];
+    id: FieldOutputTypes['public']['Contract']['id'];
+    serviceTypeId: FieldOutputTypes['public']['Contract']['serviceTypeId'];
+    startDate: FieldOutputTypes['public']['Contract']['startDate'];
+    status: FieldOutputTypes['public']['Contract']['status'];
+    serviceType: public_ContractServiceType;
+    readonly [RelationKeys]?: 'serviceType';
+  };
+  export type public_ContractServiceType = {
+    createdAt: FieldOutputTypes['public']['ContractServiceType']['createdAt'];
+    description: FieldOutputTypes['public']['ContractServiceType']['description'];
+    id: FieldOutputTypes['public']['ContractServiceType']['id'];
+    isActive: FieldOutputTypes['public']['ContractServiceType']['isActive'];
+    name: FieldOutputTypes['public']['ContractServiceType']['name'];
+    contracts: public_Contract[];
+    readonly [RelationKeys]?: 'contracts';
+  };
+  export type public_CoreEquipment = {
+    categoryId: FieldOutputTypes['public']['CoreEquipment']['categoryId'];
+    condition: FieldOutputTypes['public']['CoreEquipment']['condition'];
+    createdAt: FieldOutputTypes['public']['CoreEquipment']['createdAt'];
+    id: FieldOutputTypes['public']['CoreEquipment']['id'];
+    serialNumber: FieldOutputTypes['public']['CoreEquipment']['serialNumber'];
+    status: FieldOutputTypes['public']['CoreEquipment']['status'];
+    category: public_EquipmentCategory;
+    readonly [RelationKeys]?: 'category';
+  };
+  export type public_CoreIncident = {
+    categoryId: FieldOutputTypes['public']['CoreIncident']['categoryId'];
+    description: FieldOutputTypes['public']['CoreIncident']['description'];
+    id: FieldOutputTypes['public']['CoreIncident']['id'];
+    reportedAt: FieldOutputTypes['public']['CoreIncident']['reportedAt'];
+    severity: FieldOutputTypes['public']['CoreIncident']['severity'];
+    status: FieldOutputTypes['public']['CoreIncident']['status'];
+    category: public_IncidentCategory;
+    readonly [RelationKeys]?: 'category';
+  };
   export type public_Equipment = {
     category: FieldOutputTypes['public']['Equipment']['category'];
     code: FieldOutputTypes['public']['Equipment']['code'];
@@ -444,6 +833,15 @@ export namespace Models {
     equipment: public_Equipment;
     shift: public_Shift | null;
     readonly [RelationKeys]?: 'agent' | 'equipment' | 'shift';
+  };
+  export type public_EquipmentCategory = {
+    createdAt: FieldOutputTypes['public']['EquipmentCategory']['createdAt'];
+    description: FieldOutputTypes['public']['EquipmentCategory']['description'];
+    id: FieldOutputTypes['public']['EquipmentCategory']['id'];
+    isActive: FieldOutputTypes['public']['EquipmentCategory']['isActive'];
+    name: FieldOutputTypes['public']['EquipmentCategory']['name'];
+    equipment: public_CoreEquipment[];
+    readonly [RelationKeys]?: 'equipment';
   };
   export type public_Incident = {
     actionTaken: FieldOutputTypes['public']['Incident']['actionTaken'];
@@ -489,6 +887,15 @@ export namespace Models {
     uploadedAt: FieldOutputTypes['public']['IncidentAttachment']['uploadedAt'];
     incident: public_Incident;
     readonly [RelationKeys]?: 'incident';
+  };
+  export type public_IncidentCategory = {
+    createdAt: FieldOutputTypes['public']['IncidentCategory']['createdAt'];
+    description: FieldOutputTypes['public']['IncidentCategory']['description'];
+    id: FieldOutputTypes['public']['IncidentCategory']['id'];
+    isActive: FieldOutputTypes['public']['IncidentCategory']['isActive'];
+    name: FieldOutputTypes['public']['IncidentCategory']['name'];
+    incidents: public_CoreIncident[];
+    readonly [RelationKeys]?: 'incidents';
   };
   export type public_IncidentComment = {
     authorId: FieldOutputTypes['public']['IncidentComment']['authorId'];
@@ -550,16 +957,6 @@ export namespace Models {
     checkpoint: public_Checkpoint;
     patrol: public_Patrol;
     readonly [RelationKeys]?: 'agent' | 'checkpoint' | 'patrol';
-  };
-  export type public_RoleAssignment = {
-    assignedAt: FieldOutputTypes['public']['RoleAssignment']['assignedAt'];
-    createdAt: FieldOutputTypes['public']['RoleAssignment']['createdAt'];
-    id: FieldOutputTypes['public']['RoleAssignment']['id'];
-    role: FieldOutputTypes['public']['RoleAssignment']['role'];
-    updatedAt: FieldOutputTypes['public']['RoleAssignment']['updatedAt'];
-    userId: FieldOutputTypes['public']['RoleAssignment']['userId'];
-    user: public_User;
-    readonly [RelationKeys]?: 'user';
   };
   export type public_Shift = {
     agentId: FieldOutputTypes['public']['Shift']['agentId'];
@@ -689,7 +1086,6 @@ export namespace Models {
     patrolScans: public_PatrolScan[];
     patrols: public_Patrol[];
     reportedIncidents: public_Incident[];
-    roleAssignments: public_RoleAssignment[];
     shifts: public_Shift[];
     supervisedAgents: public_User[];
     supervisedShifts: public_Shift[];
@@ -710,7 +1106,6 @@ export namespace Models {
       | 'patrolScans'
       | 'patrols'
       | 'reportedIncidents'
-      | 'roleAssignments'
       | 'shifts'
       | 'supervisedAgents'
       | 'supervisedShifts'
@@ -729,15 +1124,20 @@ export declare const models: {
     Checkpoint: Models.public_Checkpoint;
     Client: Models.public_Client;
     ClientContract: Models.public_ClientContract;
+    Contract: Models.public_Contract;
+    ContractServiceType: Models.public_ContractServiceType;
+    CoreEquipment: Models.public_CoreEquipment;
+    CoreIncident: Models.public_CoreIncident;
     Equipment: Models.public_Equipment;
     EquipmentAssignment: Models.public_EquipmentAssignment;
+    EquipmentCategory: Models.public_EquipmentCategory;
     Incident: Models.public_Incident;
     IncidentAttachment: Models.public_IncidentAttachment;
+    IncidentCategory: Models.public_IncidentCategory;
     IncidentComment: Models.public_IncidentComment;
     Notification: Models.public_Notification;
     Patrol: Models.public_Patrol;
     PatrolScan: Models.public_PatrolScan;
-    RoleAssignment: Models.public_RoleAssignment;
     Shift: Models.public_Shift;
     Site: Models.public_Site;
     SiteEquipment: Models.public_SiteEquipment;
@@ -1095,6 +1495,7 @@ type ContractBase = Omit<
                   readonly dataType: 'pg/numeric';
                   readonly codecId: 'pg/numeric@1';
                   readonly nullable: true;
+                  readonly typeParams: { readonly precision: 10; readonly scale: 2 };
                   readonly many: false;
                 };
                 readonly id: {
@@ -1261,6 +1662,284 @@ type ContractBase = Omit<
               uniques: readonly [{ readonly columns: readonly ['code'] }];
               indexes: readonly [];
               foreignKeys: readonly [];
+            };
+            readonly contract_service_types: {
+              columns: {
+                readonly created_at: {
+                  readonly dataType: 'pg/timestamptz';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                  readonly typeParams: { readonly precision: 3 };
+                  readonly many: false;
+                };
+                readonly description: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                  readonly many: false;
+                };
+                readonly id: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly is_active: {
+                  readonly dataType: 'pg/bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/bool@1', true>;
+                  };
+                  readonly many: false;
+                };
+                readonly name: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [];
+              indexes: readonly [];
+              foreignKeys: readonly [];
+            };
+            readonly contracts: {
+              columns: {
+                readonly client_name: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly created_at: {
+                  readonly dataType: 'pg/timestamptz';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                  readonly typeParams: { readonly precision: 3 };
+                  readonly many: false;
+                };
+                readonly end_date: {
+                  readonly dataType: 'pg/timestamptz';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly precision: 3 };
+                  readonly many: false;
+                };
+                readonly id: {
+                  readonly dataType: 'pg/uuid';
+                  readonly codecId: 'pg/uuid@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'gen_random_uuid()';
+                  };
+                  readonly many: false;
+                };
+                readonly service_type_id: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly start_date: {
+                  readonly dataType: 'pg/timestamptz';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly precision: 3 };
+                  readonly many: false;
+                };
+                readonly status: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/text@1', 'ACTIVE'>;
+                  };
+                  readonly many: false;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'contracts_service_type_id_idx_2ed171c9';
+                  readonly prefix: 'contracts_service_type_id_idx';
+                  readonly columns: readonly ['service_type_id'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'contracts';
+                    readonly columns: readonly ['service_type_id'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'contract_service_types';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
+            readonly core_equipment: {
+              columns: {
+                readonly category_id: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly condition: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/text@1', 'EXCELLENT'>;
+                  };
+                  readonly many: false;
+                };
+                readonly created_at: {
+                  readonly dataType: 'pg/timestamptz';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                  readonly typeParams: { readonly precision: 3 };
+                  readonly many: false;
+                };
+                readonly id: {
+                  readonly dataType: 'pg/uuid';
+                  readonly codecId: 'pg/uuid@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'gen_random_uuid()';
+                  };
+                  readonly many: false;
+                };
+                readonly serial_number: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                  readonly many: false;
+                };
+                readonly status: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/text@1', 'AVAILABLE'>;
+                  };
+                  readonly many: false;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [{ readonly columns: readonly ['serial_number'] }];
+              indexes: readonly [
+                {
+                  readonly name: 'core_equipment_category_id_idx_da7213d4';
+                  readonly prefix: 'core_equipment_category_id_idx';
+                  readonly columns: readonly ['category_id'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'core_equipment';
+                    readonly columns: readonly ['category_id'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'equipment_categories';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
+            readonly core_incidents: {
+              columns: {
+                readonly category_id: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly description: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly id: {
+                  readonly dataType: 'pg/uuid';
+                  readonly codecId: 'pg/uuid@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'gen_random_uuid()';
+                  };
+                  readonly many: false;
+                };
+                readonly reported_at: {
+                  readonly dataType: 'pg/timestamptz';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                  readonly typeParams: { readonly precision: 3 };
+                  readonly many: false;
+                };
+                readonly severity: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly status: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/text@1', 'NEW'>;
+                  };
+                  readonly many: false;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'core_incidents_category_id_idx_da7213d4';
+                  readonly prefix: 'core_incidents_category_id_idx';
+                  readonly columns: readonly ['category_id'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'core_incidents';
+                    readonly columns: readonly ['category_id'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'incident_categories';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
             };
             readonly equipment: {
               columns: {
@@ -1502,6 +2181,50 @@ type ContractBase = Omit<
                 },
               ];
             };
+            readonly equipment_categories: {
+              columns: {
+                readonly created_at: {
+                  readonly dataType: 'pg/timestamptz';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                  readonly typeParams: { readonly precision: 3 };
+                  readonly many: false;
+                };
+                readonly description: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                  readonly many: false;
+                };
+                readonly id: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly is_active: {
+                  readonly dataType: 'pg/bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/bool@1', true>;
+                  };
+                  readonly many: false;
+                };
+                readonly name: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [];
+              indexes: readonly [];
+              foreignKeys: readonly [];
+            };
             readonly incident_attachments: {
               columns: {
                 readonly caption: {
@@ -1583,6 +2306,50 @@ type ContractBase = Omit<
                   };
                 },
               ];
+            };
+            readonly incident_categories: {
+              columns: {
+                readonly created_at: {
+                  readonly dataType: 'pg/timestamptz';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                  readonly typeParams: { readonly precision: 3 };
+                  readonly many: false;
+                };
+                readonly description: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                  readonly many: false;
+                };
+                readonly id: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly is_active: {
+                  readonly dataType: 'pg/bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/bool@1', true>;
+                  };
+                  readonly many: false;
+                };
+                readonly name: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [];
+              indexes: readonly [];
+              foreignKeys: readonly [];
             };
             readonly incident_comments: {
               columns: {
@@ -2335,80 +3102,6 @@ type ContractBase = Omit<
                 },
               ];
             };
-            readonly role_assignments: {
-              columns: {
-                readonly assignedAt: {
-                  readonly dataType: 'pg/timestamptz';
-                  readonly codecId: 'pg/timestamptz-date@1';
-                  readonly nullable: false;
-                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
-                  readonly typeParams: { readonly precision: 3 };
-                  readonly many: false;
-                };
-                readonly createdAt: {
-                  readonly dataType: 'pg/timestamptz';
-                  readonly codecId: 'pg/timestamptz-date@1';
-                  readonly nullable: false;
-                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
-                  readonly typeParams: { readonly precision: 3 };
-                  readonly many: false;
-                };
-                readonly id: {
-                  readonly dataType: 'pg/int4';
-                  readonly codecId: 'pg/int4@1';
-                  readonly nullable: false;
-                  readonly default: {
-                    readonly kind: 'function';
-                    readonly expression: 'autoincrement()';
-                  };
-                  readonly many: false;
-                };
-                readonly role: {
-                  readonly dataType: 'pg/text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                  readonly many: false;
-                };
-                readonly updatedAt: {
-                  readonly dataType: 'pg/timestamptz';
-                  readonly codecId: 'pg/timestamptz-date@1';
-                  readonly nullable: false;
-                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
-                  readonly typeParams: { readonly precision: 3 };
-                  readonly many: false;
-                };
-                readonly userId: {
-                  readonly dataType: 'pg/int4';
-                  readonly codecId: 'pg/int4@1';
-                  readonly nullable: false;
-                  readonly many: false;
-                };
-              };
-              primaryKey: { readonly columns: readonly ['id'] };
-              uniques: readonly [];
-              indexes: readonly [
-                {
-                  readonly name: 'role_assignments_userId_idx_a489d58a';
-                  readonly prefix: 'role_assignments_userId_idx';
-                  readonly columns: readonly ['userId'];
-                  readonly unique: false;
-                },
-              ];
-              foreignKeys: readonly [
-                {
-                  readonly source: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'role_assignments';
-                    readonly columns: readonly ['userId'];
-                  };
-                  readonly target: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'users';
-                    readonly columns: readonly ['id'];
-                  };
-                },
-              ];
-            };
             readonly shifts: {
               columns: {
                 readonly agentId: {
@@ -2436,6 +3129,7 @@ type ContractBase = Omit<
                   readonly dataType: 'pg/numeric';
                   readonly codecId: 'pg/numeric@1';
                   readonly nullable: true;
+                  readonly typeParams: { readonly precision: 10; readonly scale: 2 };
                   readonly many: false;
                 };
                 readonly id: {
@@ -3097,6 +3791,10 @@ type ContractBase = Omit<
                   readonly dataType: 'pg/text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/text@1', 'AGENT'>;
+                  };
                   readonly many: false;
                 };
                 readonly status: {
@@ -3179,9 +3877,138 @@ type ContractBase = Omit<
             };
           };
           readonly valueSet: {
+            readonly AttendanceStatus: {
+              readonly kind: 'valueSet';
+              readonly values: readonly [
+                'ON_TIME',
+                'LATE',
+                'ABSENT',
+                'EARLY_DEPARTURE',
+                'VERIFIED',
+              ];
+            };
+            readonly ClockMethod: {
+              readonly kind: 'valueSet';
+              readonly values: readonly ['QR_SCAN', 'GPS_GEOFENCE', 'SUPERVISOR_OVERRIDE'];
+            };
+            readonly ContractServiceKind: {
+              readonly kind: 'valueSet';
+              readonly values: readonly [
+                'STATIC_GUARDING',
+                'MOBILE_PATROL',
+                'EVENT_SECURITY',
+                'VIP_PROTECTION',
+                'DOG_HANDLER',
+              ];
+            };
+            readonly ContractStatus: {
+              readonly kind: 'valueSet';
+              readonly values: readonly ['ACTIVE', 'EXPIRED', 'TERMINATED'];
+            };
+            readonly EquipmentCategoryKind: {
+              readonly kind: 'valueSet';
+              readonly values: readonly [
+                'RADIO_COMMUNICATION',
+                'LIGHTING',
+                'DEFENSE_AND_PPE',
+                'DETECTION',
+                'KEYS_AND_BADGES',
+                'PTI_DEVICE',
+                'VEHICLE',
+              ];
+            };
+            readonly EquipmentCondition: {
+              readonly kind: 'valueSet';
+              readonly values: readonly ['EXCELLENT', 'GOOD', 'FAIR', 'DAMAGED'];
+            };
+            readonly EquipmentStatus: {
+              readonly kind: 'valueSet';
+              readonly values: readonly [
+                'AVAILABLE',
+                'ASSIGNED',
+                'UNDER_MAINTENANCE',
+                'DAMAGED',
+                'LOST',
+                'RETIRED',
+              ];
+            };
+            readonly IncidentCategoryKind: {
+              readonly kind: 'valueSet';
+              readonly values: readonly [
+                'INTRUSION',
+                'FIRE_ALARM',
+                'THEFT',
+                'VANDALISM',
+                'AGGRESSION',
+                'TECHNICAL_FAILURE',
+                'MEDICAL_EMERGENCY',
+                'ACCESS_DENIAL',
+                'SUSPICIOUS_PERSON',
+                'OTHER',
+              ];
+            };
+            readonly IncidentSeverity: {
+              readonly kind: 'valueSet';
+              readonly values: readonly ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'];
+            };
+            readonly IncidentStatus: {
+              readonly kind: 'valueSet';
+              readonly values: readonly ['NEW', 'IN_PROGRESS', 'RESOLVED', 'CLOSED'];
+            };
+            readonly InstructionType: {
+              readonly kind: 'valueSet';
+              readonly values: readonly [
+                'PERMANENT',
+                'TEMPORARY',
+                'EMERGENCY_PROCEDURE',
+                'ACCESS_CONTROL',
+              ];
+            };
+            readonly NotificationType: {
+              readonly kind: 'valueSet';
+              readonly values: readonly [
+                'SOS_ALERT',
+                'LATE_CLOCK_IN',
+                'PATROL_MISSED',
+                'INCIDENT_CRITICAL',
+                'SHIFT_ASSIGNED',
+                'SYSTEM',
+              ];
+            };
+            readonly PatrolStatus: {
+              readonly kind: 'valueSet';
+              readonly values: readonly ['IN_PROGRESS', 'COMPLETED', 'INCOMPLETE', 'ABORTED'];
+            };
+            readonly PriorityLevel: {
+              readonly kind: 'valueSet';
+              readonly values: readonly ['LOW', 'NORMAL', 'HIGH', 'URGENT'];
+            };
             readonly Role: {
               readonly kind: 'valueSet';
               readonly values: readonly ['ADMIN', 'MANAGER', 'DIRECTOR', 'SUPERVISOR', 'AGENT'];
+            };
+            readonly ScanStatus: {
+              readonly kind: 'valueSet';
+              readonly values: readonly ['OK', 'ANOMALY_DETECTED', 'MISSED'];
+            };
+            readonly ShiftStatus: {
+              readonly kind: 'valueSet';
+              readonly values: readonly [
+                'SCHEDULED',
+                'IN_PROGRESS',
+                'COMPLETED',
+                'CANCELLED',
+                'NO_SHOW',
+                'REPLACED',
+              ];
+            };
+            readonly ShiftType: {
+              readonly kind: 'valueSet';
+              readonly values: readonly ['DAY', 'NIGHT', 'WEEKEND', 'REINFORCEMENT', 'DOG_PATROL'];
+            };
+            readonly UserStatus: {
+              readonly kind: 'valueSet';
+              readonly values: readonly ['ACTIVE', 'SUSPENDED', 'ARCHIVED'];
             };
           };
         };
@@ -3207,14 +4034,35 @@ type ContractBase = Omit<
       readonly model: 'ClientContract';
     };
     readonly clients: { readonly namespace: 'public' & NamespaceId; readonly model: 'Client' };
+    readonly contract_service_types: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'ContractServiceType';
+    };
+    readonly contracts: { readonly namespace: 'public' & NamespaceId; readonly model: 'Contract' };
+    readonly core_equipment: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'CoreEquipment';
+    };
+    readonly core_incidents: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'CoreIncident';
+    };
     readonly equipment: { readonly namespace: 'public' & NamespaceId; readonly model: 'Equipment' };
     readonly equipment_assignments: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'EquipmentAssignment';
     };
+    readonly equipment_categories: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'EquipmentCategory';
+    };
     readonly incident_attachments: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'IncidentAttachment';
+    };
+    readonly incident_categories: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'IncidentCategory';
     };
     readonly incident_comments: {
       readonly namespace: 'public' & NamespaceId;
@@ -3230,10 +4078,6 @@ type ContractBase = Omit<
       readonly model: 'PatrolScan';
     };
     readonly patrols: { readonly namespace: 'public' & NamespaceId; readonly model: 'Patrol' };
-    readonly role_assignments: {
-      readonly namespace: 'public' & NamespaceId;
-      readonly model: 'RoleAssignment';
-    };
     readonly shifts: { readonly namespace: 'public' & NamespaceId; readonly model: 'Shift' };
     readonly site_equipments: {
       readonly namespace: 'public' & NamespaceId;
@@ -3620,7 +4464,11 @@ type ContractBase = Omit<
               };
               readonly hourlyRate: {
                 readonly nullable: true;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/numeric@1';
+                  readonly typeParams: { readonly precision: 10; readonly scale: 2 };
+                };
               };
               readonly id: {
                 readonly nullable: false;
@@ -3684,6 +4532,245 @@ type ContractBase = Omit<
                 readonly startDate: { readonly column: 'startDate' };
                 readonly status: { readonly column: 'status' };
                 readonly updatedAt: { readonly column: 'updatedAt' };
+              };
+            };
+          };
+          readonly Contract: {
+            readonly fields: {
+              readonly clientName: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly createdAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly typeParams: { readonly precision: 3 };
+                };
+              };
+              readonly endDate: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly typeParams: { readonly precision: 3 };
+                };
+              };
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
+              };
+              readonly serviceTypeId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly startDate: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly typeParams: { readonly precision: 3 };
+                };
+              };
+              readonly status: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+            };
+            readonly relations: {
+              readonly serviceType: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'ContractServiceType';
+                };
+                readonly cardinality: 'N:1';
+                readonly nullable: false;
+                readonly on: {
+                  readonly localFields: readonly ['serviceTypeId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'contracts';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly clientName: { readonly column: 'client_name' };
+                readonly createdAt: { readonly column: 'created_at' };
+                readonly endDate: { readonly column: 'end_date' };
+                readonly id: { readonly column: 'id' };
+                readonly serviceTypeId: { readonly column: 'service_type_id' };
+                readonly startDate: { readonly column: 'start_date' };
+                readonly status: { readonly column: 'status' };
+              };
+            };
+          };
+          readonly ContractServiceType: {
+            readonly fields: {
+              readonly createdAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly typeParams: { readonly precision: 3 };
+                };
+              };
+              readonly description: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly isActive: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
+              };
+              readonly name: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+            };
+            readonly relations: {
+              readonly contracts: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Contract';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['serviceTypeId'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'contract_service_types';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly createdAt: { readonly column: 'created_at' };
+                readonly description: { readonly column: 'description' };
+                readonly id: { readonly column: 'id' };
+                readonly isActive: { readonly column: 'is_active' };
+                readonly name: { readonly column: 'name' };
+              };
+            };
+          };
+          readonly CoreEquipment: {
+            readonly fields: {
+              readonly categoryId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly condition: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly createdAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly typeParams: { readonly precision: 3 };
+                };
+              };
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
+              };
+              readonly serialNumber: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly status: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+            };
+            readonly relations: {
+              readonly category: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'EquipmentCategory';
+                };
+                readonly cardinality: 'N:1';
+                readonly nullable: false;
+                readonly on: {
+                  readonly localFields: readonly ['categoryId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'core_equipment';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly categoryId: { readonly column: 'category_id' };
+                readonly condition: { readonly column: 'condition' };
+                readonly createdAt: { readonly column: 'created_at' };
+                readonly id: { readonly column: 'id' };
+                readonly serialNumber: { readonly column: 'serial_number' };
+                readonly status: { readonly column: 'status' };
+              };
+            };
+          };
+          readonly CoreIncident: {
+            readonly fields: {
+              readonly categoryId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly description: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
+              };
+              readonly reportedAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly typeParams: { readonly precision: 3 };
+                };
+              };
+              readonly severity: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly status: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+            };
+            readonly relations: {
+              readonly category: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'IncidentCategory';
+                };
+                readonly cardinality: 'N:1';
+                readonly nullable: false;
+                readonly on: {
+                  readonly localFields: readonly ['categoryId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'core_incidents';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly categoryId: { readonly column: 'category_id' };
+                readonly description: { readonly column: 'description' };
+                readonly id: { readonly column: 'id' };
+                readonly reportedAt: { readonly column: 'reported_at' };
+                readonly severity: { readonly column: 'severity' };
+                readonly status: { readonly column: 'status' };
               };
             };
           };
@@ -3905,6 +4992,58 @@ type ContractBase = Omit<
                 readonly returnedAt: { readonly column: 'returnedAt' };
                 readonly shiftId: { readonly column: 'shiftId' };
                 readonly updatedAt: { readonly column: 'updatedAt' };
+              };
+            };
+          };
+          readonly EquipmentCategory: {
+            readonly fields: {
+              readonly createdAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly typeParams: { readonly precision: 3 };
+                };
+              };
+              readonly description: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly isActive: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
+              };
+              readonly name: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+            };
+            readonly relations: {
+              readonly equipment: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'CoreEquipment';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['categoryId'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'equipment_categories';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly createdAt: { readonly column: 'created_at' };
+                readonly description: { readonly column: 'description' };
+                readonly id: { readonly column: 'id' };
+                readonly isActive: { readonly column: 'is_active' };
+                readonly name: { readonly column: 'name' };
               };
             };
           };
@@ -4188,6 +5327,58 @@ type ContractBase = Omit<
                 readonly id: { readonly column: 'id' };
                 readonly incidentId: { readonly column: 'incidentId' };
                 readonly uploadedAt: { readonly column: 'uploadedAt' };
+              };
+            };
+          };
+          readonly IncidentCategory: {
+            readonly fields: {
+              readonly createdAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly typeParams: { readonly precision: 3 };
+                };
+              };
+              readonly description: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly isActive: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
+              };
+              readonly name: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+            };
+            readonly relations: {
+              readonly incidents: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'CoreIncident';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['categoryId'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'incident_categories';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly createdAt: { readonly column: 'created_at' };
+                readonly description: { readonly column: 'description' };
+                readonly id: { readonly column: 'id' };
+                readonly isActive: { readonly column: 'is_active' };
+                readonly name: { readonly column: 'name' };
               };
             };
           };
@@ -4584,69 +5775,6 @@ type ContractBase = Omit<
               };
             };
           };
-          readonly RoleAssignment: {
-            readonly fields: {
-              readonly assignedAt: {
-                readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-date@1';
-                  readonly typeParams: { readonly precision: 3 };
-                };
-              };
-              readonly createdAt: {
-                readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-date@1';
-                  readonly typeParams: { readonly precision: 3 };
-                };
-              };
-              readonly id: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
-              };
-              readonly role: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly updatedAt: {
-                readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-date@1';
-                  readonly typeParams: { readonly precision: 3 };
-                };
-              };
-              readonly userId: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
-              };
-            };
-            readonly relations: {
-              readonly user: {
-                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
-                readonly cardinality: 'N:1';
-                readonly nullable: false;
-                readonly on: {
-                  readonly localFields: readonly ['userId'];
-                  readonly targetFields: readonly ['id'];
-                };
-              };
-            };
-            readonly storage: {
-              readonly table: 'role_assignments';
-              readonly namespaceId: 'public';
-              readonly fields: {
-                readonly assignedAt: { readonly column: 'assignedAt' };
-                readonly createdAt: { readonly column: 'createdAt' };
-                readonly id: { readonly column: 'id' };
-                readonly role: { readonly column: 'role' };
-                readonly updatedAt: { readonly column: 'updatedAt' };
-                readonly userId: { readonly column: 'userId' };
-              };
-            };
-          };
           readonly Shift: {
             readonly fields: {
               readonly agentId: {
@@ -4671,7 +5799,11 @@ type ContractBase = Omit<
               };
               readonly hourlyRate: {
                 readonly nullable: true;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/numeric@1';
+                  readonly typeParams: { readonly precision: 10; readonly scale: 2 };
+                };
               };
               readonly id: {
                 readonly nullable: false;
@@ -5400,17 +6532,6 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['reportedById'];
                 };
               };
-              readonly roleAssignments: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'RoleAssignment';
-                };
-                readonly cardinality: '1:N';
-                readonly on: {
-                  readonly localFields: readonly ['id'];
-                  readonly targetFields: readonly ['userId'];
-                };
-              };
               readonly shifts: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
@@ -5524,6 +6645,145 @@ type ContractBase = Omit<
           };
         };
         readonly enum: {
+          readonly AttendanceStatus: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'ON_TIME'; readonly value: 'ON_TIME' },
+              { readonly name: 'LATE'; readonly value: 'LATE' },
+              { readonly name: 'ABSENT'; readonly value: 'ABSENT' },
+              { readonly name: 'EARLY_DEPARTURE'; readonly value: 'EARLY_DEPARTURE' },
+              { readonly name: 'VERIFIED'; readonly value: 'VERIFIED' },
+            ];
+          };
+          readonly ClockMethod: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'QR_SCAN'; readonly value: 'QR_SCAN' },
+              { readonly name: 'GPS_GEOFENCE'; readonly value: 'GPS_GEOFENCE' },
+              { readonly name: 'SUPERVISOR_OVERRIDE'; readonly value: 'SUPERVISOR_OVERRIDE' },
+            ];
+          };
+          readonly ContractServiceKind: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'STATIC_GUARDING'; readonly value: 'STATIC_GUARDING' },
+              { readonly name: 'MOBILE_PATROL'; readonly value: 'MOBILE_PATROL' },
+              { readonly name: 'EVENT_SECURITY'; readonly value: 'EVENT_SECURITY' },
+              { readonly name: 'VIP_PROTECTION'; readonly value: 'VIP_PROTECTION' },
+              { readonly name: 'DOG_HANDLER'; readonly value: 'DOG_HANDLER' },
+            ];
+          };
+          readonly ContractStatus: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'ACTIVE'; readonly value: 'ACTIVE' },
+              { readonly name: 'EXPIRED'; readonly value: 'EXPIRED' },
+              { readonly name: 'TERMINATED'; readonly value: 'TERMINATED' },
+            ];
+          };
+          readonly EquipmentCategoryKind: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'RADIO_COMMUNICATION'; readonly value: 'RADIO_COMMUNICATION' },
+              { readonly name: 'LIGHTING'; readonly value: 'LIGHTING' },
+              { readonly name: 'DEFENSE_AND_PPE'; readonly value: 'DEFENSE_AND_PPE' },
+              { readonly name: 'DETECTION'; readonly value: 'DETECTION' },
+              { readonly name: 'KEYS_AND_BADGES'; readonly value: 'KEYS_AND_BADGES' },
+              { readonly name: 'PTI_DEVICE'; readonly value: 'PTI_DEVICE' },
+              { readonly name: 'VEHICLE'; readonly value: 'VEHICLE' },
+            ];
+          };
+          readonly EquipmentCondition: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'EXCELLENT'; readonly value: 'EXCELLENT' },
+              { readonly name: 'GOOD'; readonly value: 'GOOD' },
+              { readonly name: 'FAIR'; readonly value: 'FAIR' },
+              { readonly name: 'DAMAGED'; readonly value: 'DAMAGED' },
+            ];
+          };
+          readonly EquipmentStatus: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'AVAILABLE'; readonly value: 'AVAILABLE' },
+              { readonly name: 'ASSIGNED'; readonly value: 'ASSIGNED' },
+              { readonly name: 'UNDER_MAINTENANCE'; readonly value: 'UNDER_MAINTENANCE' },
+              { readonly name: 'DAMAGED'; readonly value: 'DAMAGED' },
+              { readonly name: 'LOST'; readonly value: 'LOST' },
+              { readonly name: 'RETIRED'; readonly value: 'RETIRED' },
+            ];
+          };
+          readonly IncidentCategoryKind: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'INTRUSION'; readonly value: 'INTRUSION' },
+              { readonly name: 'FIRE_ALARM'; readonly value: 'FIRE_ALARM' },
+              { readonly name: 'THEFT'; readonly value: 'THEFT' },
+              { readonly name: 'VANDALISM'; readonly value: 'VANDALISM' },
+              { readonly name: 'AGGRESSION'; readonly value: 'AGGRESSION' },
+              { readonly name: 'TECHNICAL_FAILURE'; readonly value: 'TECHNICAL_FAILURE' },
+              { readonly name: 'MEDICAL_EMERGENCY'; readonly value: 'MEDICAL_EMERGENCY' },
+              { readonly name: 'ACCESS_DENIAL'; readonly value: 'ACCESS_DENIAL' },
+              { readonly name: 'SUSPICIOUS_PERSON'; readonly value: 'SUSPICIOUS_PERSON' },
+              { readonly name: 'OTHER'; readonly value: 'OTHER' },
+            ];
+          };
+          readonly IncidentSeverity: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'LOW'; readonly value: 'LOW' },
+              { readonly name: 'MEDIUM'; readonly value: 'MEDIUM' },
+              { readonly name: 'HIGH'; readonly value: 'HIGH' },
+              { readonly name: 'CRITICAL'; readonly value: 'CRITICAL' },
+            ];
+          };
+          readonly IncidentStatus: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'NEW'; readonly value: 'NEW' },
+              { readonly name: 'IN_PROGRESS'; readonly value: 'IN_PROGRESS' },
+              { readonly name: 'RESOLVED'; readonly value: 'RESOLVED' },
+              { readonly name: 'CLOSED'; readonly value: 'CLOSED' },
+            ];
+          };
+          readonly InstructionType: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'PERMANENT'; readonly value: 'PERMANENT' },
+              { readonly name: 'TEMPORARY'; readonly value: 'TEMPORARY' },
+              { readonly name: 'EMERGENCY_PROCEDURE'; readonly value: 'EMERGENCY_PROCEDURE' },
+              { readonly name: 'ACCESS_CONTROL'; readonly value: 'ACCESS_CONTROL' },
+            ];
+          };
+          readonly NotificationType: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'SOS_ALERT'; readonly value: 'SOS_ALERT' },
+              { readonly name: 'LATE_CLOCK_IN'; readonly value: 'LATE_CLOCK_IN' },
+              { readonly name: 'PATROL_MISSED'; readonly value: 'PATROL_MISSED' },
+              { readonly name: 'INCIDENT_CRITICAL'; readonly value: 'INCIDENT_CRITICAL' },
+              { readonly name: 'SHIFT_ASSIGNED'; readonly value: 'SHIFT_ASSIGNED' },
+              { readonly name: 'SYSTEM'; readonly value: 'SYSTEM' },
+            ];
+          };
+          readonly PatrolStatus: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'IN_PROGRESS'; readonly value: 'IN_PROGRESS' },
+              { readonly name: 'COMPLETED'; readonly value: 'COMPLETED' },
+              { readonly name: 'INCOMPLETE'; readonly value: 'INCOMPLETE' },
+              { readonly name: 'ABORTED'; readonly value: 'ABORTED' },
+            ];
+          };
+          readonly PriorityLevel: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'LOW'; readonly value: 'LOW' },
+              { readonly name: 'NORMAL'; readonly value: 'NORMAL' },
+              { readonly name: 'HIGH'; readonly value: 'HIGH' },
+              { readonly name: 'URGENT'; readonly value: 'URGENT' },
+            ];
+          };
           readonly Role: {
             readonly codecId: 'pg/text@1';
             readonly members: readonly [
@@ -5534,14 +6794,173 @@ type ContractBase = Omit<
               { readonly name: 'AGENT'; readonly value: 'AGENT' },
             ];
           };
+          readonly ScanStatus: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'OK'; readonly value: 'OK' },
+              { readonly name: 'ANOMALY_DETECTED'; readonly value: 'ANOMALY_DETECTED' },
+              { readonly name: 'MISSED'; readonly value: 'MISSED' },
+            ];
+          };
+          readonly ShiftStatus: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'SCHEDULED'; readonly value: 'SCHEDULED' },
+              { readonly name: 'IN_PROGRESS'; readonly value: 'IN_PROGRESS' },
+              { readonly name: 'COMPLETED'; readonly value: 'COMPLETED' },
+              { readonly name: 'CANCELLED'; readonly value: 'CANCELLED' },
+              { readonly name: 'NO_SHOW'; readonly value: 'NO_SHOW' },
+              { readonly name: 'REPLACED'; readonly value: 'REPLACED' },
+            ];
+          };
+          readonly ShiftType: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'DAY'; readonly value: 'DAY' },
+              { readonly name: 'NIGHT'; readonly value: 'NIGHT' },
+              { readonly name: 'WEEKEND'; readonly value: 'WEEKEND' },
+              { readonly name: 'REINFORCEMENT'; readonly value: 'REINFORCEMENT' },
+              { readonly name: 'DOG_PATROL'; readonly value: 'DOG_PATROL' },
+            ];
+          };
+          readonly UserStatus: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'ACTIVE'; readonly value: 'ACTIVE' },
+              { readonly name: 'SUSPENDED'; readonly value: 'SUSPENDED' },
+              { readonly name: 'ARCHIVED'; readonly value: 'ARCHIVED' },
+            ];
+          };
         };
         readonly enumMemberTypes?: {
+          readonly AttendanceStatus: readonly [
+            { readonly name: 'ON_TIME'; readonly value: 'ON_TIME' },
+            { readonly name: 'LATE'; readonly value: 'LATE' },
+            { readonly name: 'ABSENT'; readonly value: 'ABSENT' },
+            { readonly name: 'EARLY_DEPARTURE'; readonly value: 'EARLY_DEPARTURE' },
+            { readonly name: 'VERIFIED'; readonly value: 'VERIFIED' },
+          ];
+          readonly ClockMethod: readonly [
+            { readonly name: 'QR_SCAN'; readonly value: 'QR_SCAN' },
+            { readonly name: 'GPS_GEOFENCE'; readonly value: 'GPS_GEOFENCE' },
+            { readonly name: 'SUPERVISOR_OVERRIDE'; readonly value: 'SUPERVISOR_OVERRIDE' },
+          ];
+          readonly ContractServiceKind: readonly [
+            { readonly name: 'STATIC_GUARDING'; readonly value: 'STATIC_GUARDING' },
+            { readonly name: 'MOBILE_PATROL'; readonly value: 'MOBILE_PATROL' },
+            { readonly name: 'EVENT_SECURITY'; readonly value: 'EVENT_SECURITY' },
+            { readonly name: 'VIP_PROTECTION'; readonly value: 'VIP_PROTECTION' },
+            { readonly name: 'DOG_HANDLER'; readonly value: 'DOG_HANDLER' },
+          ];
+          readonly ContractStatus: readonly [
+            { readonly name: 'ACTIVE'; readonly value: 'ACTIVE' },
+            { readonly name: 'EXPIRED'; readonly value: 'EXPIRED' },
+            { readonly name: 'TERMINATED'; readonly value: 'TERMINATED' },
+          ];
+          readonly EquipmentCategoryKind: readonly [
+            { readonly name: 'RADIO_COMMUNICATION'; readonly value: 'RADIO_COMMUNICATION' },
+            { readonly name: 'LIGHTING'; readonly value: 'LIGHTING' },
+            { readonly name: 'DEFENSE_AND_PPE'; readonly value: 'DEFENSE_AND_PPE' },
+            { readonly name: 'DETECTION'; readonly value: 'DETECTION' },
+            { readonly name: 'KEYS_AND_BADGES'; readonly value: 'KEYS_AND_BADGES' },
+            { readonly name: 'PTI_DEVICE'; readonly value: 'PTI_DEVICE' },
+            { readonly name: 'VEHICLE'; readonly value: 'VEHICLE' },
+          ];
+          readonly EquipmentCondition: readonly [
+            { readonly name: 'EXCELLENT'; readonly value: 'EXCELLENT' },
+            { readonly name: 'GOOD'; readonly value: 'GOOD' },
+            { readonly name: 'FAIR'; readonly value: 'FAIR' },
+            { readonly name: 'DAMAGED'; readonly value: 'DAMAGED' },
+          ];
+          readonly EquipmentStatus: readonly [
+            { readonly name: 'AVAILABLE'; readonly value: 'AVAILABLE' },
+            { readonly name: 'ASSIGNED'; readonly value: 'ASSIGNED' },
+            { readonly name: 'UNDER_MAINTENANCE'; readonly value: 'UNDER_MAINTENANCE' },
+            { readonly name: 'DAMAGED'; readonly value: 'DAMAGED' },
+            { readonly name: 'LOST'; readonly value: 'LOST' },
+            { readonly name: 'RETIRED'; readonly value: 'RETIRED' },
+          ];
+          readonly IncidentCategoryKind: readonly [
+            { readonly name: 'INTRUSION'; readonly value: 'INTRUSION' },
+            { readonly name: 'FIRE_ALARM'; readonly value: 'FIRE_ALARM' },
+            { readonly name: 'THEFT'; readonly value: 'THEFT' },
+            { readonly name: 'VANDALISM'; readonly value: 'VANDALISM' },
+            { readonly name: 'AGGRESSION'; readonly value: 'AGGRESSION' },
+            { readonly name: 'TECHNICAL_FAILURE'; readonly value: 'TECHNICAL_FAILURE' },
+            { readonly name: 'MEDICAL_EMERGENCY'; readonly value: 'MEDICAL_EMERGENCY' },
+            { readonly name: 'ACCESS_DENIAL'; readonly value: 'ACCESS_DENIAL' },
+            { readonly name: 'SUSPICIOUS_PERSON'; readonly value: 'SUSPICIOUS_PERSON' },
+            { readonly name: 'OTHER'; readonly value: 'OTHER' },
+          ];
+          readonly IncidentSeverity: readonly [
+            { readonly name: 'LOW'; readonly value: 'LOW' },
+            { readonly name: 'MEDIUM'; readonly value: 'MEDIUM' },
+            { readonly name: 'HIGH'; readonly value: 'HIGH' },
+            { readonly name: 'CRITICAL'; readonly value: 'CRITICAL' },
+          ];
+          readonly IncidentStatus: readonly [
+            { readonly name: 'NEW'; readonly value: 'NEW' },
+            { readonly name: 'IN_PROGRESS'; readonly value: 'IN_PROGRESS' },
+            { readonly name: 'RESOLVED'; readonly value: 'RESOLVED' },
+            { readonly name: 'CLOSED'; readonly value: 'CLOSED' },
+          ];
+          readonly InstructionType: readonly [
+            { readonly name: 'PERMANENT'; readonly value: 'PERMANENT' },
+            { readonly name: 'TEMPORARY'; readonly value: 'TEMPORARY' },
+            { readonly name: 'EMERGENCY_PROCEDURE'; readonly value: 'EMERGENCY_PROCEDURE' },
+            { readonly name: 'ACCESS_CONTROL'; readonly value: 'ACCESS_CONTROL' },
+          ];
+          readonly NotificationType: readonly [
+            { readonly name: 'SOS_ALERT'; readonly value: 'SOS_ALERT' },
+            { readonly name: 'LATE_CLOCK_IN'; readonly value: 'LATE_CLOCK_IN' },
+            { readonly name: 'PATROL_MISSED'; readonly value: 'PATROL_MISSED' },
+            { readonly name: 'INCIDENT_CRITICAL'; readonly value: 'INCIDENT_CRITICAL' },
+            { readonly name: 'SHIFT_ASSIGNED'; readonly value: 'SHIFT_ASSIGNED' },
+            { readonly name: 'SYSTEM'; readonly value: 'SYSTEM' },
+          ];
+          readonly PatrolStatus: readonly [
+            { readonly name: 'IN_PROGRESS'; readonly value: 'IN_PROGRESS' },
+            { readonly name: 'COMPLETED'; readonly value: 'COMPLETED' },
+            { readonly name: 'INCOMPLETE'; readonly value: 'INCOMPLETE' },
+            { readonly name: 'ABORTED'; readonly value: 'ABORTED' },
+          ];
+          readonly PriorityLevel: readonly [
+            { readonly name: 'LOW'; readonly value: 'LOW' },
+            { readonly name: 'NORMAL'; readonly value: 'NORMAL' },
+            { readonly name: 'HIGH'; readonly value: 'HIGH' },
+            { readonly name: 'URGENT'; readonly value: 'URGENT' },
+          ];
           readonly Role: readonly [
             { readonly name: 'ADMIN'; readonly value: 'ADMIN' },
             { readonly name: 'MANAGER'; readonly value: 'MANAGER' },
             { readonly name: 'DIRECTOR'; readonly value: 'DIRECTOR' },
             { readonly name: 'SUPERVISOR'; readonly value: 'SUPERVISOR' },
             { readonly name: 'AGENT'; readonly value: 'AGENT' },
+          ];
+          readonly ScanStatus: readonly [
+            { readonly name: 'OK'; readonly value: 'OK' },
+            { readonly name: 'ANOMALY_DETECTED'; readonly value: 'ANOMALY_DETECTED' },
+            { readonly name: 'MISSED'; readonly value: 'MISSED' },
+          ];
+          readonly ShiftStatus: readonly [
+            { readonly name: 'SCHEDULED'; readonly value: 'SCHEDULED' },
+            { readonly name: 'IN_PROGRESS'; readonly value: 'IN_PROGRESS' },
+            { readonly name: 'COMPLETED'; readonly value: 'COMPLETED' },
+            { readonly name: 'CANCELLED'; readonly value: 'CANCELLED' },
+            { readonly name: 'NO_SHOW'; readonly value: 'NO_SHOW' },
+            { readonly name: 'REPLACED'; readonly value: 'REPLACED' },
+          ];
+          readonly ShiftType: readonly [
+            { readonly name: 'DAY'; readonly value: 'DAY' },
+            { readonly name: 'NIGHT'; readonly value: 'NIGHT' },
+            { readonly name: 'WEEKEND'; readonly value: 'WEEKEND' },
+            { readonly name: 'REINFORCEMENT'; readonly value: 'REINFORCEMENT' },
+            { readonly name: 'DOG_PATROL'; readonly value: 'DOG_PATROL' },
+          ];
+          readonly UserStatus: readonly [
+            { readonly name: 'ACTIVE'; readonly value: 'ACTIVE' },
+            { readonly name: 'SUSPENDED'; readonly value: 'SUSPENDED' },
+            { readonly name: 'ARCHIVED'; readonly value: 'ARCHIVED' },
           ];
         };
       };
@@ -5575,6 +6994,157 @@ type ContractBase = Omit<
     };
   };
   readonly extensions: {};
+  readonly execution: {
+    readonly executionHash: ExecutionHash;
+    readonly mutations: {
+      readonly defaults: readonly [
+        {
+          readonly onUpdate: {
+            readonly id: 'timestampNow';
+            readonly kind: 'generator';
+            readonly params: { readonly precision: 3 };
+          };
+          readonly ref: {
+            readonly entry: 'attendances';
+            readonly field: 'updatedAt';
+            readonly namespace: 'public';
+          };
+        },
+        {
+          readonly onUpdate: {
+            readonly id: 'timestampNow';
+            readonly kind: 'generator';
+            readonly params: { readonly precision: 3 };
+          };
+          readonly ref: {
+            readonly entry: 'checkpoints';
+            readonly field: 'updatedAt';
+            readonly namespace: 'public';
+          };
+        },
+        {
+          readonly onUpdate: {
+            readonly id: 'timestampNow';
+            readonly kind: 'generator';
+            readonly params: { readonly precision: 3 };
+          };
+          readonly ref: {
+            readonly entry: 'client_contracts';
+            readonly field: 'updatedAt';
+            readonly namespace: 'public';
+          };
+        },
+        {
+          readonly onUpdate: {
+            readonly id: 'timestampNow';
+            readonly kind: 'generator';
+            readonly params: { readonly precision: 3 };
+          };
+          readonly ref: {
+            readonly entry: 'clients';
+            readonly field: 'updatedAt';
+            readonly namespace: 'public';
+          };
+        },
+        {
+          readonly onUpdate: {
+            readonly id: 'timestampNow';
+            readonly kind: 'generator';
+            readonly params: { readonly precision: 3 };
+          };
+          readonly ref: {
+            readonly entry: 'equipment';
+            readonly field: 'updatedAt';
+            readonly namespace: 'public';
+          };
+        },
+        {
+          readonly onUpdate: {
+            readonly id: 'timestampNow';
+            readonly kind: 'generator';
+            readonly params: { readonly precision: 3 };
+          };
+          readonly ref: {
+            readonly entry: 'equipment_assignments';
+            readonly field: 'updatedAt';
+            readonly namespace: 'public';
+          };
+        },
+        {
+          readonly onUpdate: {
+            readonly id: 'timestampNow';
+            readonly kind: 'generator';
+            readonly params: { readonly precision: 3 };
+          };
+          readonly ref: {
+            readonly entry: 'incidents';
+            readonly field: 'updatedAt';
+            readonly namespace: 'public';
+          };
+        },
+        {
+          readonly onUpdate: {
+            readonly id: 'timestampNow';
+            readonly kind: 'generator';
+            readonly params: { readonly precision: 3 };
+          };
+          readonly ref: {
+            readonly entry: 'patrols';
+            readonly field: 'updatedAt';
+            readonly namespace: 'public';
+          };
+        },
+        {
+          readonly onUpdate: {
+            readonly id: 'timestampNow';
+            readonly kind: 'generator';
+            readonly params: { readonly precision: 3 };
+          };
+          readonly ref: {
+            readonly entry: 'shifts';
+            readonly field: 'updatedAt';
+            readonly namespace: 'public';
+          };
+        },
+        {
+          readonly onUpdate: {
+            readonly id: 'timestampNow';
+            readonly kind: 'generator';
+            readonly params: { readonly precision: 3 };
+          };
+          readonly ref: {
+            readonly entry: 'site_instructions';
+            readonly field: 'updatedAt';
+            readonly namespace: 'public';
+          };
+        },
+        {
+          readonly onUpdate: {
+            readonly id: 'timestampNow';
+            readonly kind: 'generator';
+            readonly params: { readonly precision: 3 };
+          };
+          readonly ref: {
+            readonly entry: 'sites';
+            readonly field: 'updatedAt';
+            readonly namespace: 'public';
+          };
+        },
+        {
+          readonly onUpdate: {
+            readonly id: 'timestampNow';
+            readonly kind: 'generator';
+            readonly params: { readonly precision: 3 };
+          };
+          readonly ref: {
+            readonly entry: 'users';
+            readonly field: 'updatedAt';
+            readonly namespace: 'public';
+          };
+        },
+      ];
+    };
+  };
   readonly meta: {};
   readonly profileHash: ProfileHash;
 };

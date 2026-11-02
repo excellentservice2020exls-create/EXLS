@@ -66,6 +66,7 @@ enum EquipmentCondition {
 enum ShiftType {
   DAY
   NIGHT
+  FULL_DAY
   CUSTOM
 }
 

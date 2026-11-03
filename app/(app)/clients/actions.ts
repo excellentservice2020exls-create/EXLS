@@ -15,7 +15,7 @@ export async function createClient(formData: FormData) {
   const postalCode = String(formData.get("postalCode") ?? "").trim();
 
   if (!name || !contactName) {
-    return;
+    redirect("/clients/new?error=required-fields");
   }
 
   const code = `CLI-${Date.now().toString().slice(-6)}`;

@@ -2,8 +2,11 @@ import { createClient } from "../actions";
 import { hasPermission, requirePermission } from "@/lib/erp-auth";
 import { ClientTabs } from "@/components/erp/client-tabs";
 
-export default async function NewClientPage() {
+export default async function NewClientPage({
+  searchParams,
+}: PageProps<"/clients/new">) {
   const user = await requirePermission("clients:create");
+  const { error } = await searchParams;
   const createdAt = new Date();
   const date = new Intl.DateTimeFormat("fr-FR", {
     dateStyle: "short",
@@ -30,15 +33,21 @@ export default async function NewClientPage() {
         canRead={hasPermission(user, "clients:read")}
       />
 
+      {error === "required-fields" && (
+        <p role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+          Le nom du client et le nom du contact sont obligatoires.
+        </p>
+      )}
+
       <form action={createClient} className="space-y-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
         <label className="space-y-2 text-sm text-slate-600">
           <span>Nom de l&apos;abonné</span>
-          <input name="name" className="w-full rounded-xl border border-slate-300 px-3 py-2" defaultValue="" />
+          <input name="name" required className="w-full rounded-xl border border-slate-300 px-3 py-2" defaultValue="" />
         </label>
         <div className="grid gap-4 md:grid-cols-2">
           <label className="space-y-2 text-sm text-slate-600">
             <span>Contact</span>
-            <input name="contactName" className="w-full rounded-xl border border-slate-300 px-3 py-2" defaultValue="" />
+            <input name="contactName" required className="w-full rounded-xl border border-slate-300 px-3 py-2" defaultValue="" />
           </label>
           <label className="space-y-2 text-sm text-slate-600">
             <span>Téléphone</span>

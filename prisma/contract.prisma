@@ -22,6 +22,7 @@ namespace public {
     contactName     String
     contactPhone    String
     createdAt       DateTime          @default(now())
+    deletedAt       DateTime?
     isActive        Boolean           @default(true)
     name            String
     postalCode      String

@@ -33,3 +33,51 @@ export async function createClient(formData: FormData) {
 
   redirect("/clients");
 }
+
+export async function archiveClient(clientId: string) {
+  await requirePermission("clients:archive");
+  const id = Number(clientId);
+  if (!Number.isSafeInteger(id) || id <= 0) {
+    redirect("/clients");
+  }
+
+  const client = await db.orm.public.Client
+    .where({ id })
+    .where((currentClient) => currentClient.deletedAt.isNull())
+    .select("id")
+    .first();
+  if (!client) {
+    redirect("/clients");
+  }
+
+  await db.orm.public.Client
+    .where({ id })
+    .where((currentClient) => currentClient.deletedAt.isNull())
+    .update({ deletedAt: new Date() });
+
+  redirect("/clients?status=archived");
+}
+
+export async function restoreClient(clientId: string) {
+  await requirePermission("clients:restore");
+  const id = Number(clientId);
+  if (!Number.isSafeInteger(id) || id <= 0) {
+    redirect("/clients/archives");
+  }
+
+  const client = await db.orm.public.Client
+    .where({ id })
+    .where((currentClient) => currentClient.deletedAt.isNotNull())
+    .select("id")
+    .first();
+  if (!client) {
+    redirect("/clients/archives");
+  }
+
+  await db.orm.public.Client
+    .where({ id })
+    .where((currentClient) => currentClient.deletedAt.isNotNull())
+    .update({ deletedAt: null });
+
+  redirect("/clients?status=restored");
+}

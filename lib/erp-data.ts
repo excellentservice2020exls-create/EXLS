@@ -5,7 +5,10 @@ import { canAccessShiftInScope, getAppDataScope, type AppUser } from "@/lib/erp-
 export async function getDashboardStats() {
   noStore();
   const [clients, users, sites, shifts, attendanceRecords] = await Promise.all([
-    db.orm.public.Client.select("id").all(),
+    db.orm.public.Client
+      .where((client) => client.deletedAt.isNull())
+      .select("id")
+      .all(),
     db.orm.public.User.select("id", "status").all(),
     db.orm.public.Site.select("id").all(),
     db.orm.public.Shift.select("id", "status", "startTime").all(),
@@ -37,7 +40,17 @@ export async function getEmployees() {
 export async function getClients() {
   noStore();
   return db.orm.public.Client
-    .select("id", "name", "contactName", "contactEmail", "contactPhone", "city", "isActive")
+    .where((client) => client.deletedAt.isNull())
+    .select("id", "name", "code", "contactName", "contactEmail", "contactPhone", "city", "isActive")
+    .orderBy((client) => client.name.asc())
+    .all();
+}
+
+export async function getArchivedClients() {
+  noStore();
+  return db.orm.public.Client
+    .where((client) => client.deletedAt.isNotNull())
+    .select("id", "name", "code", "contactName", "contactEmail", "contactPhone", "city", "isActive", "deletedAt")
     .orderBy((client) => client.name.asc())
     .all();
 }

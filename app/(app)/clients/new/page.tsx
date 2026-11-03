@@ -1,14 +1,22 @@
 import { createClient } from "../actions";
-import { requirePermission } from "@/lib/erp-auth";
+import { hasPermission, requirePermission } from "@/lib/erp-auth";
+import { ClientTabs } from "@/components/erp/client-tabs";
 
 export default async function NewClientPage() {
-  await requirePermission("clients:create");
+  const user = await requirePermission("clients:create");
   return (
     <div className="max-w-2xl space-y-6">
       <header>
         <p className="text-sm font-medium uppercase tracking-[0.2em] text-emerald-700">Clients</p>
         <h1 className="mt-2 text-3xl font-bold text-slate-900">Nouveau client</h1>
       </header>
+
+      <ClientTabs
+        active="new"
+        canArchive={hasPermission(user, "clients:archive")}
+        canCreate
+        canRead={hasPermission(user, "clients:read")}
+      />
 
       <form action={createClient} className="space-y-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
         <label className="space-y-2 text-sm text-slate-600">

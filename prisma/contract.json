@@ -562,6 +562,16 @@
                   }
                 }
               },
+              "deletedAt": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
               "id": {
                 "nullable": false,
                 "type": {
@@ -655,6 +665,9 @@
                 },
                 "createdAt": {
                   "column": "createdAt"
+                },
+                "deletedAt": {
+                  "column": "deletedAt"
                 },
                 "id": {
                   "column": "id"
@@ -4962,6 +4975,14 @@
                     "precision": 3
                   }
                 },
+                "deletedAt": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "nullable": true,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
                 "id": {
                   "codecId": "pg/int4@1",
                   "dataType": "pg/int4",
@@ -7903,7 +7924,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "266ebdec44d64cb93785e6783d3d747f50d0d9bd5661544e983a176aa4044c1d"
+    "storageHash": "6e0a402a189ec09fb2cd24bfcbfc094c773308fe215a795d03d2694f58f333fb"
   },
   "capabilities": {
     "postgres": {

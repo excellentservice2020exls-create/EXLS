@@ -32,6 +32,8 @@ export const PERMISSIONS = [
   "employees:create",
   "clients:read",
   "clients:create",
+  "clients:archive",
+  "clients:restore",
   "sites:read",
   "sites:create",
   "sites:update",

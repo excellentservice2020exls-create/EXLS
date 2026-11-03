@@ -23,7 +23,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'266ebdec44d64cb93785e6783d3d747f50d0d9bd5661544e983a176aa4044c1d'>;
+  StorageHashBase<'6e0a402a189ec09fb2cd24bfcbfc094c773308fe215a795d03d2694f58f333fb'>;
 export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
@@ -376,6 +376,7 @@ export namespace Models {
     contactName: FieldOutputTypes['public']['Client']['contactName'];
     contactPhone: FieldOutputTypes['public']['Client']['contactPhone'];
     createdAt: FieldOutputTypes['public']['Client']['createdAt'];
+    deletedAt: FieldOutputTypes['public']['Client']['deletedAt'];
     id: FieldOutputTypes['public']['Client']['id'];
     isActive: FieldOutputTypes['public']['Client']['isActive'];
     name: FieldOutputTypes['public']['Client']['name'];
@@ -1275,6 +1276,13 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/timestamptz-date@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                  readonly typeParams: { readonly precision: 3 };
+                  readonly many: false;
+                };
+                readonly deletedAt: {
+                  readonly dataType: 'pg/timestamptz';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly nullable: true;
                   readonly typeParams: { readonly precision: 3 };
                   readonly many: false;
                 };
@@ -4008,6 +4016,14 @@ type ContractBase = Omit<
                   readonly typeParams: { readonly precision: 3 };
                 };
               };
+              readonly deletedAt: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly typeParams: { readonly precision: 3 };
+                };
+              };
               readonly id: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
@@ -4065,6 +4081,7 @@ type ContractBase = Omit<
                 readonly contactName: { readonly column: 'contactName' };
                 readonly contactPhone: { readonly column: 'contactPhone' };
                 readonly createdAt: { readonly column: 'createdAt' };
+                readonly deletedAt: { readonly column: 'deletedAt' };
                 readonly id: { readonly column: 'id' };
                 readonly isActive: { readonly column: 'isActive' };
                 readonly name: { readonly column: 'name' };

@@ -39,6 +39,46 @@ export async function createClient(formData: FormData) {
   redirect("/clients");
 }
 
+export async function updateClient(clientId: string, formData: FormData) {
+  await requirePermission("clients:update");
+  const id = Number(clientId);
+  if (!Number.isSafeInteger(id) || id <= 0) {
+    redirect("/clients");
+  }
+
+  const name = String(formData.get("name") ?? "").trim();
+  const contactName = String(formData.get("contactName") ?? "").trim();
+  if (!name || !contactName) {
+    redirect(`/clients/${id}/edit?error=required-fields`);
+  }
+
+  const client = await db.orm.public.Client
+    .where({ id })
+    .where((currentClient) => currentClient.deletedAt.isNull())
+    .select("id")
+    .first();
+  if (!client) {
+    redirect("/clients");
+  }
+
+  await db.orm.public.Client
+    .where({ id })
+    .where((currentClient) => currentClient.deletedAt.isNull())
+    .update({
+      name,
+      contactName,
+      contactEmail: String(formData.get("contactEmail") ?? "").trim(),
+      contactPhone: String(formData.get("contactPhone") ?? "").trim(),
+      city: String(formData.get("city") ?? "").trim() || "Kinshasa",
+      billingAddress: String(formData.get("billingAddress") ?? "").trim(),
+      postalCode: String(formData.get("postalCode") ?? "").trim(),
+      isActive: formData.get("isActive") === "on",
+      updatedAt: new Date(),
+    });
+
+  redirect("/clients?status=updated");
+}
+
 export async function archiveClient(clientId: string) {
   await requirePermission("clients:archive");
   const id = Number(clientId);

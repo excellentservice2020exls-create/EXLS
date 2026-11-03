@@ -39,7 +39,7 @@ export default async function ArchivedClientsPage() {
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <h2 className="text-lg font-semibold text-slate-900">{client.name}</h2>
-                  <p className="mt-1 text-sm text-slate-500">{client.code} · {client.city}</p>
+                  <p className="mt-1 text-sm text-slate-500">AB-{client.id} · {client.city}</p>
                 </div>
                 <span className="rounded-full bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-800">
                   Archivé

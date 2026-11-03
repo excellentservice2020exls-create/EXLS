@@ -7,8 +7,6 @@ TRUNCATE TABLE
   "public"."clients",
   "public"."contract_service_types",
   "public"."contracts",
-  "public"."core_equipment",
-  "public"."core_incidents",
   "public"."equipment",
   "public"."equipment_assignments",
   "public"."equipment_categories",

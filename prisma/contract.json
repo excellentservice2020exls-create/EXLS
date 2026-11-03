@@ -562,6 +562,27 @@
                   }
                 }
               },
+              "createdByEmail": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "createdById": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "createdByName": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "deletedAt": {
                 "nullable": true,
                 "type": {
@@ -665,6 +686,15 @@
                 },
                 "createdAt": {
                   "column": "createdAt"
+                },
+                "createdByEmail": {
+                  "column": "createdByEmail"
+                },
+                "createdById": {
+                  "column": "createdById"
+                },
+                "createdByName": {
+                  "column": "createdByName"
                 },
                 "deletedAt": {
                   "column": "deletedAt"
@@ -4975,6 +5005,21 @@
                     "precision": 3
                   }
                 },
+                "createdByEmail": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                },
+                "createdById": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "nullable": true
+                },
+                "createdByName": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                },
                 "deletedAt": {
                   "codecId": "pg/timestamptz-date@1",
                   "dataType": "pg/timestamptz",
@@ -7924,7 +7969,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "6e0a402a189ec09fb2cd24bfcbfc094c773308fe215a795d03d2694f58f333fb"
+    "storageHash": "633533837ef9090e92c5cd44d666b571370f94dd74665a38d855d06078328b36"
   },
   "capabilities": {
     "postgres": {

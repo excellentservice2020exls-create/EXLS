@@ -1,0 +1,182 @@
+[
+  {
+    "id": "column.public.clients.createdByEmail",
+    "label": "Add column \"createdByEmail\" to \"clients\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "createdByEmail",
+        "table": "clients"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"createdByEmail\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "clients",
+          "createdByEmail"
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "column \"createdByEmail\" on \"clients\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"createdByEmail\"",
+        "sql": "ALTER TABLE \"public\".\"clients\" ADD COLUMN \"createdByEmail\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"createdByEmail\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "clients",
+          "createdByEmail"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"createdByEmail\" on \"clients\""
+        }
+      },
+      {
+        "description": "verify column \"createdByEmail\" has type \"text\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_attribute\" AS \"a\" INNER JOIN \"pg_class\" AS \"c\" ON \"c\".\"oid\" = \"a\".\"attrelid\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"a\".\"attname\" = $3 AND (format_type(\"a\".\"atttypid\", \"a\".\"atttypmod\")) = $4 AND NOT (\"a\".\"attisdropped\"))) AS \"result\"",
+        "params": [
+          "public",
+          "clients",
+          "createdByEmail",
+          "text"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.clients.createdById",
+    "label": "Add column \"createdById\" to \"clients\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "createdById",
+        "table": "clients"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"createdById\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "clients",
+          "createdById"
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "column \"createdById\" on \"clients\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"createdById\"",
+        "sql": "ALTER TABLE \"public\".\"clients\" ADD COLUMN \"createdById\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"createdById\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "clients",
+          "createdById"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"createdById\" on \"clients\""
+        }
+      },
+      {
+        "description": "verify column \"createdById\" has type \"integer\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_attribute\" AS \"a\" INNER JOIN \"pg_class\" AS \"c\" ON \"c\".\"oid\" = \"a\".\"attrelid\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"a\".\"attname\" = $3 AND (format_type(\"a\".\"atttypid\", \"a\".\"atttypmod\")) = $4 AND NOT (\"a\".\"attisdropped\"))) AS \"result\"",
+        "params": [
+          "public",
+          "clients",
+          "createdById",
+          "integer"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.clients.createdByName",
+    "label": "Add column \"createdByName\" to \"clients\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "createdByName",
+        "table": "clients"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"createdByName\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "clients",
+          "createdByName"
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "column \"createdByName\" on \"clients\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"createdByName\"",
+        "sql": "ALTER TABLE \"public\".\"clients\" ADD COLUMN \"createdByName\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"createdByName\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "clients",
+          "createdByName"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"createdByName\" on \"clients\""
+        }
+      },
+      {
+        "description": "verify column \"createdByName\" has type \"text\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_attribute\" AS \"a\" INNER JOIN \"pg_class\" AS \"c\" ON \"c\".\"oid\" = \"a\".\"attrelid\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"a\".\"attname\" = $3 AND (format_type(\"a\".\"atttypid\", \"a\".\"atttypmod\")) = $4 AND NOT (\"a\".\"attisdropped\"))) AS \"result\"",
+        "params": [
+          "public",
+          "clients",
+          "createdByName",
+          "text"
+        ]
+      }
+    ]
+  }
+]

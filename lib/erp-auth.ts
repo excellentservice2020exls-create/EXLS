@@ -67,6 +67,7 @@ export const ROLE_PERMISSIONS: Readonly<Record<ErpRole, readonly Permission[]>> 
 export type AppUser = {
   id: number;
   email: string;
+  name: string;
   role: ErpRole;
   status: string;
   roles: ErpRole[];
@@ -126,7 +127,7 @@ export async function requireAppUser(): Promise<AppUser> {
   const escapedEmail = email.replace(/[\\%_]/g, "\\$&");
   const matches = await db.orm.public.User
     .where((user) => user.email.ilike(escapedEmail))
-    .select("id", "email", "role", "status")
+    .select("id", "email", "firstName", "lastName", "role", "status")
     .limit(2)
     .all();
 
@@ -155,6 +156,7 @@ export async function requireAppUser(): Promise<AppUser> {
   return {
     id: user.id,
     email: user.email,
+    name: `${user.firstName} ${user.lastName}`,
     role: primaryRole,
     status: String(user.status),
     roles: effectiveRoles,

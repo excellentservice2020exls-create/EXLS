@@ -5,7 +5,7 @@ import { db } from "@/prisma/db";
 import { requirePermission } from "@/lib/erp-auth";
 
 export async function createClient(formData: FormData) {
-  await requirePermission("clients:create");
+  const user = await requirePermission("clients:create");
   const name = String(formData.get("name") ?? "").trim();
   const contactName = String(formData.get("contactName") ?? "").trim();
   const contactEmail = String(formData.get("contactEmail") ?? "").trim();
@@ -19,6 +19,7 @@ export async function createClient(formData: FormData) {
   }
 
   const code = `CLI-${Date.now().toString().slice(-6)}`;
+  const createdAt = new Date();
 
   await db.orm.public.Client.create({
     name,
@@ -29,6 +30,10 @@ export async function createClient(formData: FormData) {
     billingAddress: billingAddress || "",
     city: city || "Kinshasa",
     postalCode: postalCode || "",
+    createdAt,
+    createdByEmail: user.email,
+    createdById: user.id,
+    createdByName: user.name,
   });
 
   redirect("/clients");

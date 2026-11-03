@@ -65,21 +65,21 @@ export default async function ClientsPage({
                 <span className="rounded-full bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700">{String(client.isActive) === "true" ? "Actif" : "Inactif"}</span>
               </div>
               <dl className="mt-5 space-y-2 text-sm text-slate-600">
-                <div className="flex justify-between gap-4"><dt>Codif</dt><dd>AB-{client.id}</dd></div>
-                <div className="flex justify-between gap-4"><dt>Contact</dt><dd>{client.contactName}</dd></div>
-                <div className="flex justify-between gap-4"><dt>Email</dt><dd>{client.contactEmail}</dd></div>
-                <div className="flex justify-between gap-4"><dt>Téléphone</dt><dd>{client.contactPhone}</dd></div>
+                <div className="flex justify-between gap-4"><dt>Codif: </dt><dd>{client.code}</dd></div>
+                <div className="flex justify-between gap-4"><dt>Contact: </dt><dd>{client.contactName}</dd></div>
+                <div className="flex justify-between gap-4"><dt>Email: </dt><dd>{client.contactEmail}</dd></div>
+                <div className="flex justify-between gap-4"><dt>Téléphone: </dt><dd>{client.contactPhone}</dd></div>
               </dl>
               {(hasPermission(user, "clients:update") || hasPermission(user, "clients:archive")) && (
                 <div className="mt-5 flex justify-end gap-2 border-t border-slate-100 pt-4">
                   {hasPermission(user, "clients:update") && (
-                    <Link href={`/clients/${client.id}/edit`} className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">
+                    <Link href={`/clients/${client.id}/edit`} className="cursor-pointer rounded-lg border border-amber-200 px-3 py-2 text-sm font-medium text-amber-800 hover:bg-amber-100">
                       Modifier
                     </Link>
                   )}
                   {hasPermission(user, "clients:archive") && (
                     <form action={archiveClient.bind(null, String(client.id))}>
-                      <button type="submit" className="rounded-lg border border-amber-200 px-3 py-2 text-sm font-medium text-amber-800 hover:bg-amber-50">
+                      <button type="submit" className="cursor-pointer rounded-lg border border-amber-200 px-3 py-2 text-sm font-medium text-amber-800 hover:bg-amber-100">
                         Archiver
                       </button>
                     </form>

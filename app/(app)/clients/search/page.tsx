@@ -23,7 +23,6 @@ export default async function ClientSearchPage({
         [
           client.name,
           client.code,
-          `AB-${client.id}`,
           client.contactName,
           client.contactEmail,
           client.contactPhone,
@@ -93,7 +92,7 @@ export default async function ClientSearchPage({
                         <p className="font-semibold text-slate-900">{client.name}</p>
                       </td>
                       <td className="px-4 py-4 text-slate-600">{client.city}</td>
-                      <td className="px-4 py-4 font-medium text-slate-700">AB-{client.id}</td>
+                      <td className="px-4 py-4 font-medium text-slate-700">{client.code}</td>
                       <td className="px-4 py-4">
                         <p className="text-slate-900">{client.contactName}</p>
                         <p className="mt-1 text-xs text-slate-500">{client.contactEmail}</p>

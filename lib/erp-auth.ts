@@ -66,7 +66,7 @@ export const ROLE_PERMISSIONS: Readonly<Record<ErpRole, readonly Permission[]>> 
 };
 
 export type AppUser = {
-  id: number;
+  id: string;
   email: string;
   name: string;
   role: ErpRole;
@@ -78,15 +78,15 @@ export type AppUser = {
 
 export type AppDataScope = {
   organizationWide: boolean;
-  userIds: ReadonlySet<number>;
-  siteIds: ReadonlySet<number>;
+  userIds: ReadonlySet<string>;
+  siteIds: ReadonlySet<string>;
 };
 
 export function isErpRole(value: string): value is ErpRole {
   return (ERP_ROLES as readonly string[]).includes(value);
 }
 
-export async function getEffectiveRoles(userId: number, primaryRole: string) {
+export async function getEffectiveRoles(userId: string, primaryRole: string) {
   if (!isErpRole(primaryRole)) {
     throw new Error(`The EXLS user ${userId} has an unsupported primary role.`);
   }
@@ -194,8 +194,8 @@ export async function getAppDataScope(user: AppUser): Promise<AppDataScope> {
     };
   }
 
-  const userIds = new Set<number>();
-  const siteIds = new Set<number>();
+  const userIds = new Set<string>();
+  const siteIds = new Set<string>();
 
   if (user.roles.includes("AGENT")) {
     userIds.add(user.id);
@@ -223,7 +223,7 @@ export async function getAppDataScope(user: AppUser): Promise<AppDataScope> {
 export function canAccessShiftInScope(
   user: AppUser,
   scope: AppDataScope,
-  shift: { agentId: number; supervisorId: number | null; teamLeaderId: number | null; siteId: number },
+  shift: { agentId: string; supervisorId: string | null; teamLeaderId: string | null; siteId: string },
 ) {
   return scope.organizationWide ||
     (user.roles.includes("AGENT") && shift.agentId === user.id) ||
@@ -237,7 +237,7 @@ export function canAccessShiftInScope(
 
 export async function requireShiftAccess(
   user: AppUser,
-  shift: { agentId: number; supervisorId: number | null; teamLeaderId: number | null; siteId: number },
+  shift: { agentId: string; supervisorId: string | null; teamLeaderId: string | null; siteId: string },
 ) {
   const scope = await getAppDataScope(user);
   if (!canAccessShiftInScope(user, scope, shift)) {

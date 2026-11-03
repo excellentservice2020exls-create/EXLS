@@ -2,6 +2,7 @@
 
 import { notFound, redirect } from "next/navigation";
 import { db } from "@/prisma/db";
+import { isUuidV7 } from "@/lib/utils";
 import {
   hasPermission,
   requireAppUser,
@@ -11,7 +12,7 @@ import {
 
 function parseId(value: FormDataEntryValue | null) {
   const text = String(value ?? "");
-  return /^[1-9]\d*$/.test(text) ? Number(text) : 0;
+  return isUuidV7(text) ? text : null;
 }
 
 function dateValue(value: Date) {
@@ -39,8 +40,9 @@ function parseClockIn(date: string, time: string) {
   return value;
 }
 
-function returnToAttendance(shiftId: number, date: string, error?: string): never {
-  const params = new URLSearchParams({ shiftId: String(shiftId), date });
+function returnToAttendance(shiftId: string | null, date: string, error?: string): never {
+  const params = new URLSearchParams({ date });
+  if (shiftId) params.set("shiftId", shiftId);
   if (error) params.set("error", error);
   redirect(`/attendance?${params.toString()}`);
 }
@@ -58,7 +60,7 @@ export async function createAttendanceRecord(formData: FormData) {
   const time = String(formData.get("time") ?? "");
 
   if (!shiftId) {
-    returnToAttendance(0, "", "invalid");
+    returnToAttendance(null, "", "invalid");
   }
 
   const shift = await db.orm.public.Shift

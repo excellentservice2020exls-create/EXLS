@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { db } from "@/prisma/db";
 import { requirePermission } from "@/lib/erp-auth";
+import { isUuidV7 } from "@/lib/utils";
 
 export async function createClient(formData: FormData) {
   const user = await requirePermission("clients:create");
@@ -18,7 +19,8 @@ export async function createClient(formData: FormData) {
     redirect("/clients/new?error=required-fields");
   }
 
-  const code = `CLI-${Date.now().toString().slice(-6)}`;
+  const existingClients = await db.orm.public.Client.select("id").all();
+  const code = `AB-${existingClients.length + 1}`;
   const createdAt = new Date();
 
   await db.orm.public.Client.create({
@@ -41,8 +43,8 @@ export async function createClient(formData: FormData) {
 
 export async function updateClient(clientId: string, formData: FormData) {
   await requirePermission("clients:update");
-  const id = Number(clientId);
-  if (!Number.isSafeInteger(id) || id <= 0) {
+  const id = clientId;
+  if (!isUuidV7(id)) {
     redirect("/clients");
   }
 
@@ -81,8 +83,8 @@ export async function updateClient(clientId: string, formData: FormData) {
 
 export async function archiveClient(clientId: string) {
   await requirePermission("clients:archive");
-  const id = Number(clientId);
-  if (!Number.isSafeInteger(id) || id <= 0) {
+  const id = clientId;
+  if (!isUuidV7(id)) {
     redirect("/clients");
   }
 
@@ -105,8 +107,8 @@ export async function archiveClient(clientId: string) {
 
 export async function restoreClient(clientId: string) {
   await requirePermission("clients:restore");
-  const id = Number(clientId);
-  if (!Number.isSafeInteger(id) || id <= 0) {
+  const id = clientId;
+  if (!isUuidV7(id)) {
     redirect("/clients/archives");
   }
 

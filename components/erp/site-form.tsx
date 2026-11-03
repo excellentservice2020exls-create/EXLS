@@ -3,7 +3,7 @@ import Link from "next/link";
 type SiteFormValues = {
   name: string;
   code: string;
-  clientId: number;
+  clientId: string;
   address: string;
   city: string;
   postalCode: string;
@@ -15,7 +15,7 @@ type SiteFormValues = {
 
 type SiteFormProps = {
   action: (formData: FormData) => Promise<void>;
-  clients: { id: number; name: string }[];
+  clients: { id: string; name: string }[];
   error?: string;
   submitLabel: string;
   values?: Partial<SiteFormValues>;

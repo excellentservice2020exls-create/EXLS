@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { ClientTabs } from "@/components/erp/client-tabs";
 import { hasPermission, requirePermission } from "@/lib/erp-auth";
 import { db } from "@/prisma/db";
+import { isUuidV7 } from "@/lib/utils";
 import { updateClient } from "../../actions";
 
 export default async function EditClientPage({
@@ -11,15 +12,15 @@ export default async function EditClientPage({
 }: PageProps<"/clients/[clientId]/edit">) {
   const user = await requirePermission("clients:update");
   const [{ clientId }, { error }] = await Promise.all([params, searchParams]);
-  const id = Number(clientId);
-  if (!Number.isSafeInteger(id) || id <= 0) {
+  const id = clientId;
+  if (!isUuidV7(id)) {
     notFound();
   }
 
   const client = await db.orm.public.Client
     .where({ id })
     .where((currentClient) => currentClient.deletedAt.isNull())
-    .select("id", "name", "contactName", "contactEmail", "contactPhone", "city", "billingAddress", "postalCode", "isActive")
+    .select("id", "code", "name", "contactName", "contactEmail", "contactPhone", "city", "billingAddress", "postalCode", "isActive")
     .first();
   if (!client) {
     notFound();
@@ -30,7 +31,7 @@ export default async function EditClientPage({
       <header>
         <p className="text-sm font-medium uppercase tracking-[0.2em] text-emerald-700">Clients</p>
         <h1 className="mt-2 text-3xl font-bold text-slate-900">Modifier le client</h1>
-        <p className="mt-1 text-sm text-slate-500">Codif AB-{client.id}</p>
+        <p className="mt-1 text-sm text-slate-500">Codif {client.code}</p>
       </header>
 
       <ClientTabs

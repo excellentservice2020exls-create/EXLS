@@ -3,6 +3,7 @@ import { SiteForm } from "@/components/erp/site-form";
 import { updateSite } from "../../actions";
 import { getClients, getSiteForManagement } from "@/lib/erp-data";
 import { requirePermission } from "@/lib/erp-auth";
+import { isUuidV7 } from "@/lib/utils";
 
 const errorValues = ["invalid", "client", "code"] as const;
 
@@ -12,8 +13,8 @@ export default async function EditSitePage({
 }: PageProps<"/sites/[siteId]/edit">) {
   await requirePermission("sites:update");
   const [{ siteId }, { error }] = await Promise.all([params, searchParams]);
-  const parsedSiteId = Number(siteId);
-  if (!Number.isSafeInteger(parsedSiteId) || parsedSiteId <= 0) {
+  const parsedSiteId = siteId;
+  if (!isUuidV7(parsedSiteId)) {
     notFound();
   }
 

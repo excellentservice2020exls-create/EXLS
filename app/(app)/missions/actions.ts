@@ -3,18 +3,19 @@
 import { redirect } from "next/navigation";
 import { db } from "@/prisma/db";
 import { getEffectiveRoles, requirePermission } from "@/lib/erp-auth";
+import { isUuidV7 } from "@/lib/utils";
 
 export async function createShift(formData: FormData) {
   await requirePermission("missions:create");
   const title = String(formData.get("title") ?? "").trim();
   const date = String(formData.get("date") ?? "");
   const startTime = String(formData.get("startTime") ?? "");
-  const siteId = Number(formData.get("siteId") ?? "0");
-  const agentId = Number(formData.get("agentId") ?? "0");
+  const siteId = String(formData.get("siteId") ?? "");
+  const agentId = String(formData.get("agentId") ?? "");
 
   if (
-    !Number.isSafeInteger(siteId) || siteId <= 0 ||
-    !Number.isSafeInteger(agentId) || agentId <= 0 ||
+    !isUuidV7(siteId) ||
+    !isUuidV7(agentId) ||
     title.length > 120 ||
     !/^\d{4}-\d{2}-\d{2}$/.test(date) ||
     !/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(startTime)

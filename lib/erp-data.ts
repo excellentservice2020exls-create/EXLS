@@ -109,7 +109,7 @@ export async function getSitesForManagement() {
     .all();
 }
 
-export async function getSiteForManagement(siteId: number) {
+export async function getSiteForManagement(siteId: string) {
   noStore();
   return db.orm.public.Site
     .where({ id: siteId })
@@ -129,17 +129,17 @@ export async function getSiteForManagement(siteId: number) {
     .first();
 }
 
-export async function getSiteById(siteId: number) {
+export async function getSiteById(siteId: string) {
   noStore();
   return db.orm.public.Site.where({ id: siteId }).select("id", "name", "code").first();
 }
 
-export async function getAgentById(agentId: number) {
+export async function getAgentById(agentId: string) {
   noStore();
   return db.orm.public.User.where({ id: agentId }).select("id", "firstName", "lastName", "role", "status").first();
 }
 
-export async function getAttendanceForShift(shiftId: number) {
+export async function getAttendanceForShift(shiftId: string) {
   noStore();
   return db.orm.public.Attendance
     .where({ shiftId })

@@ -14,7 +14,7 @@ namespace extensions {
 
 namespace public {
   model Client {
-    id              Int               @id(map: "clients_pkey") @default(autoincrement())
+    id              Uuid              @id(map: "clients_pkey") @onCreate(uuid(7))
     billingAddress  String
     city            String
     code            String            @unique(map: "clients_code_key")
@@ -23,7 +23,7 @@ namespace public {
     contactPhone    String
     createdAt       DateTime          @default(now())
     createdByEmail  String?
-    createdById     Int?
+    createdById     Uuid?
     createdByName   String?
     deletedAt       DateTime?
     isActive        Boolean           @default(true)
@@ -38,7 +38,7 @@ namespace public {
   }
 
   model User {
-    id                     Int                    @id(map: "users_pkey") @default(autoincrement())
+    id                     Uuid                   @id(map: "users_pkey") @onCreate(uuid(7))
     adminLock              String?                @unique(map: "users_adminLock_key")
     cnapsExpiration        DateTime?
     cnapsNumber            String?
@@ -52,8 +52,8 @@ namespace public {
     phone                  String?
     role                   String
     status                 String                 @default("ACTIVE")
-    supervisorId           Int?
-    teamLeaderId           Int?
+    supervisorId           Uuid?
+    teamLeaderId           Uuid?
     updatedAt              DateTime               @default(now())
     equipmentAssignments   EquipmentAssignment[]
     incidentComments       IncidentComment[]
@@ -85,11 +85,11 @@ namespace public {
   }
 
   model Site {
-    id                  Int                @id(map: "sites_pkey") @default(autoincrement())
+    id                  Uuid               @id(map: "sites_pkey") @onCreate(uuid(7))
     accessCode          String?
     address             String
     city                String
-    clientId            Int
+    clientId            Uuid
     code                String             @unique(map: "sites_code_key")
     createdAt           DateTime           @default(now())
     emergencyPhone      String?
@@ -98,10 +98,10 @@ namespace public {
     isActive            Boolean            @default(true)
     latitude            Float?
     longitude           Float?
-    managerId           Int?
+    managerId           Uuid?
     name                String
     postalCode          String
-    supervisorId        Int?
+    supervisorId        Uuid?
     updatedAt           DateTime           @default(now())
     checkpoints         Checkpoint[]
     incidents           Incident[]
@@ -121,18 +121,18 @@ namespace public {
   }
 
   model Shift {
-    id                   Int                    @id(map: "shifts_pkey") @default(autoincrement())
-    agentId              Int
+    id                   Uuid                   @id(map: "shifts_pkey") @onCreate(uuid(7))
+    agentId              Uuid
     createdAt            DateTime               @default(now())
     endTime              DateTime
     hourlyRate           Numeric?
     notes                String?
     shiftType            String
-    siteId               Int
+    siteId               Uuid
     startTime            DateTime
     status               String                 @default("SCHEDULED")
-    supervisorId         Int?
-    teamLeaderId         Int?
+    supervisorId         Uuid?
+    teamLeaderId         Uuid?
     title                String
     updatedAt            DateTime               @default(now())
     attendances          Attendance?
@@ -155,8 +155,8 @@ namespace public {
   }
 
   model Attendance {
-    id                Int       @id(map: "attendances_pkey") @default(autoincrement())
-    agentId           Int
+    id                Uuid      @id(map: "attendances_pkey") @onCreate(uuid(7))
+    agentId           Uuid
     clockInLatitude   Float?
     clockInLongitude  Float?
     clockInMethod     String    @default("QR_SCAN")
@@ -166,11 +166,11 @@ namespace public {
     clockOutTime      DateTime?
     createdAt         DateTime  @default(now())
     lateMinutes       Int       @default(0)
-    shiftId           Int       @unique(map: "attendances_shiftId_key")
+    shiftId           Uuid      @unique(map: "attendances_shiftId_key")
     status            String    @default("ON_TIME")
     updatedAt         DateTime  @default(now())
     verificationNotes String?
-    verifiedById      Int?
+    verifiedById      Uuid?
     agent             User     @relation(name: "attendances_agentId_fkey", fields: [agentId], references: [id], map: "attendances_agentId_fkey")
     shift             Shift    @relation(fields: [shiftId], references: [id], onDelete: Cascade, map: "attendances_shiftId_fkey")
     verifiedBy        User?    @relation(name: "attendances_verifiedById_fkey", fields: [verifiedById], references: [id], map: "attendances_verifiedById_fkey")
@@ -184,7 +184,7 @@ namespace public {
   }
 
   model Checkpoint {
-    id            Int           @id(map: "checkpoints_pkey") @default(autoincrement())
+    id            Uuid          @id(map: "checkpoints_pkey") @onCreate(uuid(7))
     code          String
     createdAt     DateTime      @default(now())
     floorLocation String?
@@ -195,7 +195,7 @@ namespace public {
     nfcTagId      String?
     orderIndex    Int           @default(0)
     qrCodeData    String        @unique(map: "checkpoints_qrCodeData_key")
-    siteId        Int
+    siteId        Uuid
     updatedAt     DateTime      @default(now())
     patrolScans   PatrolScan[]
     site          Site         @relation(fields: [siteId], references: [id], onDelete: Cascade, map: "checkpoints_siteId_fkey")
@@ -206,8 +206,8 @@ namespace public {
   }
 
   model ClientContract {
-    id             Int       @id(map: "client_contracts_pkey") @default(autoincrement())
-    clientId       Int
+    id             Uuid      @id(map: "client_contracts_pkey") @onCreate(uuid(7))
+    clientId       Uuid
     contractNumber String    @unique(map: "client_contracts_contractNumber_key")
     createdAt      DateTime  @default(now())
     endDate        DateTime?
@@ -227,7 +227,7 @@ namespace public {
   }
 
   model ContractServiceType {
-    id          String                 @id(map: "contract_service_types_pkey")
+    id          Uuid                   @id(map: "contract_service_types_pkey") @onCreate(uuid(7))
     name        String
     description String?
     isActive    Boolean                @default(true) @map("is_active")
@@ -239,8 +239,8 @@ namespace public {
   }
 
   model Contract {
-    id            Uuid                    @id(map: "contracts_pkey") @default(sql`gen_random_uuid()`)
-    serviceTypeId String                  @map("service_type_id")
+    id            Uuid                    @id(map: "contracts_pkey") @onCreate(uuid(7))
+    serviceTypeId Uuid                    @map("service_type_id")
     status        pg.enum(ContractStatus) @default("ACTIVE")
     clientName    String                  @map("client_name")
     startDate     DateTime(precision: 6)  @map("start_date")
@@ -253,7 +253,7 @@ namespace public {
   }
 
   model Equipment {
-    id                   Int                    @id(map: "equipment_pkey") @default(autoincrement())
+    id                   Uuid                   @id(map: "equipment_pkey") @onCreate(uuid(7))
     category             String
     code                 String                 @unique(map: "equipment_code_key")
     createdAt            DateTime               @default(now())
@@ -273,17 +273,17 @@ namespace public {
   }
 
   model EquipmentAssignment {
-    id                    Int       @id(map: "equipment_assignments_pkey") @default(autoincrement())
-    agentId               Int
+    id                    Uuid      @id(map: "equipment_assignments_pkey") @onCreate(uuid(7))
+    agentId               Uuid
     anomalyReported       Boolean   @default(false)
     assignedAt            DateTime  @default(now())
     conditionOnAssignment String    @default("GOOD")
     conditionOnReturn     String?
     createdAt             DateTime  @default(now())
-    equipmentId           Int
+    equipmentId           Uuid
     notes                 String?
     returnedAt            DateTime?
-    shiftId               Int?
+    shiftId               Uuid?
     updatedAt             DateTime  @default(now())
     agent                 User     @relation(fields: [agentId], references: [id], map: "equipment_assignments_agentId_fkey")
     equipment             Equipment @relation(fields: [equipmentId], references: [id], onDelete: Cascade, map: "equipment_assignments_equipmentId_fkey")
@@ -299,7 +299,7 @@ namespace public {
   }
 
   model EquipmentCategory {
-    id          String                 @id(map: "equipment_categories_pkey")
+    id          Uuid                   @id(map: "equipment_categories_pkey") @onCreate(uuid(7))
     name        String
     description String?
     isActive    Boolean                @default(true) @map("is_active")
@@ -310,15 +310,15 @@ namespace public {
   }
 
   model Patrol {
-    id                 Int           @id(map: "patrols_pkey") @default(autoincrement())
-    agentId            Int
+    id                 Uuid          @id(map: "patrols_pkey") @onCreate(uuid(7))
+    agentId            Uuid
     completedAt        DateTime?
     createdAt          DateTime      @default(now())
     notes              String?
     scannedCheckpoints Int           @default(0)
     scheduledStartTime DateTime?
-    shiftId            Int?
-    siteId             Int
+    shiftId            Uuid?
+    siteId             Uuid
     startedAt          DateTime      @default(now())
     status             String        @default("IN_PROGRESS")
     title              String
@@ -339,9 +339,9 @@ namespace public {
   }
 
   model Incident {
-    id                  Int                   @id(map: "incidents_pkey") @default(autoincrement())
+    id                  Uuid                  @id(map: "incidents_pkey") @onCreate(uuid(7))
     actionTaken         String?
-    assignedToId        Int?
+    assignedToId        Uuid?
     category            String
     clientNotified      Boolean               @default(false)
     createdAt           DateTime              @default(now())
@@ -349,15 +349,15 @@ namespace public {
     incidentNumber      String                @unique(map: "incidents_incidentNumber_key")
     locationDetail      String?
     occurredAt          DateTime
-    patrolId            Int?
+    patrolId            Uuid?
     policeCalled        Boolean               @default(false)
     reportedAt          DateTime              @default(now())
-    reportedById        Int
+    reportedById        Uuid
     resolutionSummary   String?
     resolvedAt          DateTime?
     severity            String                @default("MEDIUM")
-    shiftId             Int?
-    siteId              Int
+    shiftId             Uuid?
+    siteId              Uuid
     status              String                @default("NEW")
     title               String
     updatedAt           DateTime              @default(now())
@@ -382,13 +382,13 @@ namespace public {
   }
 
   model IncidentAttachment {
-    id         Int       @id(map: "incident_attachments_pkey") @default(autoincrement())
+    id         Uuid      @id(map: "incident_attachments_pkey") @onCreate(uuid(7))
     caption    String?
     fileName   String
     fileSize   Int?
     fileType   String
     fileUrl    String
-    incidentId Int
+    incidentId Uuid
     uploadedAt DateTime  @default(now())
     incident   Incident @relation(fields: [incidentId], references: [id], onDelete: Cascade, map: "incident_attachments_incidentId_fkey")
 
@@ -398,7 +398,7 @@ namespace public {
   }
 
   model IncidentCategory {
-    id          String                 @id(map: "incident_categories_pkey")
+    id          Uuid                   @id(map: "incident_categories_pkey") @onCreate(uuid(7))
     name        String
     description String?
     isActive    Boolean                @default(true) @map("is_active")
@@ -409,11 +409,11 @@ namespace public {
   }
 
   model IncidentComment {
-    id         Int       @id(map: "incident_comments_pkey") @default(autoincrement())
-    authorId   Int
+    id         Uuid      @id(map: "incident_comments_pkey") @onCreate(uuid(7))
+    authorId   Uuid
     comment    String
     createdAt  DateTime  @default(now())
-    incidentId Int
+    incidentId Uuid
     author     User     @relation(fields: [authorId], references: [id], map: "incident_comments_authorId_fkey")
     incident   Incident @relation(fields: [incidentId], references: [id], onDelete: Cascade, map: "incident_comments_incidentId_fkey")
 
@@ -424,14 +424,14 @@ namespace public {
   }
 
   model Notification {
-    id        Int       @id(map: "notifications_pkey") @default(autoincrement())
+    id        Uuid      @id(map: "notifications_pkey") @onCreate(uuid(7))
     createdAt DateTime  @default(now())
     isRead    Boolean   @default(false)
     message   String
     readAt    DateTime?
     title     String
     type     String    @default("SYSTEM") @map("type")
-    userId    Int
+    userId    Uuid
     user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, map: "notifications_userId_fkey")
 
     @@index([userId], name: "notifications_userId_idx")
@@ -441,14 +441,14 @@ namespace public {
   }
 
   model PatrolScan {
-    id                 Int         @id(map: "patrol_scans_pkey") @default(autoincrement())
-    agentId            Int
+    id                 Uuid        @id(map: "patrol_scans_pkey") @onCreate(uuid(7))
+    agentId            Uuid
     anomalyDescription String?
-    checkpointId       Int
+    checkpointId       Uuid
     createdAt          DateTime    @default(now())
     latitude           Float?
     longitude          Float?
-    patrolId           Int
+    patrolId           Uuid
     scanMethod         String      @default("QR")
     scannedAt          DateTime    @default(now())
     status             String      @default("OK")
@@ -465,12 +465,12 @@ namespace public {
   }
 
   model RoleAssignment {
-    id         Int      @id(map: "role_assignments_pkey") @default(autoincrement())
+    id         Uuid     @id(map: "role_assignments_pkey") @onCreate(uuid(7))
     assignedAt DateTime @default(now())
     createdAt  DateTime @default(now())
     role       String
     updatedAt  DateTime @default(now())
-    userId     Int
+    userId     Uuid
     user       User    @relation(fields: [userId], references: [id], onDelete: Cascade, map: "role_assignments_userId_fkey")
 
     @@index([userId], name: "role_assignments_userId_idx")
@@ -480,12 +480,12 @@ namespace public {
   }
 
   model SiteEquipment {
-    id          Int       @id(map: "site_equipments_pkey") @default(autoincrement())
+    id          Uuid      @id(map: "site_equipments_pkey") @onCreate(uuid(7))
     createdAt   DateTime  @default(now())
-    equipmentId Int
+    equipmentId Uuid
     installedAt DateTime  @default(now())
     notes       String?
-    siteId      Int
+    siteId      Uuid
     equipment   Equipment @relation(fields: [equipmentId], references: [id], onDelete: Cascade, map: "site_equipments_equipmentId_fkey")
     site        Site     @relation(fields: [siteId], references: [id], onDelete: Cascade, map: "site_equipments_siteId_fkey")
 
@@ -497,15 +497,15 @@ namespace public {
   }
 
   model SiteInstruction {
-    id             Int       @id(map: "site_instructions_pkey") @default(autoincrement())
-    authorId       Int
+    id             Uuid      @id(map: "site_instructions_pkey") @onCreate(uuid(7))
+    authorId       Uuid
     content        String
     createdAt      DateTime  @default(now())
     effectiveFrom  DateTime  @default(now())
     effectiveUntil DateTime?
     isActive       Boolean   @default(true)
     priority       String    @default("NORMAL")
-    siteId         Int
+    siteId         Uuid
     title          String
     type          String    @default("PERMANENT") @map("type")
     updatedAt      DateTime  @default(now())

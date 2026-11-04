@@ -1,0 +1,99 @@
+[
+  {
+    "id": "dropCheckConstraint.users.users_role_check_3b8a4a49",
+    "label": "Drop check constraint \"users_role_check_3b8a4a49\" on \"users\"",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "users_role_check_3b8a4a49",
+        "table": "users"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"users_role_check_3b8a4a49\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "users_role_check_3b8a4a49",
+          "public",
+          "\"public\".\"users\""
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "constraint \"users_role_check_3b8a4a49\" on \"users\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop check constraint \"users_role_check_3b8a4a49\"",
+        "sql": "ALTER TABLE \"public\".\"users\" DROP CONSTRAINT \"users_role_check_3b8a4a49\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"users_role_check_3b8a4a49\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "users_role_check_3b8a4a49",
+          "public",
+          "\"public\".\"users\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"users_role_check_3b8a4a49\" on \"users\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.users.users_role_check_3b8a4a49",
+    "label": "Add check constraint \"users_role_check_3b8a4a49\" on \"users\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "users_role_check_3b8a4a49",
+        "table": "users"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"users_role_check_3b8a4a49\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "users_role_check_3b8a4a49",
+          "public",
+          "\"public\".\"users\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"users_role_check_3b8a4a49\" on \"users\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"users_role_check_3b8a4a49\"",
+        "sql": "ALTER TABLE \"public\".\"users\" ADD CONSTRAINT \"users_role_check_3b8a4a49\" CHECK (\"role\" IN ('SUPER_ADMIN', 'ADMIN', 'MANAGER', 'DIRECTOR', 'SUPERVISOR', 'TEAM_LEADER', 'AGENT', 'USER'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify check constraint \"users_role_check_3b8a4a49\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4)) AS \"result\"",
+        "params": [
+          "users_role_check_3b8a4a49",
+          "public",
+          "\"public\".\"users\"",
+          "c"
+        ]
+      }
+    ]
+  }
+]

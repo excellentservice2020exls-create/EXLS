@@ -3650,6 +3650,23 @@
                   "kind": "scalar"
                 }
               },
+              "birthDate": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "birthPlace": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "cnapsExpiration": {
                 "nullable": true,
                 "type": {
@@ -3675,6 +3692,13 @@
                   "typeParams": {
                     "precision": 3
                   }
+                }
+              },
+              "educationLevel": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
                 }
               },
               "email": {
@@ -3733,6 +3757,34 @@
                   "kind": "scalar"
                 }
               },
+              "phone2": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "postName": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "residentialAddress": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "residentialAddress2": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "role": {
                 "nullable": false,
                 "type": {
@@ -3742,6 +3794,13 @@
               },
               "status": {
                 "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "studies": {
+                "nullable": true,
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
@@ -4081,6 +4140,12 @@
                 "adminLock": {
                   "column": "adminLock"
                 },
+                "birthDate": {
+                  "column": "birthDate"
+                },
+                "birthPlace": {
+                  "column": "birthPlace"
+                },
                 "cnapsExpiration": {
                   "column": "cnapsExpiration"
                 },
@@ -4089,6 +4154,9 @@
                 },
                 "createdAt": {
                   "column": "createdAt"
+                },
+                "educationLevel": {
+                  "column": "educationLevel"
                 },
                 "email": {
                   "column": "email"
@@ -4114,11 +4182,26 @@
                 "phone": {
                   "column": "phone"
                 },
+                "phone2": {
+                  "column": "phone2"
+                },
+                "postName": {
+                  "column": "postName"
+                },
+                "residentialAddress": {
+                  "column": "residentialAddress"
+                },
+                "residentialAddress2": {
+                  "column": "residentialAddress2"
+                },
                 "role": {
                   "column": "role"
                 },
                 "status": {
                   "column": "status"
+                },
+                "studies": {
+                  "column": "studies"
                 },
                 "supervisorId": {
                   "column": "supervisorId"
@@ -7525,6 +7608,19 @@
                   "dataType": "pg/text",
                   "nullable": true
                 },
+                "birthDate": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "nullable": true,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "birthPlace": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                },
                 "cnapsExpiration": {
                   "codecId": "pg/timestamptz-date@1",
                   "dataType": "pg/timestamptz",
@@ -7549,6 +7645,11 @@
                   "typeParams": {
                     "precision": 3
                   }
+                },
+                "educationLevel": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
                 },
                 "email": {
                   "codecId": "pg/text@1",
@@ -7594,6 +7695,26 @@
                   "dataType": "pg/text",
                   "nullable": true
                 },
+                "phone2": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                },
+                "postName": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                },
+                "residentialAddress": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                },
+                "residentialAddress2": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                },
                 "role": {
                   "codecId": "pg/text@1",
                   "dataType": "pg/text",
@@ -7607,6 +7728,11 @@
                     "value": "ACTIVE"
                   },
                   "nullable": false
+                },
+                "studies": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
                 },
                 "supervisorId": {
                   "codecId": "pg/uuid@1",
@@ -7893,7 +8019,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "a1acb21fd19abc1d0ead33c46cac404089ffe1c4854a93e4c40c3cb0ffc63086"
+    "storageHash": "d34b7ec0195aa728155605f1627098ad2d67ef562c18d691d1848f1772d0adba"
   },
   "execution": {
     "executionHash": "a639c8ae18a88650d63df97c212e242441e3d2b8c43a7fa41bd5b17e3606fd41",

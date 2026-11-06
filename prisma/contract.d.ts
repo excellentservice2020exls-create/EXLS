@@ -23,7 +23,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'a1acb21fd19abc1d0ead33c46cac404089ffe1c4854a93e4c40c3cb0ffc63086'>;
+  StorageHashBase<'d34b7ec0195aa728155605f1627098ad2d67ef562c18d691d1848f1772d0adba'>;
 export type ExecutionHash =
   ExecutionHashBase<'a639c8ae18a88650d63df97c212e242441e3d2b8c43a7fa41bd5b17e3606fd41'>;
 export type ProfileHash =
@@ -698,9 +698,12 @@ export namespace Models {
   };
   export type public_User = {
     adminLock: FieldOutputTypes['public']['User']['adminLock'];
+    birthDate: FieldOutputTypes['public']['User']['birthDate'];
+    birthPlace: FieldOutputTypes['public']['User']['birthPlace'];
     cnapsExpiration: FieldOutputTypes['public']['User']['cnapsExpiration'];
     cnapsNumber: FieldOutputTypes['public']['User']['cnapsNumber'];
     createdAt: FieldOutputTypes['public']['User']['createdAt'];
+    educationLevel: FieldOutputTypes['public']['User']['educationLevel'];
     email: FieldOutputTypes['public']['User']['email'];
     firstName: FieldOutputTypes['public']['User']['firstName'];
     id: FieldOutputTypes['public']['User']['id'];
@@ -709,8 +712,13 @@ export namespace Models {
     mustChangePassword: FieldOutputTypes['public']['User']['mustChangePassword'];
     passwordHash: FieldOutputTypes['public']['User']['passwordHash'];
     phone: FieldOutputTypes['public']['User']['phone'];
+    phone2: FieldOutputTypes['public']['User']['phone2'];
+    postName: FieldOutputTypes['public']['User']['postName'];
+    residentialAddress: FieldOutputTypes['public']['User']['residentialAddress'];
+    residentialAddress2: FieldOutputTypes['public']['User']['residentialAddress2'];
     role: FieldOutputTypes['public']['User']['role'];
     status: FieldOutputTypes['public']['User']['status'];
+    studies: FieldOutputTypes['public']['User']['studies'];
     supervisorId: FieldOutputTypes['public']['User']['supervisorId'];
     teamLeaderId: FieldOutputTypes['public']['User']['teamLeaderId'];
     updatedAt: FieldOutputTypes['public']['User']['updatedAt'];
@@ -3322,6 +3330,19 @@ type ContractBase = Omit<
                   readonly nullable: true;
                   readonly many: false;
                 };
+                readonly birthDate: {
+                  readonly dataType: 'pg/timestamptz';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly precision: 3 };
+                  readonly many: false;
+                };
+                readonly birthPlace: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                  readonly many: false;
+                };
                 readonly cnapsExpiration: {
                   readonly dataType: 'pg/timestamptz';
                   readonly codecId: 'pg/timestamptz-date@1';
@@ -3341,6 +3362,12 @@ type ContractBase = Omit<
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
                   readonly typeParams: { readonly precision: 3 };
+                  readonly many: false;
+                };
+                readonly educationLevel: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
                   readonly many: false;
                 };
                 readonly email: {
@@ -3395,6 +3422,30 @@ type ContractBase = Omit<
                   readonly nullable: true;
                   readonly many: false;
                 };
+                readonly phone2: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                  readonly many: false;
+                };
+                readonly postName: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                  readonly many: false;
+                };
+                readonly residentialAddress: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                  readonly many: false;
+                };
+                readonly residentialAddress2: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                  readonly many: false;
+                };
                 readonly role: {
                   readonly dataType: 'pg/text';
                   readonly codecId: 'pg/text@1';
@@ -3409,6 +3460,12 @@ type ContractBase = Omit<
                     readonly kind: 'literal';
                     readonly value: DefaultLiteralValue<'pg/text@1', 'ACTIVE'>;
                   };
+                  readonly many: false;
+                };
+                readonly studies: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
                   readonly many: false;
                 };
                 readonly supervisorId: {
@@ -5881,6 +5938,18 @@ type ContractBase = Omit<
                 readonly nullable: true;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
+              readonly birthDate: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly typeParams: { readonly precision: 3 };
+                };
+              };
+              readonly birthPlace: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
               readonly cnapsExpiration: {
                 readonly nullable: true;
                 readonly type: {
@@ -5900,6 +5969,10 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/timestamptz-date@1';
                   readonly typeParams: { readonly precision: 3 };
                 };
+              };
+              readonly educationLevel: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly email: {
                 readonly nullable: false;
@@ -5933,12 +6006,32 @@ type ContractBase = Omit<
                 readonly nullable: true;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
+              readonly phone2: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly postName: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly residentialAddress: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly residentialAddress2: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
               readonly role: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly status: {
                 readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly studies: {
+                readonly nullable: true;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly supervisorId: {
@@ -6169,9 +6262,12 @@ type ContractBase = Omit<
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly adminLock: { readonly column: 'adminLock' };
+                readonly birthDate: { readonly column: 'birthDate' };
+                readonly birthPlace: { readonly column: 'birthPlace' };
                 readonly cnapsExpiration: { readonly column: 'cnapsExpiration' };
                 readonly cnapsNumber: { readonly column: 'cnapsNumber' };
                 readonly createdAt: { readonly column: 'createdAt' };
+                readonly educationLevel: { readonly column: 'educationLevel' };
                 readonly email: { readonly column: 'email' };
                 readonly firstName: { readonly column: 'firstName' };
                 readonly id: { readonly column: 'id' };
@@ -6180,8 +6276,13 @@ type ContractBase = Omit<
                 readonly mustChangePassword: { readonly column: 'mustChangePassword' };
                 readonly passwordHash: { readonly column: 'passwordHash' };
                 readonly phone: { readonly column: 'phone' };
+                readonly phone2: { readonly column: 'phone2' };
+                readonly postName: { readonly column: 'postName' };
+                readonly residentialAddress: { readonly column: 'residentialAddress' };
+                readonly residentialAddress2: { readonly column: 'residentialAddress2' };
                 readonly role: { readonly column: 'role' };
                 readonly status: { readonly column: 'status' };
+                readonly studies: { readonly column: 'studies' };
                 readonly supervisorId: { readonly column: 'supervisorId' };
                 readonly teamLeaderId: { readonly column: 'teamLeaderId' };
                 readonly updatedAt: { readonly column: 'updatedAt' };

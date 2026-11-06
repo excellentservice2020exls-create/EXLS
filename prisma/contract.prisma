@@ -40,18 +40,26 @@ namespace public {
   model User {
     id                     Uuid                   @id(map: "users_pkey") @onCreate(uuid(7))
     adminLock              String?                @unique(map: "users_adminLock_key")
+    birthDate              DateTime?
+    birthPlace              String?
     cnapsExpiration        DateTime?
     cnapsNumber            String?
     createdAt              DateTime               @default(now())
     email                  String                 @unique(map: "users_email_key")
+    educationLevel         String?
     firstName              String
     lastName               String
     matricule              String                 @unique(map: "users_matricule_key")
     mustChangePassword     Boolean                @default(false)
     passwordHash           String
     phone                  String?
+    phone2                 String?
+    postName               String?
+    residentialAddress     String?
+    residentialAddress2    String?
     role                   String
     status                 String                 @default("ACTIVE")
+    studies                String?
     supervisorId           Uuid?
     teamLeaderId           Uuid?
     updatedAt              DateTime               @default(now())

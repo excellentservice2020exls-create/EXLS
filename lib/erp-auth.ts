@@ -86,8 +86,24 @@ export function isErpRole(value: string): value is ErpRole {
   return (ERP_ROLES as readonly string[]).includes(value);
 }
 
+function toErpRole(value: string): ErpRole | null {
+  if (isErpRole(value)) {
+    return value;
+  }
+
+  if (value === "SUPER_ADMIN") {
+    return "ADMIN";
+  }
+  if (value === "TEAM_LEADER") {
+    return "SUPERVISOR";
+  }
+
+  return null;
+}
+
 export async function getEffectiveRoles(userId: string, primaryRole: string) {
-  if (!isErpRole(primaryRole)) {
+  const effectivePrimaryRole = toErpRole(primaryRole);
+  if (!effectivePrimaryRole) {
     throw new Error(`The EXLS user ${userId} has an unsupported primary role.`);
   }
 
@@ -95,15 +111,20 @@ export async function getEffectiveRoles(userId: string, primaryRole: string) {
     .where({ userId })
     .select("role")
     .all();
-  const assignedRoleValues = assignedRoles.map((assignment) => String(assignment.role));
-  if (!assignedRoleValues.every(isErpRole)) {
+  const assignedRoleValues = assignedRoles.map((assignment) =>
+    toErpRole(String(assignment.role)),
+  );
+  if (assignedRoleValues.some((role) => role === null)) {
     throw new Error(`The EXLS user ${userId} has an unsupported role assignment.`);
   }
-  if (primaryRole !== "ADMIN" && assignedRoleValues.includes("ADMIN")) {
+  const validAssignedRoles = assignedRoleValues.filter(
+    (role): role is ErpRole => role !== null,
+  );
+  if (effectivePrimaryRole !== "ADMIN" && validAssignedRoles.includes("ADMIN")) {
     throw new Error(`The EXLS user ${userId} has an invalid ADMIN role assignment.`);
   }
 
-  return [...new Set<ErpRole>([primaryRole, ...assignedRoleValues])];
+  return [...new Set<ErpRole>([effectivePrimaryRole, ...validAssignedRoles])];
 }
 
 export function hasRole(user: AppUser, roles: readonly string[]) {
@@ -141,11 +162,11 @@ export async function requireAppUser(): Promise<AppUser> {
     redirect("/account?erpAccess=inactive");
   }
 
-  const effectiveRoles = await getEffectiveRoles(user.id, String(user.role));
-  const primaryRole = effectiveRoles.find((role) => role === String(user.role));
+  const primaryRole = toErpRole(String(user.role));
   if (!primaryRole) {
-    throw new Error(`The EXLS user ${user.id} has no valid primary role.`);
+    redirect("/account?erpAccess=role-required");
   }
+  const effectiveRoles = await getEffectiveRoles(user.id, String(user.role));
 
   const permissions = new Set<Permission>();
   for (const role of effectiveRoles) {

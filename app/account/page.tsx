@@ -34,6 +34,8 @@ export default async function AccountPage({
       "Votre profil EXLS existe mais n’est pas actif. Contactez un administrateur EXLS pour vérifier votre accès.",
     ambiguous:
       "Plusieurs profils EXLS correspondent à cette adresse. Contactez un administrateur afin de corriger les profils avant de réessayer.",
+    "role-required":
+      "Votre profil EXLS n’a pas de rôle opérationnel. Contactez un administrateur EXLS pour vérifier votre accès.",
   };
   const accessMessage =
     typeof erpAccess === "string" ? erpAccessMessage[erpAccess] : undefined;

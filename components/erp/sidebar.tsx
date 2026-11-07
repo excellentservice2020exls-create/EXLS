@@ -19,7 +19,7 @@ export function Sidebar({
   const navigationItems: { href: string; label: string; permission: Permission }[] = [
     { href: "/dashboard", label: "Tableau de bord", permission: "dashboard:read" },
     { href: "/profile", label: "Mon profil", permission: "profile:read:self" },
-    { href: "/employees", label: "Personnel", permission: "employees:read" },
+    { href: "/employees", label: "AGENT", permission: "employees:read" },
     { href: "/clients", label: "Abonnés / Clients", permission: "clients:read" },
     { href: "/sites", label: "Sites", permission: "sites:read" },
     { href: "/missions", label: "Missions", permission: "missions:read" },

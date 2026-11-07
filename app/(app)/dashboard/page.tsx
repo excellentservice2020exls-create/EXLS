@@ -46,7 +46,7 @@ export default async function DashboardPage() {
       </header>
 
       <section className="grid gap-5 md:grid-cols-4">
-        <StatCard label="Personnel" value={String(stats.users)} accent="bg-emerald-100 text-emerald-700" />
+        <StatCard label="Agents" value={String(stats.agents)} accent="bg-emerald-100 text-emerald-700" />
         <StatCard label="Clients" value={String(stats.clients)} accent="bg-sky-100 text-sky-700" />
         <StatCard label="Sites" value={String(stats.sites)} accent="bg-violet-100 text-violet-700" />
         <StatCard label="Missions actives" value={String(stats.activeShifts)} accent="bg-amber-100 text-amber-700" />

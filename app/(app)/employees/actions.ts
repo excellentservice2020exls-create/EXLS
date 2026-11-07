@@ -1,113 +1,200 @@
 "use server";
 
-import { createHash, randomBytes } from "node:crypto";
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { db } from "@/prisma/db";
-import { canAssignRole, requirePermission } from "@/lib/erp-auth";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { requirePermission } from "@/lib/erp-auth";
+import { isUuidV7 } from "@/lib/utils";
 
-const employeeRoles = ["AGENT", "SUPERVISOR", "MANAGER", "DIRECTOR"] as const;
-type EmployeeRole = (typeof employeeRoles)[number];
+const genders = ["FEMININ", "MASCULIN", "AUTRE"] as const;
 
-function isEmployeeRole(value: string): value is EmployeeRole {
-  return employeeRoles.some((role) => role === value);
+function field(formData: FormData, name: string) {
+  return String(formData.get(name) ?? "").trim();
 }
 
-function getInviteRedirectUrl(origin: string | null) {
-  if (!origin) {
-    throw new Error("The request origin is required to send an EXLS invitation.");
+function isDate(value: string) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return false;
   }
-
-  const parsedOrigin = new URL(origin);
-  if (
-    !["http:", "https:"].includes(parsedOrigin.protocol) ||
-    parsedOrigin.origin !== origin
-  ) {
-    throw new Error("The request origin is not a valid application origin.");
-  }
-
-  const callbackUrl = new URL("/auth/callback", parsedOrigin);
-  callbackUrl.searchParams.set("next", "/auth/reset-password");
-  return callbackUrl.toString();
+  const date = new Date(`${value}T00:00:00.000Z`);
+  return !Number.isNaN(date.getTime()) && date.toISOString().slice(0, 10) === value;
 }
 
-export async function createEmployee(formData: FormData) {
-  const user = await requirePermission("employees:create");
-  const firstName = String(formData.get("firstName") ?? "").trim();
-  const lastName = String(formData.get("lastName") ?? "").trim();
-  const phone = String(formData.get("phone") ?? "").trim();
-  const matricule = String(formData.get("matricule") ?? "").trim();
-  const email = String(formData.get("email") ?? "").trim().toLowerCase();
-  const requestedRole = String(formData.get("role") ?? "");
+function isGender(value: string): value is (typeof genders)[number] {
+  return genders.some((gender) => gender === value);
+}
+
+export async function createAgentApplication(formData: FormData) {
+  await requirePermission("employees:create");
+  const firstName = field(formData, "firstName");
+  const postName = field(formData, "postName");
+  const lastName = field(formData, "lastName");
+  const gender = field(formData, "gender");
+  const birthPlace = field(formData, "birthPlace");
+  const birthDate = field(formData, "birthDate");
+  const nationality = field(formData, "nationality");
+  const residentialAddress = field(formData, "residentialAddress");
+  const phone = field(formData, "phone");
+  const educationLevel = field(formData, "educationLevel");
 
   if (
-    !firstName || !lastName || !matricule ||
-    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
-    !isEmployeeRole(requestedRole)
+    !firstName ||
+    !postName ||
+    !lastName ||
+    !isGender(gender) ||
+    !birthPlace ||
+    !isDate(birthDate) ||
+    !nationality ||
+    !residentialAddress ||
+    !phone ||
+    !educationLevel
   ) {
-    redirect("/employees/new?error=invalid");
-  }
-  if (!canAssignRole(user, requestedRole)) {
-    redirect("/employees/new?error=role-not-assignable");
+    redirect("/employees/new?error=application-invalid#application-form");
   }
 
-  const escapedEmail = email.replace(/[\\%_]/g, "\\$&");
-  const existingProfiles = await db.orm.public.User
-    .where((user) => user.email.ilike(escapedEmail))
-    .limit(1)
-    .all();
+  await db.orm.public.AgentApplication.create({
+    firstName,
+    postName,
+    lastName,
+    gender,
+    birthPlace,
+    birthDate,
+    nationality,
+    residentialAddress,
+    residentialAddress2: field(formData, "residentialAddress2") || null,
+    phone,
+    phone2: field(formData, "phone2") || null,
+    educationLevel,
+    status: "ACTIVE",
+  });
 
-  if (existingProfiles.length > 0) {
-    redirect("/employees/new?error=profile-exists");
+  redirect("/employees?tab=all&status=application-created");
+}
+
+export async function createAgentIdentity(formData: FormData) {
+  await requirePermission("employees:create");
+  const agentApplicationId = field(formData, "agentApplicationId");
+  const firstName = field(formData, "firstName");
+  const postName = field(formData, "postName");
+  const lastName = field(formData, "lastName");
+  const gender = field(formData, "gender");
+  const birthPlace = field(formData, "birthPlace");
+  const birthDate = field(formData, "birthDate");
+  const nationality = field(formData, "nationality");
+  const phone = field(formData, "phone");
+
+  if (
+    !isUuidV7(agentApplicationId) ||
+    !firstName ||
+    !postName ||
+    !lastName ||
+    !isGender(gender) ||
+    !birthPlace ||
+    !isDate(birthDate) ||
+    !nationality ||
+    !phone ||
+    !field(formData, "province") ||
+    !field(formData, "district") ||
+    !field(formData, "territory") ||
+    !field(formData, "sector") ||
+    !field(formData, "maritalStatus") ||
+    !field(formData, "fatherName") ||
+    !field(formData, "motherName") ||
+    !field(formData, "residentialAddress")
+  ) {
+    redirect("/employees/new?error=identity-invalid#identity-form");
   }
 
-  const requestHeaders = await headers();
-  const supabase = createAdminClient();
-  const { data: invitation, error: inviteError } =
-    await supabase.auth.admin.inviteUserByEmail(email, {
-      data: { firstName, lastName },
-      redirectTo: getInviteRedirectUrl(requestHeaders.get("origin")),
-    });
-
-  const existingAuthUser =
-    inviteError?.code === "email_exists" ||
-    inviteError?.code === "user_already_exists";
-
-  if (inviteError && !existingAuthUser) {
-    redirect("/employees/new?error=invite");
+  const application = await db.orm.public.AgentApplication
+    .where({ id: agentApplicationId })
+    .select("id")
+    .first();
+  if (!application) {
+    redirect("/employees/new?error=application-missing#identity-form");
   }
 
-  const authUserId = existingAuthUser ? null : invitation.user?.id;
-  if (!existingAuthUser && !authUserId) {
-    throw new Error("Supabase did not return the invited user's ID.");
+  const existingIdentity = await db.orm.public.AgentIdentity
+    .where({ agentApplicationId })
+    .select("id")
+    .first();
+  if (existingIdentity) {
+    redirect("/employees/new?error=identity-exists#identity-form");
   }
 
-  try {
-    await db.orm.public.User.create({
-      firstName,
-      lastName,
-      phone: phone || null,
-      matricule,
-      email,
-      passwordHash: createHash("sha256").update(randomBytes(32)).digest("hex"),
-      role: requestedRole,
-      status: "ACTIVE",
-    });
-  } catch (profileError) {
-    if (authUserId) {
-      const { error: deleteError } =
-        await supabase.auth.admin.deleteUser(authUserId);
-      if (deleteError) {
-        throw new Error(
-          "The EXLS profile could not be created and the newly invited authentication account could not be removed.",
-          { cause: profileError },
-        );
-      }
+  await db.orm.public.AgentIdentity.create({
+    agentApplicationId,
+    firstName,
+    postName,
+    lastName,
+    gender,
+    birthPlace,
+    birthDate,
+    nationality,
+    province: field(formData, "province"),
+    district: field(formData, "district"),
+    territory: field(formData, "territory"),
+    sector: field(formData, "sector"),
+    maritalStatus: field(formData, "maritalStatus"),
+    fatherName: field(formData, "fatherName"),
+    motherName: field(formData, "motherName"),
+    residentialAddress: field(formData, "residentialAddress"),
+    residentialAddress2: field(formData, "residentialAddress2") || null,
+    phone,
+    phone2: field(formData, "phone2") || null,
+    studies: field(formData, "studies") || null,
+    professionalExperiences: field(formData, "professionalExperiences") || null,
+    additionalTrainings: field(formData, "additionalTrainings") || null,
+    spokenLanguages: field(formData, "spokenLanguages") || null,
+  });
+
+  redirect("/employees?tab=all&status=identity-created");
+}
+
+export async function changeAgentStatus(
+  source: "application" | "account",
+  applicationId: string,
+  status: "ACTIVE" | "ARCHIVED",
+) {
+  if (
+    (source !== "application" && source !== "account") ||
+    (status !== "ACTIVE" && status !== "ARCHIVED")
+  ) {
+    redirect("/employees");
+  }
+
+  await requirePermission(
+    status === "ACTIVE" ? "employees:restore" : "employees:archive",
+  );
+  if (!isUuidV7(applicationId)) {
+    redirect("/employees");
+  }
+
+  if (source === "application") {
+    const application = await db.orm.public.AgentApplication
+      .where({ id: applicationId })
+      .select("id")
+      .first();
+    if (!application) {
+      redirect("/employees");
     }
 
-    redirect("/employees/new?error=profile");
+    await db.orm.public.AgentApplication
+      .where({ id: applicationId })
+      .update({ status, updatedAt: new Date() });
+  } else if (source === "account") {
+    const agent = await db.orm.public.User
+      .where({ id: applicationId, role: "AGENT" })
+      .select("id")
+      .first();
+    if (!agent) {
+      redirect("/employees");
+    }
+
+    await db.orm.public.User
+      .where({ id: applicationId, role: "AGENT" })
+      .update({ status, updatedAt: new Date() });
   }
 
-  redirect(`/employees?status=${existingAuthUser ? "linked" : "invited"}`);
+  redirect(
+    `/employees?tab=${status === "ACTIVE" ? "all" : "inactive"}&status=${status === "ACTIVE" ? "restored" : "archived"}`,
+  );
 }

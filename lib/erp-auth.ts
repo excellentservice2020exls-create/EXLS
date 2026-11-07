@@ -30,6 +30,8 @@ export const PERMISSIONS = [
   "profile:read:self",
   "employees:read",
   "employees:create",
+  "employees:archive",
+  "employees:restore",
   "clients:read",
   "clients:create",
   "clients:update",

@@ -29,7 +29,7 @@ export default async function AccountPage({
   const { password, erpAccess } = await searchParams;
   const erpAccessMessage: Record<string, string> = {
     "not-provisioned":
-      "Votre compte de connexion est prêt, mais aucun profil employé EXLS ne correspond à cette adresse. Vérifiez que vous utilisez l’adresse fournie à votre responsable, qui pourra créer votre profil.",
+      "Votre compte de connexion est prêt, mais aucun profil d’agent EXLS ne correspond à cette adresse. Vérifiez que vous utilisez l’adresse fournie à votre responsable, qui pourra créer votre profil.",
     inactive:
       "Votre profil EXLS existe mais n’est pas actif. Contactez un administrateur EXLS pour vérifier votre accès.",
     ambiguous:

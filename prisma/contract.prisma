@@ -92,6 +92,61 @@ namespace public {
     @@map("users")
   }
 
+  model AgentApplication {
+    id                  Uuid            @id(map: "agent_applications_pkey") @onCreate(uuid(7))
+    birthDate           Date
+    birthPlace          String
+    createdAt           DateTime        @default(now())
+    educationLevel      String
+    firstName           String
+    gender              String
+    lastName            String
+    nationality         String
+    phone               String
+    phone2              String?
+    postName            String
+    residentialAddress  String
+    residentialAddress2 String?
+    status              String          @default("ACTIVE")
+    updatedAt           DateTime        @default(now())
+    identity            AgentIdentity?
+
+    @@rls
+    @@map("agent_applications")
+  }
+
+  model AgentIdentity {
+    id                    Uuid            @id(map: "agent_identities_pkey") @onCreate(uuid(7))
+    agentApplicationId    Uuid            @unique(map: "agent_identities_agentApplicationId_key")
+    birthDate             Date
+    birthPlace            String
+    createdAt             DateTime        @default(now())
+    district              String
+    fatherName            String
+    firstName             String
+    gender                String
+    lastName              String
+    maritalStatus         String
+    motherName            String
+    nationality           String
+    phone                 String
+    phone2                String?
+    postName              String
+    professionalExperiences String?
+    province              String
+    residentialAddress    String
+    residentialAddress2   String?
+    sector                String
+    studies               String?
+    territory             String
+    additionalTrainings   String?
+    spokenLanguages       String?
+    agentApplication      AgentApplication @relation(fields: [agentApplicationId], references: [id], onDelete: Cascade)
+
+    @@rls
+    @@map("agent_identities")
+  }
+
   model Site {
     id                  Uuid               @id(map: "sites_pkey") @onCreate(uuid(7))
     accessCode          String?

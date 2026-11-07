@@ -23,9 +23,9 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'d34b7ec0195aa728155605f1627098ad2d67ef562c18d691d1848f1772d0adba'>;
+  StorageHashBase<'c6dcc89981f8a98e3572aaae0ad6e64b50069e1cebcae1bddee3cdbac713832e'>;
 export type ExecutionHash =
-  ExecutionHashBase<'a639c8ae18a88650d63df97c212e242441e3d2b8c43a7fa41bd5b17e3606fd41'>;
+  ExecutionHashBase<'32978bbadc64066f76d69a2cb67e21d416a5fbd82e93a28b5a7a56daf57dbde7'>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
 
@@ -329,6 +329,55 @@ export type StorageColumnInputTypes = ColumnTypesFromStorage<
 >;
 
 export namespace Models {
+  export type public_AgentApplication = {
+    birthDate: FieldOutputTypes['public']['AgentApplication']['birthDate'];
+    birthPlace: FieldOutputTypes['public']['AgentApplication']['birthPlace'];
+    createdAt: FieldOutputTypes['public']['AgentApplication']['createdAt'];
+    educationLevel: FieldOutputTypes['public']['AgentApplication']['educationLevel'];
+    firstName: FieldOutputTypes['public']['AgentApplication']['firstName'];
+    gender: FieldOutputTypes['public']['AgentApplication']['gender'];
+    id: FieldOutputTypes['public']['AgentApplication']['id'];
+    lastName: FieldOutputTypes['public']['AgentApplication']['lastName'];
+    nationality: FieldOutputTypes['public']['AgentApplication']['nationality'];
+    phone: FieldOutputTypes['public']['AgentApplication']['phone'];
+    phone2: FieldOutputTypes['public']['AgentApplication']['phone2'];
+    postName: FieldOutputTypes['public']['AgentApplication']['postName'];
+    residentialAddress: FieldOutputTypes['public']['AgentApplication']['residentialAddress'];
+    residentialAddress2: FieldOutputTypes['public']['AgentApplication']['residentialAddress2'];
+    status: FieldOutputTypes['public']['AgentApplication']['status'];
+    updatedAt: FieldOutputTypes['public']['AgentApplication']['updatedAt'];
+    identity: public_AgentIdentity | null;
+    readonly [RelationKeys]?: 'identity';
+  };
+  export type public_AgentIdentity = {
+    additionalTrainings: FieldOutputTypes['public']['AgentIdentity']['additionalTrainings'];
+    agentApplicationId: FieldOutputTypes['public']['AgentIdentity']['agentApplicationId'];
+    birthDate: FieldOutputTypes['public']['AgentIdentity']['birthDate'];
+    birthPlace: FieldOutputTypes['public']['AgentIdentity']['birthPlace'];
+    createdAt: FieldOutputTypes['public']['AgentIdentity']['createdAt'];
+    district: FieldOutputTypes['public']['AgentIdentity']['district'];
+    fatherName: FieldOutputTypes['public']['AgentIdentity']['fatherName'];
+    firstName: FieldOutputTypes['public']['AgentIdentity']['firstName'];
+    gender: FieldOutputTypes['public']['AgentIdentity']['gender'];
+    id: FieldOutputTypes['public']['AgentIdentity']['id'];
+    lastName: FieldOutputTypes['public']['AgentIdentity']['lastName'];
+    maritalStatus: FieldOutputTypes['public']['AgentIdentity']['maritalStatus'];
+    motherName: FieldOutputTypes['public']['AgentIdentity']['motherName'];
+    nationality: FieldOutputTypes['public']['AgentIdentity']['nationality'];
+    phone: FieldOutputTypes['public']['AgentIdentity']['phone'];
+    phone2: FieldOutputTypes['public']['AgentIdentity']['phone2'];
+    postName: FieldOutputTypes['public']['AgentIdentity']['postName'];
+    professionalExperiences: FieldOutputTypes['public']['AgentIdentity']['professionalExperiences'];
+    province: FieldOutputTypes['public']['AgentIdentity']['province'];
+    residentialAddress: FieldOutputTypes['public']['AgentIdentity']['residentialAddress'];
+    residentialAddress2: FieldOutputTypes['public']['AgentIdentity']['residentialAddress2'];
+    sector: FieldOutputTypes['public']['AgentIdentity']['sector'];
+    spokenLanguages: FieldOutputTypes['public']['AgentIdentity']['spokenLanguages'];
+    studies: FieldOutputTypes['public']['AgentIdentity']['studies'];
+    territory: FieldOutputTypes['public']['AgentIdentity']['territory'];
+    agentApplication: public_AgentApplication;
+    readonly [RelationKeys]?: 'agentApplication';
+  };
   export type public_Attendance = {
     agentId: FieldOutputTypes['public']['Attendance']['agentId'];
     clockInLatitude: FieldOutputTypes['public']['Attendance']['clockInLatitude'];
@@ -768,6 +817,8 @@ export namespace Models {
 
 export declare const models: {
   public: {
+    AgentApplication: Models.public_AgentApplication;
+    AgentIdentity: Models.public_AgentIdentity;
     Attendance: Models.public_Attendance;
     Checkpoint: Models.public_Checkpoint;
     Client: Models.public_Client;
@@ -816,6 +867,302 @@ type ContractBase = Omit<
         readonly kind: 'postgres-schema';
         readonly entries: {
           readonly table: {
+            readonly agent_applications: {
+              columns: {
+                readonly birthDate: {
+                  readonly dataType: 'pg/date';
+                  readonly codecId: 'pg/date-string@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly birthPlace: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly createdAt: {
+                  readonly dataType: 'pg/timestamptz';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                  readonly typeParams: { readonly precision: 3 };
+                  readonly many: false;
+                };
+                readonly educationLevel: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly firstName: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly gender: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly id: {
+                  readonly dataType: 'pg/uuid';
+                  readonly codecId: 'pg/uuid@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly lastName: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly nationality: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly phone: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly phone2: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                  readonly many: false;
+                };
+                readonly postName: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly residentialAddress: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly residentialAddress2: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                  readonly many: false;
+                };
+                readonly status: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/text@1', 'ACTIVE'>;
+                  };
+                  readonly many: false;
+                };
+                readonly updatedAt: {
+                  readonly dataType: 'pg/timestamptz';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                  readonly typeParams: { readonly precision: 3 };
+                  readonly many: false;
+                };
+              };
+              primaryKey: {
+                readonly columns: readonly ['id'];
+                readonly name: 'agent_applications_pkey';
+              };
+              uniques: readonly [];
+              indexes: readonly [];
+              foreignKeys: readonly [];
+            };
+            readonly agent_identities: {
+              columns: {
+                readonly additionalTrainings: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                  readonly many: false;
+                };
+                readonly agentApplicationId: {
+                  readonly dataType: 'pg/uuid';
+                  readonly codecId: 'pg/uuid@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly birthDate: {
+                  readonly dataType: 'pg/date';
+                  readonly codecId: 'pg/date-string@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly birthPlace: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly createdAt: {
+                  readonly dataType: 'pg/timestamptz';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                  readonly typeParams: { readonly precision: 3 };
+                  readonly many: false;
+                };
+                readonly district: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly fatherName: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly firstName: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly gender: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly id: {
+                  readonly dataType: 'pg/uuid';
+                  readonly codecId: 'pg/uuid@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly lastName: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly maritalStatus: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly motherName: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly nationality: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly phone: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly phone2: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                  readonly many: false;
+                };
+                readonly postName: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly professionalExperiences: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                  readonly many: false;
+                };
+                readonly province: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly residentialAddress: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly residentialAddress2: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                  readonly many: false;
+                };
+                readonly sector: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly spokenLanguages: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                  readonly many: false;
+                };
+                readonly studies: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                  readonly many: false;
+                };
+                readonly territory: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+              };
+              primaryKey: {
+                readonly columns: readonly ['id'];
+                readonly name: 'agent_identities_pkey';
+              };
+              uniques: readonly [
+                {
+                  readonly columns: readonly ['agentApplicationId'];
+                  readonly name: 'agent_identities_agentApplicationId_key';
+                },
+              ];
+              indexes: readonly [];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'agent_identities';
+                    readonly columns: readonly ['agentApplicationId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'agent_applications';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
             readonly attendances: {
               columns: {
                 readonly agentId: {
@@ -3673,6 +4020,14 @@ type ContractBase = Omit<
   readonly target: 'postgres';
   readonly targetFamily: 'sql';
   readonly roots: {
+    readonly agent_applications: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'AgentApplication';
+    };
+    readonly agent_identities: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'AgentIdentity';
+    };
     readonly attendances: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'Attendance';
@@ -3742,6 +4097,271 @@ type ContractBase = Omit<
     readonly namespaces: {
       readonly public: {
         readonly models: {
+          readonly AgentApplication: {
+            readonly fields: {
+              readonly birthDate: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/date-string@1' };
+              };
+              readonly birthPlace: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly createdAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly typeParams: { readonly precision: 3 };
+                };
+              };
+              readonly educationLevel: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly firstName: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly gender: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
+              };
+              readonly lastName: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly nationality: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly phone: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly phone2: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly postName: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly residentialAddress: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly residentialAddress2: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly status: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly updatedAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly typeParams: { readonly precision: 3 };
+                };
+              };
+            };
+            readonly relations: {
+              readonly identity: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'AgentIdentity';
+                };
+                readonly cardinality: '1:1';
+                readonly nullable: true;
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['agentApplicationId'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'agent_applications';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly birthDate: { readonly column: 'birthDate' };
+                readonly birthPlace: { readonly column: 'birthPlace' };
+                readonly createdAt: { readonly column: 'createdAt' };
+                readonly educationLevel: { readonly column: 'educationLevel' };
+                readonly firstName: { readonly column: 'firstName' };
+                readonly gender: { readonly column: 'gender' };
+                readonly id: { readonly column: 'id' };
+                readonly lastName: { readonly column: 'lastName' };
+                readonly nationality: { readonly column: 'nationality' };
+                readonly phone: { readonly column: 'phone' };
+                readonly phone2: { readonly column: 'phone2' };
+                readonly postName: { readonly column: 'postName' };
+                readonly residentialAddress: { readonly column: 'residentialAddress' };
+                readonly residentialAddress2: { readonly column: 'residentialAddress2' };
+                readonly status: { readonly column: 'status' };
+                readonly updatedAt: { readonly column: 'updatedAt' };
+              };
+            };
+          };
+          readonly AgentIdentity: {
+            readonly fields: {
+              readonly additionalTrainings: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly agentApplicationId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
+              };
+              readonly birthDate: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/date-string@1' };
+              };
+              readonly birthPlace: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly createdAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly typeParams: { readonly precision: 3 };
+                };
+              };
+              readonly district: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly fatherName: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly firstName: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly gender: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
+              };
+              readonly lastName: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly maritalStatus: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly motherName: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly nationality: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly phone: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly phone2: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly postName: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly professionalExperiences: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly province: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly residentialAddress: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly residentialAddress2: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly sector: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly spokenLanguages: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly studies: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly territory: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+            };
+            readonly relations: {
+              readonly agentApplication: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'AgentApplication';
+                };
+                readonly cardinality: 'N:1';
+                readonly nullable: false;
+                readonly on: {
+                  readonly localFields: readonly ['agentApplicationId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'agent_identities';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly additionalTrainings: { readonly column: 'additionalTrainings' };
+                readonly agentApplicationId: { readonly column: 'agentApplicationId' };
+                readonly birthDate: { readonly column: 'birthDate' };
+                readonly birthPlace: { readonly column: 'birthPlace' };
+                readonly createdAt: { readonly column: 'createdAt' };
+                readonly district: { readonly column: 'district' };
+                readonly fatherName: { readonly column: 'fatherName' };
+                readonly firstName: { readonly column: 'firstName' };
+                readonly gender: { readonly column: 'gender' };
+                readonly id: { readonly column: 'id' };
+                readonly lastName: { readonly column: 'lastName' };
+                readonly maritalStatus: { readonly column: 'maritalStatus' };
+                readonly motherName: { readonly column: 'motherName' };
+                readonly nationality: { readonly column: 'nationality' };
+                readonly phone: { readonly column: 'phone' };
+                readonly phone2: { readonly column: 'phone2' };
+                readonly postName: { readonly column: 'postName' };
+                readonly professionalExperiences: { readonly column: 'professionalExperiences' };
+                readonly province: { readonly column: 'province' };
+                readonly residentialAddress: { readonly column: 'residentialAddress' };
+                readonly residentialAddress2: { readonly column: 'residentialAddress2' };
+                readonly sector: { readonly column: 'sector' };
+                readonly spokenLanguages: { readonly column: 'spokenLanguages' };
+                readonly studies: { readonly column: 'studies' };
+                readonly territory: { readonly column: 'territory' };
+              };
+            };
+          };
           readonly Attendance: {
             readonly fields: {
               readonly agentId: {
@@ -6325,6 +6945,22 @@ type ContractBase = Omit<
     readonly executionHash: ExecutionHash;
     readonly mutations: {
       readonly defaults: readonly [
+        {
+          readonly onCreate: { readonly id: 'uuidv7'; readonly kind: 'generator' };
+          readonly ref: {
+            readonly entry: 'agent_applications';
+            readonly field: 'id';
+            readonly namespace: 'public';
+          };
+        },
+        {
+          readonly onCreate: { readonly id: 'uuidv7'; readonly kind: 'generator' };
+          readonly ref: {
+            readonly entry: 'agent_identities';
+            readonly field: 'id';
+            readonly namespace: 'public';
+          };
+        },
         {
           readonly onCreate: { readonly id: 'uuidv7'; readonly kind: 'generator' };
           readonly ref: {

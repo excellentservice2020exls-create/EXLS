@@ -23,17 +23,17 @@ export default function Home() {
         <p className="text-sm font-semibold uppercase tracking-[0.42em] text-cyan-300 sm:text-base">
           =
         </p>
-        <h1 className="mt-5 text-5xl font-black uppercase leading-[0.95] tracking-[-0.06em] text-transparent bg-gradient-to-r from-white via-cyan-100 to-cyan-400 bg-clip-text sm:text-7xl md:text-8xl">
+        <h1 className="mt-5 text-5xl font-black uppercase leading-[0.95] tracking-[-0.06em] text-transparent bg-linear-to-r from-white via-cyan-100 to-cyan-400 bg-clip-text sm:text-7xl md:text-8xl">
           Excellent
           <span className="mt-2 block">Service</span>
         </h1>
-        <div className="mt-8 h-px w-20 bg-gradient-to-r from-transparent via-cyan-300 to-transparent" />
+        <div className="mt-8 h-px w-20 bg-linear-to-r from-transparent via-cyan-300 to-transparent" />
         <p className="mt-8 max-w-xl text-lg leading-8 text-slate-300 sm:text-xl">
           Bienvenue dans le portail de la société EXLS, en sigle.
         </p>
         <Link
           href="/auth/sign-in"
-          className="mt-10 inline-flex min-h-14 items-center justify-center gap-3 rounded-xl bg-cyan-400 px-8 py-4 text-base font-bold text-slate-950 shadow-lg shadow-cyan-950/40 transition hover:-translate-y-0.5 hover:bg-cyan-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-300"
+          className="mt-10 inline-flex min-h-14 items-center justify-center gap-3 rounded-xl bg-cyan-400 px-8 py-4 text-base font-bold text-slate-950 shadow-lg shadow-cyan-950/40 transition hover:-translate-y-0.5 hover:bg-cyan-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-300"
         >
           Entrer dans le portail
           <span aria-hidden="true" className="text-xl">

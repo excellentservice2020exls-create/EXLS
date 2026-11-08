@@ -59,7 +59,7 @@ export async function getEffectiveRoles(userId: string, primaryRole: string) {
   return [...new Set<ErpRole>([effectivePrimaryRole, ...validAssignedRoles])];
 }
 
-export async function requireAppUser(): Promise<AppUser> {
+async function loadAppUser(requireApprovedSession: boolean): Promise<AppUser> {
   const authUser = await getAuthenticatedUser();
   if (!authUser?.email) {
     redirect("/auth/session/expired");
@@ -86,7 +86,7 @@ export async function requireAppUser(): Promise<AppUser> {
   if (primaryRole === null) {
     redirect("/account?erpAccess=role-required");
   }
-  if (primaryRole !== "SUPER_ADMIN") {
+  if (requireApprovedSession && primaryRole !== "SUPER_ADMIN") {
     if (!authUser.sessionId) {
       redirect("/account?erpAccess=session-required");
     }
@@ -119,9 +119,17 @@ export async function requireAppUser(): Promise<AppUser> {
     status: String(user.status),
     sessionExpiresAt: authUser.expiresAt,
     roles: effectiveRoles,
-    level: Math.max(...effectiveRoles.map((role) => ROLE_LEVELS[role])),
+    level: Math.min(...effectiveRoles.map((role) => ROLE_LEVELS[role])),
     permissions: [...permissions],
   };
+}
+
+export async function requireAppUser(): Promise<AppUser> {
+  return loadAppUser(true);
+}
+
+export async function getPostLoginRoleLevel(): Promise<number> {
+  return (await loadAppUser(false)).level;
 }
 
 export async function requirePermission(permission: Permission) {

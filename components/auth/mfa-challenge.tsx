@@ -71,7 +71,7 @@ export function MfaChallenge() {
       });
       if (verifyError) throw verifyError;
 
-      router.replace("/attendance");
+      router.replace("/auth/continue");
       router.refresh();
     } catch (caughtError) {
       setError(caughtError instanceof Error ? caughtError.message : "Code de vérification invalide.");

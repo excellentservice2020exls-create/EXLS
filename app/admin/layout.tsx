@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { requireRole } from "@/lib/erp-auth";
+import { SessionExpiry } from "@/components/auth/session-expiry";
 
 export default async function AdminLayout({
   children,
@@ -10,6 +11,9 @@ export default async function AdminLayout({
 
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900">
+      <SessionExpiry
+        expiresInMs={Math.max(0, user.sessionExpiresAt.getTime() - Date.now())}
+      />
       <aside className="border-b border-slate-800 bg-slate-950 text-slate-50 md:fixed md:inset-y-0 md:left-0 md:flex md:w-72 md:flex-col md:border-b-0 md:border-r">
         <div className="border-b border-slate-800 px-6 py-5">
           <Link href="/admin" className="block">

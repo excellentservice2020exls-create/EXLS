@@ -109,7 +109,7 @@ export function AuthForm({
       router.replace(
         assurance.nextLevel === "aal2" && assurance.currentLevel !== "aal2"
           ? "/auth/mfa"
-          : "/account",
+          : "/auth/continue",
       );
       router.refresh();
     } catch (caughtError) {

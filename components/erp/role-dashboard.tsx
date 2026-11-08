@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getAccessibleShifts, getAttendanceForShift, getDashboardStats, getSiteById } from "@/lib/erp-data";
 import { getAppDataScope, hasPermission, requireRole, type ErpRole, type Permission } from "@/lib/erp-auth";
+import { SessionExpiry } from "@/components/auth/session-expiry";
 
 const ROLE_CONTENT: Record<ErpRole, { title: string; intro: string }> = {
   SUPER_ADMIN: { title: "Administration générale", intro: "Pilotage global des opérations EXLS." },
@@ -40,6 +41,9 @@ export async function RoleDashboard({ role }: { role: ErpRole }) {
 
   return (
     <div className="space-y-8">
+      <SessionExpiry
+        expiresInMs={Math.max(0, user.sessionExpiresAt.getTime() - Date.now())}
+      />
       <header>
         <p className="text-sm font-medium uppercase tracking-[0.2em] text-emerald-700">EXLS · {role.replaceAll("_", " ")}</p>
         <h1 className="mt-2 text-3xl font-bold text-slate-900">{content.title}</h1>

@@ -11,7 +11,7 @@ export const ERP_ROLES = [
 
 export type ErpRole = (typeof ERP_ROLES)[number];
 
-/** Higher values represent broader access. */
+/** Lower values represent broader access. */
 export const ROLE_LEVELS: Readonly<Record<ErpRole, number>> = {
   SUPER_ADMIN: 1,
   ADMIN: 2,
@@ -91,7 +91,27 @@ export function hasPermission(user: Pick<AppUser, "permissions">, permission: Pe
 }
 
 export function canAssignRole(actor: Pick<AppUser, "level">, role: ErpRole) {
-  return role !== "SUPER_ADMIN" && actor.level > ROLE_LEVELS[role];
+  return role !== "SUPER_ADMIN" && actor.level < ROLE_LEVELS[role];
+}
+
+export function getRoleHomePath(level: number) {
+  switch (level) {
+    case 1:
+    case 2:
+      return "/admin";
+    case 3:
+      return "/manager";
+    case 4:
+      return "/supervisor";
+    case 5:
+      return "/teamleader";
+    case 6:
+      return "/agent";
+    case 7:
+      return "/";
+    default:
+      return "/account";
+  }
 }
 
 export function toErpRole(value: string): ErpRole | null {

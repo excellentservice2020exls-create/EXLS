@@ -19,10 +19,10 @@ export default async function MfaPage() {
     redirect("/auth/sign-in");
   }
   if (data.currentLevel === "aal2") {
-    redirect("/attendance");
+    redirect("/auth/continue");
   }
   if (data.nextLevel !== "aal2") {
-    redirect("/attendance");
+    redirect("/auth/continue");
   }
 
   return (

@@ -6,10 +6,13 @@ import { db } from "@/prisma/db";
 
 const SESSION_MAX_AGE_MS = 60 * 60 * 1000;
 
-type AuthenticatedUser = {
+type VerifiedUser = {
   id: string;
   email: string | null;
   sessionId: string;
+};
+
+type AuthenticatedUser = VerifiedUser & {
   createdAt: Date;
   expiresAt: Date;
 };
@@ -36,22 +39,9 @@ async function getVerifiedAuthenticatedUser(
     return null;
   }
 
-  const issuedAt = claims.iat;
   const sessionId = claims.session_id;
-  if (
-    typeof sessionId !== "string" ||
-    !sessionId ||
-    typeof issuedAt !== "number" ||
-    !Number.isSafeInteger(issuedAt) ||
-    issuedAt <= 0
-  ) {
-    onRejected?.("session_claims_missing_or_invalid");
-    return null;
-  }
-
-  const createdAt = new Date(issuedAt * 1000);
-  if (createdAt.getTime() > Date.now() + 30_000) {
-    onRejected?.("issued_at_in_future");
+  if (typeof sessionId !== "string" || !sessionId) {
+    onRejected?.("session_id_missing_or_invalid");
     return null;
   }
 
@@ -59,8 +49,41 @@ async function getVerifiedAuthenticatedUser(
     id: claims.sub,
     email: typeof claims.email === "string" ? claims.email : null,
     sessionId,
-    createdAt,
-    expiresAt: new Date(createdAt.getTime() + SESSION_MAX_AGE_MS),
+  };
+}
+
+async function findRegisteredSession(sessionId: string) {
+  return db.orm.public.AppAuthSession
+    .where({ sessionId })
+    .select("authUserId", "createdAt", "expiresAt")
+    .first();
+}
+
+function getActiveRegisteredSession(
+  authenticatedUser: VerifiedUser,
+  registeredSession: Awaited<ReturnType<typeof findRegisteredSession>>,
+  onRejected?: (reason: string) => void,
+): AuthenticatedUser | null {
+  if (!registeredSession) {
+    return null;
+  }
+
+  if (registeredSession.authUserId !== authenticatedUser.id) {
+    throw new Error("The Supabase session is already linked to a different user.");
+  }
+
+  const expiresAt = new Date(
+    registeredSession.createdAt.getTime() + SESSION_MAX_AGE_MS,
+  );
+  if (expiresAt.getTime() <= Date.now()) {
+    onRejected?.("registered_session_expired");
+    return null;
+  }
+
+  return {
+    ...authenticatedUser,
+    createdAt: registeredSession.createdAt,
+    expiresAt,
   };
 }
 
@@ -73,40 +96,41 @@ export async function registerAuthenticatedSession(
     return null;
   }
 
-  const existingSession = await db.orm.public.AppAuthSession
-    .where({ sessionId: authenticatedUser.sessionId })
-    .select("authUserId", "createdAt", "expiresAt")
-    .first();
+  const existingSession = await findRegisteredSession(authenticatedUser.sessionId);
   if (existingSession) {
-    if (existingSession.authUserId !== authenticatedUser.id) {
-      throw new Error("The Supabase session is already linked to a different user.");
-    }
-
-    if (existingSession.expiresAt.getTime() <= Date.now()) {
-      onRejected?.("registered_session_expired");
-      return null;
-    }
-
-    return {
-      ...authenticatedUser,
-      createdAt: existingSession.createdAt,
-      expiresAt: existingSession.expiresAt,
-    };
+    return getActiveRegisteredSession(authenticatedUser, existingSession, onRejected);
   }
 
-  if (authenticatedUser.expiresAt.getTime() <= Date.now()) {
-    onRejected?.("token_session_expired");
-    return null;
+  // Start the app session clock when this session is first registered. JWT iat
+  // can be ahead of this server's clock, so it must not control app expiry.
+  const createdAt = new Date();
+  const expiresAt = new Date(createdAt.getTime() + SESSION_MAX_AGE_MS);
+
+  try {
+    await db.orm.public.AppAuthSession.create({
+      authUserId: authenticatedUser.id,
+      sessionId: authenticatedUser.sessionId,
+      createdAt,
+      expiresAt,
+    });
+  } catch (error) {
+    // Sign-in and callback requests can race to register the same session.
+    // Reuse the row created by the winning request when that happens.
+    const concurrentlyRegisteredSession = await findRegisteredSession(
+      authenticatedUser.sessionId,
+    );
+    if (!concurrentlyRegisteredSession) {
+      throw error;
+    }
+
+    return getActiveRegisteredSession(
+      authenticatedUser,
+      concurrentlyRegisteredSession,
+      onRejected,
+    );
   }
 
-  await db.orm.public.AppAuthSession.create({
-    authUserId: authenticatedUser.id,
-    sessionId: authenticatedUser.sessionId,
-    createdAt: authenticatedUser.createdAt,
-    expiresAt: authenticatedUser.expiresAt,
-  });
-
-  return authenticatedUser;
+  return { ...authenticatedUser, createdAt, expiresAt };
 }
 
 export async function getAuthenticatedUser(): Promise<AuthenticatedUser | null> {
@@ -115,22 +139,6 @@ export async function getAuthenticatedUser(): Promise<AuthenticatedUser | null> 
     return null;
   }
 
-  const registeredSession = await db.orm.public.AppAuthSession
-    .where({ sessionId: authenticatedUser.sessionId })
-    .select("authUserId", "createdAt", "expiresAt")
-    .first();
-
-  if (
-    !registeredSession ||
-    registeredSession.authUserId !== authenticatedUser.id ||
-    registeredSession.expiresAt.getTime() <= Date.now()
-  ) {
-    return null;
-  }
-
-  return {
-    ...authenticatedUser,
-    createdAt: registeredSession.createdAt,
-    expiresAt: registeredSession.expiresAt,
-  };
+  const registeredSession = await findRegisteredSession(authenticatedUser.sessionId);
+  return getActiveRegisteredSession(authenticatedUser, registeredSession);
 }

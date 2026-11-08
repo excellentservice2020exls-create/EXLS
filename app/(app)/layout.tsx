@@ -7,7 +7,9 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900">
-      <SessionExpiry expiresAt={user.sessionExpiresAt.toISOString()} />
+      <SessionExpiry
+        expiresInMs={Math.max(0, user.sessionExpiresAt.getTime() - Date.now())}
+      />
       <Sidebar
         role={user.role}
         roles={user.roles}

@@ -1,4 +1,5 @@
 import { Sidebar } from "@/components/erp/sidebar";
+import { SessionExpiry } from "@/components/auth/session-expiry";
 import { requireAppUser } from "@/lib/erp-auth";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
@@ -6,6 +7,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900">
+      <SessionExpiry expiresAt={user.sessionExpiresAt.toISOString()} />
       <Sidebar
         role={user.role}
         roles={user.roles}

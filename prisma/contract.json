@@ -12,6 +12,10 @@
       "model": "AgentIdentity",
       "namespace": "public"
     },
+    "app_auth_sessions": {
+      "model": "AppAuthSession",
+      "namespace": "public"
+    },
     "attendances": {
       "model": "Attendance",
       "namespace": "public"
@@ -582,6 +586,73 @@
               },
               "namespaceId": "public",
               "table": "agent_identities"
+            }
+          },
+          "AppAuthSession": {
+            "fields": {
+              "authUserId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/uuid@1",
+                  "kind": "scalar"
+                }
+              },
+              "createdAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "expiresAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/uuid@1",
+                  "kind": "scalar"
+                }
+              },
+              "sessionId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {},
+            "storage": {
+              "fields": {
+                "authUserId": {
+                  "column": "authUserId"
+                },
+                "createdAt": {
+                  "column": "createdAt"
+                },
+                "expiresAt": {
+                  "column": "expiresAt"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "sessionId": {
+                  "column": "sessionId"
+                }
+              },
+              "namespaceId": "public",
+              "table": "app_auth_sessions"
             }
           },
           "Attendance": {
@@ -5066,6 +5137,11 @@
               "namespaceId": "public",
               "tableName": "agent_identities"
             },
+            "app_auth_sessions": {
+              "kind": "rls",
+              "namespaceId": "public",
+              "tableName": "app_auth_sessions"
+            },
             "attendances": {
               "kind": "rls",
               "namespaceId": "public",
@@ -5466,6 +5542,73 @@
                     "agentApplicationId"
                   ],
                   "name": "agent_identities_agentApplicationId_key"
+                }
+              ]
+            },
+            "app_auth_sessions": {
+              "checks": [
+                {
+                  "expression": "expiresAt > createdAt",
+                  "name": "app_auth_sessions_expiration_de2b345a",
+                  "prefix": "app_auth_sessions_expiration"
+                }
+              ],
+              "columns": {
+                "authUserId": {
+                  "codecId": "pg/uuid@1",
+                  "dataType": "pg/uuid",
+                  "nullable": false
+                },
+                "createdAt": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "expiresAt": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "id": {
+                  "codecId": "pg/uuid@1",
+                  "dataType": "pg/uuid",
+                  "nullable": false
+                },
+                "sessionId": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [
+                {
+                  "columns": [
+                    "expiresAt"
+                  ],
+                  "name": "app_auth_sessions_expiresAt_idx_6b6b8c10",
+                  "prefix": "app_auth_sessions_expiresAt_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ],
+                "name": "app_auth_sessions_pkey"
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "sessionId"
+                  ],
+                  "name": "app_auth_sessions_sessionId_key"
                 }
               ]
             },
@@ -9102,10 +9245,10 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "09a9599321e56934e967e64696dcda7347c728a3f41c34637c5f3e325eec2c14"
+    "storageHash": "b5fe57b44dc4bea771683490e2faa16b43f21cc5c103cea02c9c44a646fb4434"
   },
   "execution": {
-    "executionHash": "d4d4f83b04f63dff37f566ed62d0a6fc7c85496c876bc93c0f133433c8ed5aba",
+    "executionHash": "208d9314964e36a4a0c6ad187ffa612cde34f8666ed4075275f6d48d14c354ff",
     "mutations": {
       "defaults": [
         {
@@ -9126,6 +9269,17 @@
           },
           "ref": {
             "entry": "agent_identities",
+            "field": "id",
+            "namespace": "public"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "uuidv7",
+            "kind": "generator"
+          },
+          "ref": {
+            "entry": "app_auth_sessions",
             "field": "id",
             "namespace": "public"
           }

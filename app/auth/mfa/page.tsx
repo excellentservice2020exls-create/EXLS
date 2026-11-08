@@ -1,4 +1,5 @@
 import { MfaChallenge } from "@/components/auth/mfa-challenge";
+import { SessionExpiry } from "@/components/auth/session-expiry";
 import { getAuthenticatorAssuranceLevel } from "@/lib/supabase/assurance";
 import { getAuthenticatedUser } from "@/lib/supabase/auth";
 import { createClient } from "@/lib/supabase/server";
@@ -9,7 +10,7 @@ export const dynamic = "force-dynamic";
 export default async function MfaPage() {
   const user = await getAuthenticatedUser();
   if (!user) {
-    redirect("/auth/sign-in");
+    redirect("/auth/session/expired");
   }
 
   const supabase = await createClient();
@@ -24,5 +25,10 @@ export default async function MfaPage() {
     redirect("/attendance");
   }
 
-  return <MfaChallenge />;
+  return (
+    <>
+      <SessionExpiry expiresAt={user.expiresAt.toISOString()} />
+      <MfaChallenge />
+    </>
+  );
 }

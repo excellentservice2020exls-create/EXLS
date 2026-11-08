@@ -62,7 +62,7 @@ export async function getEffectiveRoles(userId: string, primaryRole: string) {
 export async function requireAppUser(): Promise<AppUser> {
   const authUser = await getAuthenticatedUser();
   if (!authUser?.email) {
-    redirect("/auth/sign-in");
+    redirect("/auth/session/expired");
   }
 
   const email = authUser.email.trim();
@@ -117,6 +117,7 @@ export async function requireAppUser(): Promise<AppUser> {
     name: `${user.firstName} ${user.lastName}`,
     role: primaryRole,
     status: String(user.status),
+    sessionExpiresAt: authUser.expiresAt,
     roles: effectiveRoles,
     level: Math.max(...effectiveRoles.map((role) => ROLE_LEVELS[role])),
     permissions: [...permissions],

@@ -72,6 +72,7 @@ export type AppUser = {
   name: string;
   role: ErpRole;
   status: string;
+  sessionExpiresAt: Date;
   roles: ErpRole[];
   level: number;
   permissions: Permission[];

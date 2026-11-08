@@ -562,6 +562,19 @@ namespace public {
     @@map("security_access_requests")
   }
 
+  model AppAuthSession {
+    id         Uuid     @id(map: "app_auth_sessions_pkey") @onCreate(uuid(7))
+    authUserId Uuid
+    sessionId  String   @unique(map: "app_auth_sessions_sessionId_key")
+    createdAt  DateTime
+    expiresAt  DateTime
+
+    @@index([expiresAt], name: "app_auth_sessions_expiresAt_idx")
+    @@check(expression: sql`expiresAt > createdAt`, name: "app_auth_sessions_expiration")
+    @@rls
+    @@map("app_auth_sessions")
+  }
+
   model SiteEquipment {
     id          Uuid      @id(map: "site_equipments_pkey") @onCreate(uuid(7))
     createdAt   DateTime  @default(now())

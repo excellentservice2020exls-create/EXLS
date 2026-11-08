@@ -85,6 +85,13 @@ export function AuthForm({
       });
       if (signInError) throw signInError;
 
+      const sessionResponse = await fetch("/auth/session", { method: "POST" });
+      if (!sessionResponse.ok) {
+        throw new Error(
+          "La session n’a pas pu être enregistrée. Veuillez vous reconnecter.",
+        );
+      }
+
       const assurance = await getAuthenticatorAssuranceLevel(
         supabase,
         data.session?.access_token,
@@ -96,7 +103,7 @@ export function AuthForm({
       router.replace(
         assurance.nextLevel === "aal2" && assurance.currentLevel !== "aal2"
           ? "/auth/mfa"
-          : "/attendance",
+          : "/account",
       );
       router.refresh();
     } catch (caughtError) {

@@ -23,9 +23,9 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'09a9599321e56934e967e64696dcda7347c728a3f41c34637c5f3e325eec2c14'>;
+  StorageHashBase<'b5fe57b44dc4bea771683490e2faa16b43f21cc5c103cea02c9c44a646fb4434'>;
 export type ExecutionHash =
-  ExecutionHashBase<'d4d4f83b04f63dff37f566ed62d0a6fc7c85496c876bc93c0f133433c8ed5aba'>;
+  ExecutionHashBase<'208d9314964e36a4a0c6ad187ffa612cde34f8666ed4075275f6d48d14c354ff'>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
 
@@ -377,6 +377,14 @@ export namespace Models {
     territory: FieldOutputTypes['public']['AgentIdentity']['territory'];
     agentApplication: public_AgentApplication;
     readonly [RelationKeys]?: 'agentApplication';
+  };
+  export type public_AppAuthSession = {
+    authUserId: FieldOutputTypes['public']['AppAuthSession']['authUserId'];
+    createdAt: FieldOutputTypes['public']['AppAuthSession']['createdAt'];
+    expiresAt: FieldOutputTypes['public']['AppAuthSession']['expiresAt'];
+    id: FieldOutputTypes['public']['AppAuthSession']['id'];
+    sessionId: FieldOutputTypes['public']['AppAuthSession']['sessionId'];
+    readonly [RelationKeys]?: never;
   };
   export type public_Attendance = {
     agentId: FieldOutputTypes['public']['Attendance']['agentId'];
@@ -835,6 +843,7 @@ export declare const models: {
   public: {
     AgentApplication: Models.public_AgentApplication;
     AgentIdentity: Models.public_AgentIdentity;
+    AppAuthSession: Models.public_AppAuthSession;
     Attendance: Models.public_Attendance;
     Checkpoint: Models.public_Checkpoint;
     Client: Models.public_Client;
@@ -1179,6 +1188,61 @@ type ContractBase = Omit<
                   };
                 },
               ];
+            };
+            readonly app_auth_sessions: {
+              columns: {
+                readonly authUserId: {
+                  readonly dataType: 'pg/uuid';
+                  readonly codecId: 'pg/uuid@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly createdAt: {
+                  readonly dataType: 'pg/timestamptz';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly precision: 3 };
+                  readonly many: false;
+                };
+                readonly expiresAt: {
+                  readonly dataType: 'pg/timestamptz';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly precision: 3 };
+                  readonly many: false;
+                };
+                readonly id: {
+                  readonly dataType: 'pg/uuid';
+                  readonly codecId: 'pg/uuid@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly sessionId: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+              };
+              primaryKey: {
+                readonly columns: readonly ['id'];
+                readonly name: 'app_auth_sessions_pkey';
+              };
+              uniques: readonly [
+                {
+                  readonly columns: readonly ['sessionId'];
+                  readonly name: 'app_auth_sessions_sessionId_key';
+                },
+              ];
+              indexes: readonly [
+                {
+                  readonly name: 'app_auth_sessions_expiresAt_idx_6b6b8c10';
+                  readonly prefix: 'app_auth_sessions_expiresAt_idx';
+                  readonly columns: readonly ['expiresAt'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [];
             };
             readonly attendances: {
               columns: {
@@ -4156,6 +4220,10 @@ type ContractBase = Omit<
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'AgentIdentity';
     };
+    readonly app_auth_sessions: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'AppAuthSession';
+    };
     readonly attendances: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'Attendance';
@@ -4491,6 +4559,50 @@ type ContractBase = Omit<
                 readonly spokenLanguages: { readonly column: 'spokenLanguages' };
                 readonly studies: { readonly column: 'studies' };
                 readonly territory: { readonly column: 'territory' };
+              };
+            };
+          };
+          readonly AppAuthSession: {
+            readonly fields: {
+              readonly authUserId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
+              };
+              readonly createdAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly typeParams: { readonly precision: 3 };
+                };
+              };
+              readonly expiresAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly typeParams: { readonly precision: 3 };
+                };
+              };
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
+              };
+              readonly sessionId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+            };
+            readonly relations: Record<string, never>;
+            readonly storage: {
+              readonly table: 'app_auth_sessions';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly authUserId: { readonly column: 'authUserId' };
+                readonly createdAt: { readonly column: 'createdAt' };
+                readonly expiresAt: { readonly column: 'expiresAt' };
+                readonly id: { readonly column: 'id' };
+                readonly sessionId: { readonly column: 'sessionId' };
               };
             };
           };
@@ -7184,6 +7296,14 @@ type ContractBase = Omit<
           readonly onCreate: { readonly id: 'uuidv7'; readonly kind: 'generator' };
           readonly ref: {
             readonly entry: 'agent_identities';
+            readonly field: 'id';
+            readonly namespace: 'public';
+          };
+        },
+        {
+          readonly onCreate: { readonly id: 'uuidv7'; readonly kind: 'generator' };
+          readonly ref: {
+            readonly entry: 'app_auth_sessions';
             readonly field: 'id';
             readonly namespace: 'public';
           };

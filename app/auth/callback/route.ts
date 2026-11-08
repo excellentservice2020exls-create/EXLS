@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { registerAuthenticatedSession } from "@/lib/supabase/auth";
 import { NextResponse, type NextRequest } from "next/server";
 
 const emailOtpTypes = [
@@ -38,6 +39,7 @@ export async function GET(request: NextRequest) {
   );
 
   const supabase = await createClient();
+  let authenticated = false;
   if (code) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (error) {
@@ -45,11 +47,10 @@ export async function GET(request: NextRequest) {
         new URL("/auth/sign-in?status=callback", request.url),
       );
     }
-
-    return NextResponse.redirect(nextUrl);
+    authenticated = true;
   }
 
-  if (tokenHash && isEmailOtpType(type)) {
+  if (!authenticated && tokenHash && isEmailOtpType(type)) {
     const { error } = await supabase.auth.verifyOtp({
       token_hash: tokenHash,
       type,
@@ -57,6 +58,16 @@ export async function GET(request: NextRequest) {
     if (error) {
       return NextResponse.redirect(
         new URL("/auth/sign-in?status=callback", request.url),
+      );
+    }
+    authenticated = true;
+  }
+
+  if (authenticated) {
+    const session = await registerAuthenticatedSession();
+    if (!session) {
+      return NextResponse.redirect(
+        new URL("/auth/sign-in?status=session", request.url),
       );
     }
 

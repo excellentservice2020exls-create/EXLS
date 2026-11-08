@@ -23,9 +23,9 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'c6dcc89981f8a98e3572aaae0ad6e64b50069e1cebcae1bddee3cdbac713832e'>;
+  StorageHashBase<'09a9599321e56934e967e64696dcda7347c728a3f41c34637c5f3e325eec2c14'>;
 export type ExecutionHash =
-  ExecutionHashBase<'32978bbadc64066f76d69a2cb67e21d416a5fbd82e93a28b5a7a56daf57dbde7'>;
+  ExecutionHashBase<'d4d4f83b04f63dff37f566ed62d0a6fc7c85496c876bc93c0f133433c8ed5aba'>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
 
@@ -645,6 +645,18 @@ export namespace Models {
     user: public_User;
     readonly [RelationKeys]?: 'user';
   };
+  export type public_SecurityAccessRequest = {
+    decidedAt: FieldOutputTypes['public']['SecurityAccessRequest']['decidedAt'];
+    decidedById: FieldOutputTypes['public']['SecurityAccessRequest']['decidedById'];
+    id: FieldOutputTypes['public']['SecurityAccessRequest']['id'];
+    requestedAt: FieldOutputTypes['public']['SecurityAccessRequest']['requestedAt'];
+    sessionId: FieldOutputTypes['public']['SecurityAccessRequest']['sessionId'];
+    status: FieldOutputTypes['public']['SecurityAccessRequest']['status'];
+    userId: FieldOutputTypes['public']['SecurityAccessRequest']['userId'];
+    decidedBy: public_User | null;
+    user: public_User;
+    readonly [RelationKeys]?: 'decidedBy' | 'user';
+  };
   export type public_Shift = {
     agentId: FieldOutputTypes['public']['Shift']['agentId'];
     createdAt: FieldOutputTypes['public']['Shift']['createdAt'];
@@ -771,8 +783,10 @@ export namespace Models {
     supervisorId: FieldOutputTypes['public']['User']['supervisorId'];
     teamLeaderId: FieldOutputTypes['public']['User']['teamLeaderId'];
     updatedAt: FieldOutputTypes['public']['User']['updatedAt'];
+    accessRequests: public_SecurityAccessRequest[];
     attendances: public_Attendance[];
     attendancesAttendances: public_Attendance[];
+    decidedAccessRequests: public_SecurityAccessRequest[];
     equipmentAssignments: public_EquipmentAssignment[];
     incidentComments: public_IncidentComment[];
     incidents: public_Incident[];
@@ -792,8 +806,10 @@ export namespace Models {
     users: public_User[];
     usersUsers: public_User[];
     readonly [RelationKeys]?:
+      | 'accessRequests'
       | 'attendances'
       | 'attendancesAttendances'
+      | 'decidedAccessRequests'
       | 'equipmentAssignments'
       | 'incidentComments'
       | 'incidents'
@@ -836,6 +852,7 @@ export declare const models: {
     Patrol: Models.public_Patrol;
     PatrolScan: Models.public_PatrolScan;
     RoleAssignment: Models.public_RoleAssignment;
+    SecurityAccessRequest: Models.public_SecurityAccessRequest;
     Shift: Models.public_Shift;
     Site: Models.public_Site;
     SiteEquipment: Models.public_SiteEquipment;
@@ -3062,6 +3079,117 @@ type ContractBase = Omit<
                 },
               ];
             };
+            readonly security_access_requests: {
+              columns: {
+                readonly decidedAt: {
+                  readonly dataType: 'pg/timestamptz';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly precision: 3 };
+                  readonly many: false;
+                };
+                readonly decidedById: {
+                  readonly dataType: 'pg/uuid';
+                  readonly codecId: 'pg/uuid@1';
+                  readonly nullable: true;
+                  readonly many: false;
+                };
+                readonly id: {
+                  readonly dataType: 'pg/uuid';
+                  readonly codecId: 'pg/uuid@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly requestedAt: {
+                  readonly dataType: 'pg/timestamptz';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                  readonly typeParams: { readonly precision: 3 };
+                  readonly many: false;
+                };
+                readonly sessionId: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly status: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/text@1', 'PENDING'>;
+                  };
+                  readonly many: false;
+                };
+                readonly userId: {
+                  readonly dataType: 'pg/uuid';
+                  readonly codecId: 'pg/uuid@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+              };
+              primaryKey: {
+                readonly columns: readonly ['id'];
+                readonly name: 'security_access_requests_pkey';
+              };
+              uniques: readonly [
+                {
+                  readonly columns: readonly ['sessionId'];
+                  readonly name: 'security_access_requests_sessionId_key';
+                },
+              ];
+              indexes: readonly [
+                {
+                  readonly name: 'security_access_requests_decidedById_idx_8194d55f';
+                  readonly prefix: 'security_access_requests_decidedById_idx';
+                  readonly columns: readonly ['decidedById'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'security_access_requests_status_requestedAt_idx_27ce3e29';
+                  readonly prefix: 'security_access_requests_status_requestedAt_idx';
+                  readonly columns: readonly ['status', 'requestedAt'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'security_access_requests_userId_idx_a489d58a';
+                  readonly prefix: 'security_access_requests_userId_idx';
+                  readonly columns: readonly ['userId'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'security_access_requests';
+                    readonly columns: readonly ['userId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'users';
+                    readonly columns: readonly ['id'];
+                  };
+                  readonly name: 'security_access_requests_userId_fkey';
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'security_access_requests';
+                    readonly columns: readonly ['decidedById'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'users';
+                    readonly columns: readonly ['id'];
+                  };
+                  readonly name: 'security_access_requests_decidedById_fkey';
+                },
+              ];
+            };
             readonly shifts: {
               columns: {
                 readonly agentId: {
@@ -4080,6 +4208,10 @@ type ContractBase = Omit<
     readonly role_assignments: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'RoleAssignment';
+    };
+    readonly security_access_requests: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'SecurityAccessRequest';
     };
     readonly shifts: { readonly namespace: 'public' & NamespaceId; readonly model: 'Shift' };
     readonly site_equipments: {
@@ -5990,6 +6122,79 @@ type ContractBase = Omit<
               };
             };
           };
+          readonly SecurityAccessRequest: {
+            readonly fields: {
+              readonly decidedAt: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly typeParams: { readonly precision: 3 };
+                };
+              };
+              readonly decidedById: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
+              };
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
+              };
+              readonly requestedAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly typeParams: { readonly precision: 3 };
+                };
+              };
+              readonly sessionId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly status: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly userId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
+              };
+            };
+            readonly relations: {
+              readonly decidedBy: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
+                readonly cardinality: 'N:1';
+                readonly nullable: true;
+                readonly on: {
+                  readonly localFields: readonly ['decidedById'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly user: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
+                readonly cardinality: 'N:1';
+                readonly nullable: false;
+                readonly on: {
+                  readonly localFields: readonly ['userId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'security_access_requests';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly decidedAt: { readonly column: 'decidedAt' };
+                readonly decidedById: { readonly column: 'decidedById' };
+                readonly id: { readonly column: 'id' };
+                readonly requestedAt: { readonly column: 'requestedAt' };
+                readonly sessionId: { readonly column: 'sessionId' };
+                readonly status: { readonly column: 'status' };
+                readonly userId: { readonly column: 'userId' };
+              };
+            };
+          };
           readonly Shift: {
             readonly fields: {
               readonly agentId: {
@@ -6672,6 +6877,17 @@ type ContractBase = Omit<
               };
             };
             readonly relations: {
+              readonly accessRequests: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'SecurityAccessRequest';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['userId'];
+                };
+              };
               readonly attendances: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
@@ -6692,6 +6908,17 @@ type ContractBase = Omit<
                 readonly on: {
                   readonly localFields: readonly ['id'];
                   readonly targetFields: readonly ['verifiedById'];
+                };
+              };
+              readonly decidedAccessRequests: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'SecurityAccessRequest';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['decidedById'];
                 };
               };
               readonly equipmentAssignments: {
@@ -7093,6 +7320,14 @@ type ContractBase = Omit<
           readonly onCreate: { readonly id: 'uuidv7'; readonly kind: 'generator' };
           readonly ref: {
             readonly entry: 'role_assignments';
+            readonly field: 'id';
+            readonly namespace: 'public';
+          };
+        },
+        {
+          readonly onCreate: { readonly id: 'uuidv7'; readonly kind: 'generator' };
+          readonly ref: {
+            readonly entry: 'security_access_requests';
             readonly field: 'id';
             readonly namespace: 'public';
           };

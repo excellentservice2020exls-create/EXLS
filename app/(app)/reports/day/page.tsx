@@ -6,7 +6,7 @@ import {
   getSiteById,
 } from "@/lib/erp-data";
 import { unstable_noStore as noStore } from "next/cache";
-import { hasRole, MANAGEMENT_ROLES, requirePermission, type AppUser } from "@/lib/erp-auth";
+import { requirePermission, type AppUser } from "@/lib/erp-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -79,7 +79,7 @@ async function getReportStats(
   user: AppUser,
   shifts: Awaited<ReturnType<typeof getShifts>>,
 ) {
-  if (hasRole(user, MANAGEMENT_ROLES)) {
+  if (user.roles.includes("SUPER_ADMIN")) {
     return getDashboardStats();
   }
 

@@ -48,6 +48,14 @@ export function Sidebar({
             {item.label}
           </Link>
         ))}
+        {roles.includes("SUPER_ADMIN") && (
+          <Link
+            href="/security"
+            className="block rounded-xl border border-transparent px-3 py-2 text-sm font-medium text-slate-200 transition hover:border-emerald-400/40 hover:bg-slate-800 hover:text-white"
+          >
+            Validation des accès
+          </Link>
+        )}
       </nav>
 
       <div className="border-t border-slate-800 px-4 py-4 text-sm text-slate-300">

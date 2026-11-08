@@ -23,5 +23,7 @@ export async function getAuthenticatedUser() {
   return {
     id: claims.sub,
     email: typeof claims.email === "string" ? claims.email : null,
+    sessionId:
+      typeof claims.session_id === "string" ? claims.session_id : null,
   };
 }

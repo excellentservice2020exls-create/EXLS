@@ -69,6 +69,8 @@ namespace public {
     patrolScans            PatrolScan[]
     patrols                Patrol[]
     roleAssignments        RoleAssignment[]
+    accessRequests         SecurityAccessRequest[] @relation(name: "security_access_requests_userId_fkey")
+    decidedAccessRequests SecurityAccessRequest[] @relation(name: "security_access_requests_decidedById_fkey")
     siteInstructions       SiteInstruction[]
     attendances            Attendance[]          @relation(name: "attendances_agentId_fkey")
     attendancesAttendances Attendance[]          @relation(name: "attendances_verifiedById_fkey")
@@ -540,6 +542,24 @@ namespace public {
     @@check(expression: sql`(role = ANY (ARRAY['ADMIN'::text, 'MANAGER'::text, 'DIRECTOR'::text, 'SUPERVISOR'::text, 'AGENT'::text]))`, map: "role_assignments_role_check_3b8a4a49")
     @@rls
     @@map("role_assignments")
+  }
+
+  model SecurityAccessRequest {
+    id          Uuid      @id(map: "security_access_requests_pkey") @onCreate(uuid(7))
+    userId      Uuid
+    sessionId   String    @unique(map: "security_access_requests_sessionId_key")
+    status      String    @default("PENDING")
+    requestedAt DateTime  @default(now())
+    decidedAt   DateTime?
+    decidedById Uuid?
+    user        User      @relation(name: "security_access_requests_userId_fkey", fields: [userId], references: [id], onDelete: Cascade, map: "security_access_requests_userId_fkey")
+    decidedBy   User?     @relation(name: "security_access_requests_decidedById_fkey", fields: [decidedById], references: [id], onDelete: SetNull, map: "security_access_requests_decidedById_fkey")
+
+    @@index([status, requestedAt], name: "security_access_requests_status_requestedAt_idx")
+    @@index([userId], name: "security_access_requests_userId_idx")
+    @@check(expression: sql`(status = ANY (ARRAY['PENDING'::text, 'APPROVED'::text, 'REJECTED'::text]))`, name: "security_access_requests_status")
+    @@rls
+    @@map("security_access_requests")
   }
 
   model SiteEquipment {

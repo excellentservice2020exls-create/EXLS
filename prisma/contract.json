@@ -80,6 +80,10 @@
       "model": "RoleAssignment",
       "namespace": "public"
     },
+    "security_access_requests": {
+      "model": "SecurityAccessRequest",
+      "namespace": "public"
+    },
     "shifts": {
       "model": "Shift",
       "namespace": "public"
@@ -3213,6 +3217,126 @@
               "table": "role_assignments"
             }
           },
+          "SecurityAccessRequest": {
+            "fields": {
+              "decidedAt": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "decidedById": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/uuid@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/uuid@1",
+                  "kind": "scalar"
+                }
+              },
+              "requestedAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "sessionId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "status": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "userId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/uuid@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "decidedBy": {
+                "cardinality": "N:1",
+                "nullable": true,
+                "on": {
+                  "localFields": [
+                    "decidedById"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "User",
+                  "namespace": "public"
+                }
+              },
+              "user": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "userId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "User",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "decidedAt": {
+                  "column": "decidedAt"
+                },
+                "decidedById": {
+                  "column": "decidedById"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "requestedAt": {
+                  "column": "requestedAt"
+                },
+                "sessionId": {
+                  "column": "sessionId"
+                },
+                "status": {
+                  "column": "status"
+                },
+                "userId": {
+                  "column": "userId"
+                }
+              },
+              "namespaceId": "public",
+              "table": "security_access_requests"
+            }
+          },
           "Shift": {
             "fields": {
               "agentId": {
@@ -4315,6 +4439,21 @@
               }
             },
             "relations": {
+              "accessRequests": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "userId"
+                  ]
+                },
+                "to": {
+                  "model": "SecurityAccessRequest",
+                  "namespace": "public"
+                }
+              },
               "attendances": {
                 "cardinality": "1:N",
                 "on": {
@@ -4342,6 +4481,21 @@
                 },
                 "to": {
                   "model": "Attendance",
+                  "namespace": "public"
+                }
+              },
+              "decidedAccessRequests": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "decidedById"
+                  ]
+                },
+                "to": {
+                  "model": "SecurityAccessRequest",
                   "namespace": "public"
                 }
               },
@@ -4996,6 +5150,11 @@
               "kind": "rls",
               "namespaceId": "public",
               "tableName": "role_assignments"
+            },
+            "security_access_requests": {
+              "kind": "rls",
+              "namespaceId": "public",
+              "tableName": "security_access_requests"
             },
             "shifts": {
               "kind": "rls",
@@ -7616,6 +7775,151 @@
               },
               "uniques": []
             },
+            "security_access_requests": {
+              "checks": [
+                {
+                  "expression": "(status = ANY (ARRAY['PENDING'::text, 'APPROVED'::text, 'REJECTED'::text]))",
+                  "name": "security_access_requests_status_7ebbec5c",
+                  "prefix": "security_access_requests_status"
+                }
+              ],
+              "columns": {
+                "decidedAt": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "nullable": true,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "decidedById": {
+                  "codecId": "pg/uuid@1",
+                  "dataType": "pg/uuid",
+                  "nullable": true
+                },
+                "id": {
+                  "codecId": "pg/uuid@1",
+                  "dataType": "pg/uuid",
+                  "nullable": false
+                },
+                "requestedAt": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "sessionId": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "status": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "default": {
+                    "kind": "literal",
+                    "value": "PENDING"
+                  },
+                  "nullable": false
+                },
+                "userId": {
+                  "codecId": "pg/uuid@1",
+                  "dataType": "pg/uuid",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "index": {
+                    "name": "security_access_requests_userId_idx_a489d58a"
+                  },
+                  "name": "security_access_requests_userId_fkey",
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "userId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "security_access_requests"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "users"
+                  }
+                },
+                {
+                  "index": {
+                    "name": "security_access_requests_decidedById_idx_8194d55f"
+                  },
+                  "name": "security_access_requests_decidedById_fkey",
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
+                      "decidedById"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "security_access_requests"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "users"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "decidedById"
+                  ],
+                  "name": "security_access_requests_decidedById_idx_8194d55f",
+                  "prefix": "security_access_requests_decidedById_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "status",
+                    "requestedAt"
+                  ],
+                  "name": "security_access_requests_status_requestedAt_idx_27ce3e29",
+                  "prefix": "security_access_requests_status_requestedAt_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "userId"
+                  ],
+                  "name": "security_access_requests_userId_idx_a489d58a",
+                  "prefix": "security_access_requests_userId_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ],
+                "name": "security_access_requests_pkey"
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "sessionId"
+                  ],
+                  "name": "security_access_requests_sessionId_key"
+                }
+              ]
+            },
             "shifts": {
               "checks": [
                 {
@@ -8798,10 +9102,10 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "c6dcc89981f8a98e3572aaae0ad6e64b50069e1cebcae1bddee3cdbac713832e"
+    "storageHash": "09a9599321e56934e967e64696dcda7347c728a3f41c34637c5f3e325eec2c14"
   },
   "execution": {
-    "executionHash": "32978bbadc64066f76d69a2cb67e21d416a5fbd82e93a28b5a7a56daf57dbde7",
+    "executionHash": "d4d4f83b04f63dff37f566ed62d0a6fc7c85496c876bc93c0f133433c8ed5aba",
     "mutations": {
       "defaults": [
         {
@@ -9009,6 +9313,17 @@
           },
           "ref": {
             "entry": "role_assignments",
+            "field": "id",
+            "namespace": "public"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "uuidv7",
+            "kind": "generator"
+          },
+          "ref": {
+            "entry": "security_access_requests",
             "field": "id",
             "namespace": "public"
           }

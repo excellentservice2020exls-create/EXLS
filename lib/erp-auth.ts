@@ -86,6 +86,22 @@ export async function requireAppUser(): Promise<AppUser> {
   if (primaryRole === null) {
     redirect("/account?erpAccess=role-required");
   }
+  if (primaryRole !== "SUPER_ADMIN") {
+    if (!authUser.sessionId) {
+      redirect("/account?erpAccess=session-required");
+    }
+
+    const accessRequest = await db.orm.public.SecurityAccessRequest
+      .where({ userId: user.id, sessionId: authUser.sessionId })
+      .select("status")
+      .first();
+    if (String(accessRequest?.status) !== "APPROVED") {
+      redirect(
+        `/account?erpAccess=${accessRequest?.status === "REJECTED" ? "approval-rejected" : accessRequest ? "approval-pending" : "approval-required"}`,
+      );
+    }
+  }
+
   const effectiveRoles = await getEffectiveRoles(user.id, String(user.role));
 
   const permissions = new Set<Permission>();

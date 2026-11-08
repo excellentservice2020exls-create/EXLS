@@ -9,10 +9,11 @@ import { updateProfile } from "./actions";
 export const dynamic = "force-dynamic";
 
 const roleLabels: Record<string, string> = {
+  SUPER_ADMIN: "Super_Administrateur",
   ADMIN: "Administrateur",
-  DIRECTOR: "Direction",
   MANAGER: "Responsable",
   SUPERVISOR: "Superviseur",
+  TEAM_LEADER: "Chef d'équipe",
   AGENT: "Agent",
 };
 
@@ -20,7 +21,7 @@ function ProfileDetail({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-xl border border-slate-200 bg-white p-4">
       <dt className="text-sm text-slate-500">{label}</dt>
-      <dd className="mt-2 break-words font-medium text-slate-900">{value}</dd>
+      <dd className="mt-2 wrap-break-words font-medium text-slate-900">{value}</dd>
     </div>
   );
 }

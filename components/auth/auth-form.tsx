@@ -84,8 +84,14 @@ export function AuthForm({
         password,
       });
       if (signInError) throw signInError;
+      if (!data.session?.access_token) {
+        throw new Error("La session de connexion est introuvable. Veuillez rÃ©essayer.");
+      }
 
-      const sessionResponse = await fetch("/auth/session", { method: "POST" });
+      const sessionResponse = await fetch("/auth/session", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${data.session.access_token}` },
+      });
       if (!sessionResponse.ok) {
         throw new Error(
           "La session n’a pas pu être enregistrée. Veuillez vous reconnecter.",

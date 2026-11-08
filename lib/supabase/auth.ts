@@ -14,20 +14,25 @@ type AuthenticatedUser = {
   expiresAt: Date;
 };
 
-async function getVerifiedAuthenticatedUser() {
+async function getVerifiedAuthenticatedUser(
+  accessToken?: string,
+  onRejected?: (reason: string) => void,
+) {
   const supabase = await createClient();
-  const { data, error } = await supabase.auth.getClaims();
+  const { data, error } = await supabase.auth.getClaims(accessToken);
 
   if (error) {
     if (!isUnauthenticatedError(error)) {
       throw error;
     }
 
+    onRejected?.("claims_rejected");
     return null;
   }
 
   const claims = data?.claims;
   if (!claims?.sub) {
+    onRejected?.("subject_missing");
     return null;
   }
 
@@ -40,11 +45,13 @@ async function getVerifiedAuthenticatedUser() {
     !Number.isSafeInteger(issuedAt) ||
     issuedAt <= 0
   ) {
+    onRejected?.("session_claims_missing_or_invalid");
     return null;
   }
 
   const createdAt = new Date(issuedAt * 1000);
   if (createdAt.getTime() > Date.now() + 30_000) {
+    onRejected?.("issued_at_in_future");
     return null;
   }
 
@@ -57,8 +64,11 @@ async function getVerifiedAuthenticatedUser() {
   };
 }
 
-export async function registerAuthenticatedSession(): Promise<AuthenticatedUser | null> {
-  const authenticatedUser = await getVerifiedAuthenticatedUser();
+export async function registerAuthenticatedSession(
+  accessToken?: string,
+  onRejected?: (reason: string) => void,
+): Promise<AuthenticatedUser | null> {
+  const authenticatedUser = await getVerifiedAuthenticatedUser(accessToken, onRejected);
   if (!authenticatedUser) {
     return null;
   }
@@ -73,6 +83,7 @@ export async function registerAuthenticatedSession(): Promise<AuthenticatedUser 
     }
 
     if (existingSession.expiresAt.getTime() <= Date.now()) {
+      onRejected?.("registered_session_expired");
       return null;
     }
 
@@ -84,6 +95,7 @@ export async function registerAuthenticatedSession(): Promise<AuthenticatedUser 
   }
 
   if (authenticatedUser.expiresAt.getTime() <= Date.now()) {
+    onRejected?.("token_session_expired");
     return null;
   }
 

@@ -7820,7 +7820,7 @@
             "role_assignments": {
               "checks": [
                 {
-                  "expression": "(role = ANY (ARRAY['ADMIN'::text, 'MANAGER'::text, 'DIRECTOR'::text, 'SUPERVISOR'::text, 'AGENT'::text]))",
+                  "expression": "(role = ANY (ARRAY['ADMIN'::text, 'MANAGER'::text, 'DIRECTOR'::text, 'SUPERVISOR'::text, 'TEAM_LEADER'::text, 'AGENT'::text]))",
                   "name": "role_assignments_role_check_3b8a4a49"
                 }
               ],
@@ -9245,7 +9245,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "b5fe57b44dc4bea771683490e2faa16b43f21cc5c103cea02c9c44a646fb4434"
+    "storageHash": "768212131dbd26d0ac4a1758b88945ecde2da736a26889847a670bf6f3742ed2"
   },
   "execution": {
     "executionHash": "208d9314964e36a4a0c6ad187ffa612cde34f8666ed4075275f6d48d14c354ff",

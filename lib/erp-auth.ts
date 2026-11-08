@@ -143,7 +143,7 @@ export async function requireRole(allowedRoles: readonly string[]) {
 }
 
 export async function getAppDataScope(user: AppUser): Promise<AppDataScope> {
-  const organizationWide = hasRole(user, ["SUPER_ADMIN"]);
+  const organizationWide = hasRole(user, ["SUPER_ADMIN", "ADMIN", "MANAGER"]);
   if (organizationWide) {
     return {
       organizationWide: true,
@@ -175,6 +175,16 @@ export async function getAppDataScope(user: AppUser): Promise<AppDataScope> {
     }
   }
 
+  if (user.roles.includes("TEAM_LEADER")) {
+    const [teamMembers, ledShifts] = await Promise.all([
+      db.orm.public.User.where({ teamLeaderId: user.id }).select("id").all(),
+      db.orm.public.Shift.where({ teamLeaderId: user.id }).select("siteId").all(),
+    ]);
+    userIds.add(user.id);
+    for (const member of teamMembers) userIds.add(member.id);
+    for (const shift of ledShifts) siteIds.add(shift.siteId);
+  }
+
   return { organizationWide: false, userIds, siteIds };
 }
 
@@ -190,6 +200,9 @@ export function canAccessShiftInScope(
       shift.teamLeaderId === user.id ||
       scope.userIds.has(shift.agentId) ||
       scope.siteIds.has(shift.siteId)
+    )) ||
+    (user.roles.includes("TEAM_LEADER") && (
+      shift.teamLeaderId === user.id || scope.userIds.has(shift.agentId)
     ));
 }
 

@@ -539,7 +539,7 @@ namespace public {
     user       User    @relation(fields: [userId], references: [id], onDelete: Cascade, map: "role_assignments_userId_fkey")
 
     @@index([userId], name: "role_assignments_userId_idx")
-    @@check(expression: sql`(role = ANY (ARRAY['ADMIN'::text, 'MANAGER'::text, 'DIRECTOR'::text, 'SUPERVISOR'::text, 'AGENT'::text]))`, map: "role_assignments_role_check_3b8a4a49")
+    @@check(expression: sql`(role = ANY (ARRAY['ADMIN'::text, 'MANAGER'::text, 'DIRECTOR'::text, 'SUPERVISOR'::text, 'TEAM_LEADER'::text, 'AGENT'::text]))`, map: "role_assignments_role_check_3b8a4a49")
     @@rls
     @@map("role_assignments")
   }

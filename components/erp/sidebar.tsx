@@ -39,6 +39,20 @@ export function Sidebar({
       </div>
 
       <nav className="flex-1 space-y-2 px-4 py-6">
+        {[
+          { role: "MANAGER", href: "/manager", label: "Espace manager" },
+          { role: "SUPERVISOR", href: "/supervisor", label: "Espace superviseur" },
+          { role: "TEAM_LEADER", href: "/teamleader", label: "Espace chef d’équipe" },
+          { role: "AGENT", href: "/agent", label: "Espace agent" },
+        ].filter((item) => roles.includes(item.role)).map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className="block rounded-xl border border-emerald-400/30 bg-emerald-400/10 px-3 py-2 text-sm font-semibold text-emerald-200 transition hover:bg-emerald-400/20"
+          >
+            {item.label}
+          </Link>
+        ))}
         {items.map((item) => (
           <Link
             key={item.href}

@@ -104,7 +104,7 @@ export function AuthForm({
         return;
       }
 
-      const signInResponse = await fetch("/auth/sign-in", {
+      const signInResponse = await fetch("/api/auth/sign-in", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

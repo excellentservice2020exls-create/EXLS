@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
   try {
     limit = await checkSignInRateLimit(email, getClientIp(request));
   } catch (error) {
-    console.error("[auth/sign-in] rate_limit_check_failed", error);
+    console.error("[api/auth/sign-in] rate_limit_check_failed", error);
     return jsonResponse(
       { error: "La connexion est temporairement indisponible. Réessayez plus tard." },
       503,
@@ -123,7 +123,7 @@ export async function POST(request: NextRequest) {
     const supabase = await createClient();
     result = await supabase.auth.signInWithPassword({ email, password });
   } catch (error) {
-    console.error("[auth/sign-in] authentication_request_failed", error);
+    console.error("[api/auth/sign-in] authentication_request_failed", error);
     return jsonResponse(
       { error: "La connexion est temporairement indisponible. Réessayez plus tard." },
       503,
@@ -139,7 +139,7 @@ export async function POST(request: NextRequest) {
       );
     }
     if (result.error.status !== 400 && result.error.status !== 401) {
-      console.error("[auth/sign-in] authentication_request_failed", result.error);
+      console.error("[api/auth/sign-in] authentication_request_failed", result.error);
       return jsonResponse(
         { error: "La connexion est temporairement indisponible. Réessayez plus tard." },
         503,

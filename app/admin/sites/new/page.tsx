@@ -7,7 +7,7 @@ const errorValues = ["invalid", "client", "code"] as const;
 
 export default async function NewSitePage({
   searchParams,
-}: PageProps<"/sites/new">) {
+}: PageProps<"/admin/sites/new">) {
   await requirePermission("sites:create");
   const [{ error }, clients] = await Promise.all([searchParams, getClients()]);
   const formError = errorValues.find((value) => value === error);

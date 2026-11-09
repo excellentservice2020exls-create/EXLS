@@ -15,7 +15,7 @@ const errorMessages: Record<string, string> = {
 
 export default async function SitesPage({
   searchParams,
-}: PageProps<"/sites">) {
+}: PageProps<"/admin/sites">) {
   const user = await requirePermission("sites:read");
   const [{ status, error }, sites, clients] = await Promise.all([
     searchParams,

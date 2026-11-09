@@ -10,7 +10,7 @@ const errorValues = ["invalid", "client", "code"] as const;
 export default async function EditSitePage({
   params,
   searchParams,
-}: PageProps<"/sites/[siteId]/edit">) {
+}: PageProps<"/admin/sites/[siteId]/edit">) {
   await requirePermission("sites:update");
   const [{ siteId }, { error }] = await Promise.all([params, searchParams]);
   const parsedSiteId = siteId;

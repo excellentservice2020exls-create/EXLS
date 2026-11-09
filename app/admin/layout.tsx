@@ -17,10 +17,12 @@ export default async function AdminLayout({
       />
       <aside className="border-b border-slate-800 bg-slate-950 text-slate-50 md:fixed md:inset-y-0 md:left-0 md:flex md:w-72 md:flex-col md:border-b-0 md:border-r">
         <div className="border-b border-slate-800 px-6 py-5">
-          <Link href="/admin" className="block">
+          <Link href="/" className="block">
             <p className="text-xs uppercase tracking-[0.25em] text-emerald-400 hover:font-bold">
               EXLS
             </p>
+          </Link>
+          <Link href="/admin" className="block">
             <span className="mt-2 block text-2xl font-semibold text-emerald-400 hover:font-bold">
               Administration
             </span>

@@ -10,7 +10,7 @@ export async function updateProfile(formData: FormData) {
   function readText(name: string) {
     const value = formData.get(name);
     if (typeof value !== "string") {
-      redirect("/profile?error=invalid");
+      redirect("/admin/profile?error=invalid");
     }
     return value.trim();
   }
@@ -41,14 +41,14 @@ export async function updateProfile(formData: FormData) {
     studies.length > 2000 ||
     educationLevel.length > 150
   ) {
-    redirect("/profile?error=invalid");
+    redirect("/admin/profile?error=invalid");
   }
 
   let birthDate: Date | null = null;
   if (birthDateValue) {
     const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(birthDateValue);
     if (!match) {
-      redirect("/profile?error=invalid");
+      redirect("/admin/profile?error=invalid");
     }
 
     const [, yearValue, monthValue, dayValue] = match;
@@ -62,7 +62,7 @@ export async function updateProfile(formData: FormData) {
       birthDate.getUTCDate() !== day ||
       birthDate.getTime() > Date.now()
     ) {
-      redirect("/profile?error=invalid");
+      redirect("/admin/profile?error=invalid");
     }
   }
 
@@ -83,5 +83,5 @@ export async function updateProfile(formData: FormData) {
       updatedAt: new Date(),
     });
 
-  redirect("/profile?status=updated");
+  redirect("/admin/profile?status=updated");
 }

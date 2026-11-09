@@ -1,4 +1,4 @@
-// app/(app)/profile/page.tsx
+// app/admin/profile/page.tsx
 
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -28,7 +28,7 @@ function ProfileDetail({ label, value }: { label: string; value: string }) {
 
 export default async function ProfilePage({
   searchParams,
-}: PageProps<"/profile">) {
+}: PageProps<"/admin/profile">) {
   const appUser = await requirePermission("profile:read:self");
   const { error, status } = await searchParams;
   const profile = await db.orm.public.User

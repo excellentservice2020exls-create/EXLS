@@ -16,6 +16,20 @@ import { PasswordInput } from "./password-input";
 
 type AuthMode = "sign-in" | "forgot-password" | "reset-password";
 
+type SignInResponse = {
+  accessToken?: string;
+  error?: string;
+};
+
+function isSignInResponse(value: unknown): value is SignInResponse {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    (!("accessToken" in value) || typeof value.accessToken === "string") &&
+    (!("error" in value) || typeof value.error === "string")
+  );
+}
+
 function getCallbackUrl(next: string) {
   const callbackUrl = new URL("/auth/callback", window.location.origin);
   callbackUrl.searchParams.set("next", next);
@@ -45,12 +59,19 @@ export function AuthForm({
     setError("");
     setMessage("");
 
-    if (needsConfirmation && password !== confirmPassword) {
+    const submittedEmail = email;
+    const submittedPassword = password;
+    const submittedConfirmPassword = confirmPassword;
+    setEmail("");
+    setPassword("");
+    setConfirmPassword("");
+
+    if (needsConfirmation && submittedPassword !== submittedConfirmPassword) {
       setError("Les mots de passe ne correspondent pas.");
       return;
     }
 
-    if (needsPassword && password.length < 8) {
+    if (needsPassword && submittedPassword.length < 8) {
       setError("Le mot de passe doit contenir au moins 8 caractères.");
       return;
     }
@@ -61,7 +82,7 @@ export function AuthForm({
       const supabase = createClient();
 
       if (mode === "forgot-password") {
-        const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+        const { error: resetError } = await supabase.auth.resetPasswordForEmail(submittedEmail, {
           redirectTo: getCallbackUrl("/auth/reset-password"),
         });
         if (resetError) throw resetError;
@@ -73,7 +94,9 @@ export function AuthForm({
       }
 
       if (mode === "reset-password") {
-        const { error: updateError } = await supabase.auth.updateUser({ password });
+        const { error: updateError } = await supabase.auth.updateUser({
+          password: submittedPassword,
+        });
         if (updateError) throw updateError;
 
         router.replace("/account?password=updated");
@@ -81,14 +104,37 @@ export function AuthForm({
         return;
       }
 
-      const { data, error: signInError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      const signInResponse = await fetch("/auth/sign-in", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: submittedEmail,
+          password: submittedPassword,
+        }),
       });
-      if (signInError) throw signInError;
-      if (!data.session?.access_token) {
+      let responseBody: unknown;
+      try {
+        responseBody = await signInResponse.json();
+      } catch {
+        throw new Error(
+          "La connexion est temporairement indisponible. Réessayez plus tard.",
+        );
+      }
+      if (!isSignInResponse(responseBody)) {
+        throw new Error(
+          "La connexion est temporairement indisponible. Réessayez plus tard.",
+        );
+      }
+      const signInResult = responseBody;
+      if (!signInResponse.ok) {
+        throw new Error(
+          signInResult.error ?? "Une erreur est survenue. Veuillez réessayer.",
+        );
+      }
+      if (!signInResult.accessToken) {
         throw new Error("La session de connexion est introuvable. Veuillez rÃ©essayer.");
       }
+      const data = { session: { access_token: signInResult.accessToken } };
 
       const sessionResponse = await fetch("/auth/session", {
         method: "POST",
@@ -102,7 +148,7 @@ export function AuthForm({
 
       const assurance = await getAuthenticatorAssuranceLevel(
         supabase,
-        data.session?.access_token,
+        signInResult.accessToken,
       );
       if (!assurance) {
         throw new Error("La session de connexion est introuvable. Veuillez réessayer.");
@@ -121,6 +167,9 @@ export function AuthForm({
           : "Une erreur est survenue. Veuillez réessayer.",
       );
     } finally {
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
       setPending(false);
     }
   }
@@ -140,6 +189,7 @@ export function AuthForm({
             <input
               autoComplete="email"
               className={inputClassName}
+              disabled={pending}
               onChange={(event) => setEmail(event.target.value)}
               required
               type="email"
@@ -159,6 +209,7 @@ export function AuthForm({
                     : "new-password"
               }
               minLength={8}
+              disabled={pending}
               onChange={(event) => setPassword(event.target.value)}
               required
               value={password}
@@ -170,6 +221,7 @@ export function AuthForm({
             Confirmer le mot de passe
             <PasswordInput
               autoComplete="new-password"
+              disabled={pending}
               minLength={8}
               onChange={(event) => setConfirmPassword(event.target.value)}
               required

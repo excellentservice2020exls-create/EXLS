@@ -40,6 +40,8 @@ Prisma 8 stores these enums as text columns and enforces their allowed values wi
 
 Email/password authentication is available at `/auth/sign-in`. Public sign-up is disabled in the application; configure Supabase Auth to disable new public sign-ups as well, so accounts are created only when an EXLS manager creates a profile. Profile creation sends an invitation through the Supabase Auth Admin API and requires `SUPABASE_SERVICE_ROLE_KEY` on the server. Configure the Supabase Auth email redirect allowlist to include your application's `/auth/callback` URL and enable email/password sign-in. Email confirmation, password recovery, and account password changes are supported. Users can optionally enable TOTP in `/account`; enabled factors are challenged after sign-in and protected account access requires the second factor. Enforce any additional MFA requirements for database access in Supabase RLS policies as well.
 
+The application sign-in endpoint uses a database-backed rate limit: 10 attempts per account and 60 per client IP in a 15-minute window. Apply `supabase/migrations/20261109110000_add_auth_sign_in_rate_limits.sql` in the Supabase SQL Editor before deploying this change. The IP limit reads `x-forwarded-for`, so only deploy behind a trusted proxy that sets this header. Supabase Auth endpoints are also directly reachable with the public key; configure the provider's own limits in [Supabase Authentication > Rate Limits](https://supabase.com/dashboard/project/_/auth/rate-limits), and keep public sign-ups disabled there as well.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

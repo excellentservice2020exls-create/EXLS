@@ -25,7 +25,7 @@ export default async function MissionsPage() {
           <h1 className="mt-2 text-3xl font-bold text-slate-900">Planification des missions</h1>
         </div>
         {hasPermission(user, "missions:create") && (
-          <Link href="/missions/new" className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-500">
+          <Link href="/admin/missions/new" className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-500">
             + Nouvelle mission
           </Link>
         )}

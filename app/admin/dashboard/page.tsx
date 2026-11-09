@@ -40,7 +40,7 @@ export default async function DashboardPage() {
           <p className="text-sm font-medium uppercase tracking-[0.2em] text-emerald-700">EXLS</p>
           <h1 className="mt-2 text-3xl font-bold text-slate-900">Tableau de bord</h1>
         </div>
-        <Link href="/missions/new" className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-emerald-500">
+        <Link href="/admin/missions/new" className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-emerald-500">
           + Nouvelle mission
         </Link>
       </header>

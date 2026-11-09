@@ -74,7 +74,7 @@ export default async function AccountPage({
   return (
     <main className="min-h-screen bg-slate-950 px-4 py-10 text-slate-100 sm:px-8">
       <SessionExpiry
-        expiresInMs={Math.max(0, user.expiresAt.getTime() - Date.now())}
+        expiresAtMs={user.expiresAt.getTime()}
       />
       <div className="mx-auto max-w-3xl">
         <header className="flex flex-wrap items-center justify-between gap-5 border-b border-slate-800 pb-6">

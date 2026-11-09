@@ -58,5 +58,5 @@ export async function createShift(formData: FormData) {
     status: "SCHEDULED",
   });
 
-  redirect("/missions");
+  redirect("/admin/missions");
 }

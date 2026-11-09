@@ -44,7 +44,7 @@ export async function RoleDashboard({ role }: { role: ErpRole }) {
   return (
     <div className="space-y-8">
       <SessionExpiry
-        expiresInMs={Math.max(0, user.sessionExpiresAt.getTime() - Date.now())}
+        expiresAtMs={user.sessionExpiresAt.getTime()}
       />
       <header>
         <p className="text-sm font-medium uppercase tracking-[0.2em] text-emerald-700">EXLS · {role.replaceAll("_", " ")}</p>

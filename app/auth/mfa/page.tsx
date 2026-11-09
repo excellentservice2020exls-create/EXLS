@@ -28,7 +28,7 @@ export default async function MfaPage() {
   return (
     <>
       <SessionExpiry
-        expiresInMs={Math.max(0, user.expiresAt.getTime() - Date.now())}
+        expiresAtMs={user.expiresAt.getTime()}
       />
       <MfaChallenge />
     </>

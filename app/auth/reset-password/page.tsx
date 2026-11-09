@@ -15,7 +15,7 @@ export default async function ResetPasswordPage() {
   return (
     <>
       <SessionExpiry
-        expiresInMs={Math.max(0, user.expiresAt.getTime() - Date.now())}
+        expiresAtMs={user.expiresAt.getTime()}
       />
       <AuthShell
         description="Choisissez un nouveau mot de passe pour votre compte."

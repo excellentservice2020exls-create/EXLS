@@ -4,11 +4,11 @@
 
 import { useEffect } from "react";
 
-export function SessionExpiry({ expiresInMs }: { expiresInMs: number }) {
+export function SessionExpiry({ expiresAtMs }: { expiresAtMs: number }) {
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
     let expired = false;
-    const deadline = performance.now() + expiresInMs;
+    const deadline = performance.now() + expiresAtMs - Date.now();
 
     function expireSession() {
       if (expired) return;
@@ -36,7 +36,7 @@ export function SessionExpiry({ expiresInMs }: { expiresInMs: number }) {
       document.removeEventListener("visibilitychange", checkExpiration);
       window.removeEventListener("focus", checkExpiration);
     };
-  }, [expiresInMs]);
+  }, [expiresAtMs]);
 
   return null;
 }

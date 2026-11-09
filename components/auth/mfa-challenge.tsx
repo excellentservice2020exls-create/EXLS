@@ -1,3 +1,5 @@
+// components/auth/mfa-challenge.tsx
+
 "use client";
 
 import Link from "next/link";

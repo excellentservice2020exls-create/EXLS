@@ -1,3 +1,5 @@
+// components/erp/agent-tabs.tsx
+
 import Link from "next/link";
 
 type AgentTab = "active" | "all" | "new" | "search" | "inactive";

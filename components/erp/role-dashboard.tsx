@@ -1,3 +1,5 @@
+// components/erp/role-dashboard.tsx
+
 import Link from "next/link";
 import { getAccessibleShifts, getAttendanceForShift, getDashboardStats, getSiteById } from "@/lib/erp-data";
 import { getAppDataScope, hasPermission, requireRole, type ErpRole, type Permission } from "@/lib/erp-auth";

@@ -1,3 +1,5 @@
+// components/auth/password-change-form.tsx
+
 "use client";
 
 import { useState, type FormEvent } from "react";

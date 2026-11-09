@@ -1,3 +1,5 @@
+// components/auth/session-expiry.tsx
+
 "use client";
 
 import { useEffect } from "react";

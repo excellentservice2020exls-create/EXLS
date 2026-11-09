@@ -1,3 +1,5 @@
+// components/erp/client-tabs.tsx
+
 import Link from "next/link";
 
 type ClientTabsProps = {

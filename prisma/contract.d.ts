@@ -23,7 +23,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'768212131dbd26d0ac4a1758b88945ecde2da736a26889847a670bf6f3742ed2'>;
+  StorageHashBase<'b6791ba92248d0201c5c2952fbb3a559a4ecd1f485d653064924a21c0f9a0177'>;
 export type ExecutionHash =
   ExecutionHashBase<'208d9314964e36a4a0c6ad187ffa612cde34f8666ed4075275f6d48d14c354ff'>;
 export type ProfileHash =
@@ -4154,6 +4154,7 @@ type ContractBase = Omit<
                 'SUPER_ADMIN',
                 'ADMIN',
                 'MANAGER',
+                'DIRECTOR',
                 'SUPERVISOR',
                 'TEAM_LEADER',
                 'AGENT',

@@ -99,6 +99,28 @@ export default async function NewEmployeePage({
 
       <AgentTabs active="new" />
 
+      <nav aria-label="Accès aux formulaires" className="flex flex-wrap items-center gap-2 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm text-sm">
+        <span className="font-semibold text-slate-500 mr-1">Formulaires :</span>
+        <a
+          href="#application-form"
+          className="rounded-xl bg-slate-100 px-3.5 py-1.5 font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 transition"
+        >
+          1. Formulaire de candidature
+        </a>
+        <a
+          href="#identity-form"
+          className="rounded-xl bg-slate-100 px-3.5 py-1.5 font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 transition"
+        >
+          2. Formulaire d’identité
+        </a>
+        <a
+          href="#documents-form"
+          className="rounded-xl bg-emerald-100 px-3.5 py-1.5 font-semibold text-emerald-800 hover:bg-emerald-200 transition"
+        >
+          3. Dossier de l’agent (Documents d’embauche)
+        </a>
+      </nav>
+
       {errorMessage && (
         <p role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
           {errorMessage}
@@ -112,7 +134,10 @@ export default async function NewEmployeePage({
 
       <section id="application-form" className="space-y-4">
         <div>
-          <h2 className="text-xl font-semibold text-slate-900">Formulaire de candidature</h2>
+          <p className="text-xs font-bold uppercase tracking-wider text-emerald-700">Formulaire 1</p>
+          <h2 className="mt-1 text-2xl font-bold uppercase tracking-tight text-slate-900">
+            Formulaire de candidature
+          </h2>
           <p className="mt-1 text-sm text-slate-600">
             Enregistrez le dossier de candidature. Il sera ajouté à la liste des agents actifs.
           </p>
@@ -148,9 +173,12 @@ export default async function NewEmployeePage({
         </form>
       </section>
 
-      <section id="identity-form" className="space-y-4 pt-4">
-        <div>
-          <h2 className="text-xl font-semibold text-slate-900">Formulaire d’identité</h2>
+      <section id="identity-form" className="space-y-4 pt-6">
+        <div className="border-t border-slate-200 pt-6">
+          <p className="text-xs font-bold uppercase tracking-wider text-emerald-700">Formulaire 2</p>
+          <h2 className="mt-1 text-2xl font-bold uppercase tracking-tight text-slate-900">
+            Formulaire d’identité
+          </h2>
           <p className="mt-1 text-sm text-slate-600">
             Ce dossier est enregistré séparément et rattaché à une candidature existante.
           </p>
@@ -238,12 +266,28 @@ export default async function NewEmployeePage({
         </form>
       </section>
 
-      <section id="documents-form" className="space-y-4 pt-4">
-        <div>
-          <h2 className="text-xl font-semibold text-slate-900">Dossier de l’agent</h2>
+      <section id="documents-form" className="space-y-4 pt-6">
+        <div className="border-t border-slate-200 pt-6">
+          <p className="text-xs font-bold uppercase tracking-wider text-emerald-700">Formulaire 3</p>
+          <h2 className="mt-1 text-2xl font-bold uppercase tracking-tight text-slate-900">
+            DOSSIER DE L’AGENT
+          </h2>
           <p className="mt-1 text-sm text-slate-600">
-            Veuillez adjoindre les photocopies de documents ci-après :
+            Ce formulaire sert de porte d’entrée des documents que l’agent doit fournir lors de son embauche :
           </p>
+        </div>
+
+        <div className="rounded-2xl border border-emerald-200 bg-emerald-50/70 p-5 shadow-xs">
+          <p className="text-sm font-semibold text-emerald-950">
+            « Veuillez adjoindre les photocopies de documents ci-après : »
+          </p>
+          <ul className="mt-2.5 grid gap-1.5 pl-5 text-sm text-emerald-900 list-disc">
+            <li>Curriculum vitae actualisé</li>
+            <li>Carte d’identité valide ou passeport en cours ou PV de la police</li>
+            <li>Photos passeport (deux)</li>
+            <li>Diplôme d’état ou document similaire ou équivalent</li>
+            <li>Attestation de bonne vie et mœurs</li>
+          </ul>
         </div>
         <form
           action={uploadAgentDocuments}
@@ -276,9 +320,9 @@ export default async function NewEmployeePage({
           <p className="text-sm text-slate-600">
             Formats acceptés : PDF, JPG ou PNG. Taille maximale : 5 Mo par fichier.
           </p>
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid gap-5 md:grid-cols-2">
             <label className="space-y-2 text-sm text-slate-600">
-              <span>CURRICULUM VITAE ACTUALISÉ</span>
+              <span className="font-semibold text-slate-700">1. CURRICULUM VITAE ACTUALISÉ</span>
               <input
                 name="curriculumVitae"
                 type="file"
@@ -287,8 +331,9 @@ export default async function NewEmployeePage({
                 className={inputClass}
               />
             </label>
+
             <label className="space-y-2 text-sm text-slate-600">
-              <span>PIÈCE D’IDENTITÉ</span>
+              <span className="font-semibold text-slate-700">2. CARTE D’IDENTITÉ VALIDE OU PASSEPORT EN COURS OU PV DE LA POLICE</span>
               <select
                 name="identityDocumentType"
                 required
@@ -297,7 +342,7 @@ export default async function NewEmployeePage({
               >
                 <option value="identity-card">Carte d’identité valide</option>
                 <option value="passport">Passeport en cours de validité</option>
-                <option value="police-report">Procès-verbal de la police</option>
+                <option value="police-report">PV de la police (procès-verbal)</option>
               </select>
               <input
                 name="identityDocument"
@@ -308,8 +353,9 @@ export default async function NewEmployeePage({
                 className={inputClass}
               />
             </label>
+
             <label className="space-y-2 text-sm text-slate-600">
-              <span>PHOTO PASSEPORT 1</span>
+              <span className="font-semibold text-slate-700">3. PHOTOS PASSEPORT (DEUX) — PREMIÈRE PHOTO</span>
               <input
                 name="passportPhoto1"
                 type="file"
@@ -318,8 +364,9 @@ export default async function NewEmployeePage({
                 className={inputClass}
               />
             </label>
+
             <label className="space-y-2 text-sm text-slate-600">
-              <span>PHOTO PASSEPORT 2</span>
+              <span className="font-semibold text-slate-700">3. PHOTOS PASSEPORT (DEUX) — DEUXIÈME PHOTO</span>
               <input
                 name="passportPhoto2"
                 type="file"
@@ -328,8 +375,9 @@ export default async function NewEmployeePage({
                 className={inputClass}
               />
             </label>
+
             <label className="space-y-2 text-sm text-slate-600">
-              <span>DIPLÔME D’ÉTAT OU DOCUMENT SIMILAIRE / ÉQUIVALENT</span>
+              <span className="font-semibold text-slate-700">4. DIPLÔME D’ÉTAT OU DOCUMENT SIMILAIRE OU ÉQUIVALENT</span>
               <input
                 name="diploma"
                 type="file"
@@ -338,8 +386,9 @@ export default async function NewEmployeePage({
                 className={inputClass}
               />
             </label>
+
             <label className="space-y-2 text-sm text-slate-600">
-              <span>ATTESTATION DE BONNE VIE ET MŒURS</span>
+              <span className="font-semibold text-slate-700">5. ATTESTATION DE BONNE VIE ET MŒURS</span>
               <input
                 name="goodConductCertificate"
                 type="file"
@@ -349,13 +398,20 @@ export default async function NewEmployeePage({
               />
             </label>
           </div>
-          <div className="flex justify-end">
+
+          <div className="flex justify-end gap-3 pt-2">
+            <Link
+              href="/admin/employees"
+              className="rounded-xl border border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 transition"
+            >
+              Annuler
+            </Link>
             <button
               type="submit"
               disabled={documentApplications.length === 0}
-              className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-50 transition"
             >
-              Téléverser les documents
+              Enregistrer le dossier de l’agent
             </button>
           </div>
         </form>

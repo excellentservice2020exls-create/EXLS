@@ -3,12 +3,66 @@
 import { redirect } from "next/navigation";
 import { db } from "@/prisma/db";
 import { requirePermission } from "@/lib/erp-auth";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { isUuidV7 } from "@/lib/utils";
 
 const genders = ["FEMININ", "MASCULIN", "AUTRE"] as const;
+const allowedIdentityDocumentTypes = [
+  "identity-card",
+  "passport",
+  "police-report",
+] as const;
+const maxDocumentSize = 5 * 1024 * 1024;
+const documentBucket = "agent-documents";
 
 function field(formData: FormData, name: string) {
   return String(formData.get(name) ?? "").trim();
+}
+
+function uploadedFile(formData: FormData, name: string) {
+  const value = formData.get(name);
+  return value instanceof File && value.size > 0 ? value : null;
+}
+
+function isAllowedIdentityDocumentType(
+  value: string,
+): value is (typeof allowedIdentityDocumentTypes)[number] {
+  return allowedIdentityDocumentTypes.some((type) => type === value);
+}
+
+async function getDocumentContentType(file: File, imagesOnly = false) {
+  if (file.size > maxDocumentSize) {
+    return "too-large" as const;
+  }
+
+  const header = new Uint8Array(await file.slice(0, 8).arrayBuffer());
+  const isPdf =
+    header.length >= 5 &&
+    header[0] === 0x25 &&
+    header[1] === 0x50 &&
+    header[2] === 0x44 &&
+    header[3] === 0x46 &&
+    header[4] === 0x2d;
+  const isJpeg =
+    header.length >= 3 &&
+    header[0] === 0xff &&
+    header[1] === 0xd8 &&
+    header[2] === 0xff;
+  const isPng =
+    header.length >= 8 &&
+    header[0] === 0x89 &&
+    header[1] === 0x50 &&
+    header[2] === 0x4e &&
+    header[3] === 0x47 &&
+    header[4] === 0x0d &&
+    header[5] === 0x0a &&
+    header[6] === 0x1a &&
+    header[7] === 0x0a;
+
+  if (isPdf && !imagesOnly) return "application/pdf";
+  if (isJpeg) return "image/jpeg";
+  if (isPng) return "image/png";
+  return null;
 }
 
 function isDate(value: string) {
@@ -48,7 +102,7 @@ export async function createAgentApplication(formData: FormData) {
     !phone ||
     !educationLevel
   ) {
-    redirect("/employees/new?error=application-invalid#application-form");
+    redirect("/admin/employees/new?error=application-invalid#application-form");
   }
 
   await db.orm.public.AgentApplication.create({
@@ -67,7 +121,7 @@ export async function createAgentApplication(formData: FormData) {
     status: "ACTIVE",
   });
 
-  redirect("/employees?tab=all&status=application-created");
+  redirect("/admin/employees?tab=all&status=application-created");
 }
 
 export async function createAgentIdentity(formData: FormData) {
@@ -101,7 +155,7 @@ export async function createAgentIdentity(formData: FormData) {
     !field(formData, "motherName") ||
     !field(formData, "residentialAddress")
   ) {
-    redirect("/employees/new?error=identity-invalid#identity-form");
+    redirect("/admin/employees/new?error=identity-invalid#identity-form");
   }
 
   const application = await db.orm.public.AgentApplication
@@ -109,7 +163,7 @@ export async function createAgentIdentity(formData: FormData) {
     .select("id")
     .first();
   if (!application) {
-    redirect("/employees/new?error=application-missing#identity-form");
+    redirect("/admin/employees/new?error=application-missing#identity-form");
   }
 
   const existingIdentity = await db.orm.public.AgentIdentity
@@ -117,7 +171,7 @@ export async function createAgentIdentity(formData: FormData) {
     .select("id")
     .first();
   if (existingIdentity) {
-    redirect("/employees/new?error=identity-exists#identity-form");
+    redirect("/admin/employees/new?error=identity-exists#identity-form");
   }
 
   await db.orm.public.AgentIdentity.create({
@@ -146,7 +200,78 @@ export async function createAgentIdentity(formData: FormData) {
     spokenLanguages: field(formData, "spokenLanguages") || null,
   });
 
-  redirect("/employees?tab=all&status=identity-created");
+  redirect("/admin/employees?tab=all&status=identity-created");
+}
+
+export async function uploadAgentDocuments(formData: FormData) {
+  await requirePermission("employees:create");
+  const agentApplicationId = field(formData, "agentApplicationId");
+  const identityDocumentType = field(formData, "identityDocumentType");
+
+  if (
+    !isUuidV7(agentApplicationId) ||
+    !isAllowedIdentityDocumentType(identityDocumentType)
+  ) {
+    redirect("/admin/employees/new?error=documents-invalid#documents-form");
+  }
+
+  const application = await db.orm.public.AgentApplication
+    .where({ id: agentApplicationId })
+    .select("id")
+    .first();
+  if (!application) {
+    redirect("/admin/employees/new?error=application-missing#documents-form");
+  }
+
+  const files = [
+    { name: "curriculumVitae", key: "curriculum-vitae", imagesOnly: false },
+    {
+      name: "identityDocument",
+      key: "identity-document",
+      imagesOnly: false,
+    },
+    { name: "passportPhoto1", key: "passport-photo-1", imagesOnly: true },
+    { name: "passportPhoto2", key: "passport-photo-2", imagesOnly: true },
+    { name: "diploma", key: "diploma", imagesOnly: false },
+    { name: "goodConductCertificate", key: "good-conduct-certificate", imagesOnly: false },
+  ].map((document) => ({
+    ...document,
+    file: uploadedFile(formData, document.name),
+  }));
+
+  if (files.some(({ file }) => !file)) {
+    redirect("/admin/employees/new?error=documents-invalid#documents-form");
+  }
+
+  const validatedFiles = [];
+  for (const { file, ...document } of files) {
+    if (!file) {
+      redirect("/admin/employees/new?error=documents-invalid#documents-form");
+    }
+    const contentType = await getDocumentContentType(file, document.imagesOnly);
+    if (contentType === "too-large") {
+      redirect("/admin/employees/new?error=document-too-large#documents-form");
+    }
+    if (!contentType) {
+      redirect("/admin/employees/new?error=documents-invalid#documents-form");
+    }
+    validatedFiles.push({ ...document, file, contentType });
+  }
+
+  const storage = createAdminClient().storage.from(documentBucket);
+  for (const { key, file, contentType } of validatedFiles) {
+    const { error } = await storage.upload(
+      `${agentApplicationId}/${key}`,
+      file,
+      { contentType, upsert: true },
+    );
+    if (error) {
+      console.error("Failed to upload agent document.", error);
+      redirect("/admin/employees/new?error=document-upload-failed#documents-form");
+    }
+  }
+
+  redirect("/admin/employees/new?status=documents-uploaded#documents-form");
 }
 
 export async function changeAgentStatus(
@@ -158,14 +283,14 @@ export async function changeAgentStatus(
     (source !== "application" && source !== "account") ||
     (status !== "ACTIVE" && status !== "ARCHIVED")
   ) {
-    redirect("/employees");
+    redirect("/admin/employees");
   }
 
   await requirePermission(
     status === "ACTIVE" ? "employees:restore" : "employees:archive",
   );
   if (!isUuidV7(applicationId)) {
-    redirect("/employees");
+    redirect("/admin/employees");
   }
 
   if (source === "application") {
@@ -174,7 +299,7 @@ export async function changeAgentStatus(
       .select("id")
       .first();
     if (!application) {
-      redirect("/employees");
+      redirect("/admin/employees");
     }
 
     await db.orm.public.AgentApplication
@@ -186,7 +311,7 @@ export async function changeAgentStatus(
       .select("id")
       .first();
     if (!agent) {
-      redirect("/employees");
+      redirect("/admin/employees");
     }
 
     await db.orm.public.User
@@ -195,6 +320,6 @@ export async function changeAgentStatus(
   }
 
   redirect(
-    `/employees?tab=${status === "ACTIVE" ? "all" : "inactive"}&status=${status === "ACTIVE" ? "restored" : "archived"}`,
+    `/admin/employees?tab=${status === "ACTIVE" ? "all" : "inactive"}&status=${status === "ACTIVE" ? "restored" : "archived"}`,
   );
 }

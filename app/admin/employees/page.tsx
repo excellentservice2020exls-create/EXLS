@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
 
 export default async function EmployeesPage({
   searchParams,
-}: PageProps<"/employees">) {
+}: PageProps<"/admin/employees">) {
   const user = await requirePermission("employees:read");
   noStore();
   const [{ status, tab, q }, applications, identities, registeredAgents] = await Promise.all([
@@ -103,7 +103,7 @@ export default async function EmployeesPage({
       )}
 
       {activeTab === "search" && (
-        <form action="/employees" method="get" className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:flex-row">
+        <form action="/admin/employees" method="get" className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:flex-row">
           <input type="hidden" name="tab" value="search" />
           <label htmlFor="agent-search" className="sr-only">Rechercher un agent</label>
           <input

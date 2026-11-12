@@ -1,16 +1,24 @@
 import Link from "next/link";
 import { AgentTabs } from "@/components/erp/agent-tabs";
 import {
+  getAgentApplications,
   getAgentApplicationsWithoutIdentity,
 } from "@/lib/erp-data";
 import { requirePermission } from "@/lib/erp-auth";
-import { createAgentApplication, createAgentIdentity } from "../actions";
+import {
+  createAgentApplication,
+  createAgentIdentity,
+  uploadAgentDocuments,
+} from "../actions";
 
 const errorMessages: Record<string, string> = {
   "application-invalid": "Vérifiez les champs obligatoires du formulaire de candidature.",
   "identity-invalid": "Vérifiez les champs obligatoires du formulaire d’identité.",
   "application-missing": "L’agent sélectionné n’existe plus. Choisissez un dossier valide.",
   "identity-exists": "Un dossier d’identité existe déjà pour cet agent.",
+  "documents-invalid": "Sélectionnez un agent et fournissez tous les documents dans un format accepté (PDF, JPG ou PNG).",
+  "document-too-large": "Chaque document doit peser au maximum 5 Mo.",
+  "document-upload-failed": "Le téléversement a échoué. Les fichiers déjà transférés peuvent être remplacés en renvoyant le dossier.",
 };
 
 const inputClass =
@@ -71,14 +79,16 @@ function GenderField() {
 
 export default async function NewEmployeePage({
   searchParams,
-}: PageProps<"/employees/new">) {
+}: PageProps<"/admin/employees/new">) {
   await requirePermission("employees:create");
-  const [{ error }, applications] = await Promise.all([
+  const [{ error, status }, applications, documentApplications] = await Promise.all([
     searchParams,
     getAgentApplicationsWithoutIdentity(),
+    getAgentApplications(),
   ]);
   const errorMessage =
     typeof error === "string" ? errorMessages[error] : undefined;
+  const documentsUploaded = status === "documents-uploaded";
 
   return (
     <div className="space-y-6">
@@ -92,6 +102,11 @@ export default async function NewEmployeePage({
       {errorMessage && (
         <p role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
           {errorMessage}
+        </p>
+      )}
+      {documentsUploaded && (
+        <p role="status" className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+          Les documents de l’agent ont été téléversés.
         </p>
       )}
 
@@ -209,7 +224,7 @@ export default async function NewEmployeePage({
             <TextAreaField name="spokenLanguages" label="LANGUES PARLÉES" />
           </div>
           <div className="flex justify-end gap-3">
-            <Link href="/employees" className="rounded-xl border border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-700">
+            <Link href="/admin/employees" className="rounded-xl border border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-700">
               Annuler
             </Link>
             <button
@@ -218,6 +233,129 @@ export default async function NewEmployeePage({
               className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-50"
             >
               Enregistrer le dossier d’identité
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <section id="documents-form" className="space-y-4 pt-4">
+        <div>
+          <h2 className="text-xl font-semibold text-slate-900">Dossier de l’agent</h2>
+          <p className="mt-1 text-sm text-slate-600">
+            Veuillez adjoindre les photocopies de documents ci-après :
+          </p>
+        </div>
+        <form
+          action={uploadAgentDocuments}
+          encType="multipart/form-data"
+          className="space-y-5 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+        >
+          <label className="block space-y-2 text-sm text-slate-600">
+            <span>AGENT CONCERNÉ</span>
+            <select
+              name="agentApplicationId"
+              required
+              defaultValue=""
+              disabled={documentApplications.length === 0}
+              className={inputClass}
+            >
+              <option value="" disabled>Sélectionner un agent</option>
+              {documentApplications.map((application) => (
+                <option key={String(application.id)} value={String(application.id)}>
+                  {application.lastName} {application.postName} {application.firstName} — {application.phone}
+                </option>
+              ))}
+            </select>
+            {documentApplications.length === 0 && (
+              <span className="block text-amber-700">
+                Enregistrez d’abord une candidature pour pouvoir joindre ses documents.
+              </span>
+            )}
+          </label>
+
+          <p className="text-sm text-slate-600">
+            Formats acceptés : PDF, JPG ou PNG. Taille maximale : 5 Mo par fichier.
+          </p>
+          <div className="grid gap-4 md:grid-cols-2">
+            <label className="space-y-2 text-sm text-slate-600">
+              <span>CURRICULUM VITAE ACTUALISÉ</span>
+              <input
+                name="curriculumVitae"
+                type="file"
+                accept="application/pdf,image/jpeg,image/png"
+                required
+                className={inputClass}
+              />
+            </label>
+            <label className="space-y-2 text-sm text-slate-600">
+              <span>PIÈCE D’IDENTITÉ</span>
+              <select
+                name="identityDocumentType"
+                required
+                defaultValue="identity-card"
+                className={inputClass}
+              >
+                <option value="identity-card">Carte d’identité valide</option>
+                <option value="passport">Passeport en cours de validité</option>
+                <option value="police-report">Procès-verbal de la police</option>
+              </select>
+              <input
+                name="identityDocument"
+                type="file"
+                accept="application/pdf,image/jpeg,image/png"
+                required
+                aria-label="Photocopie de la pièce d’identité choisie"
+                className={inputClass}
+              />
+            </label>
+            <label className="space-y-2 text-sm text-slate-600">
+              <span>PHOTO PASSEPORT 1</span>
+              <input
+                name="passportPhoto1"
+                type="file"
+                accept="image/jpeg,image/png"
+                required
+                className={inputClass}
+              />
+            </label>
+            <label className="space-y-2 text-sm text-slate-600">
+              <span>PHOTO PASSEPORT 2</span>
+              <input
+                name="passportPhoto2"
+                type="file"
+                accept="image/jpeg,image/png"
+                required
+                className={inputClass}
+              />
+            </label>
+            <label className="space-y-2 text-sm text-slate-600">
+              <span>DIPLÔME D’ÉTAT OU DOCUMENT SIMILAIRE / ÉQUIVALENT</span>
+              <input
+                name="diploma"
+                type="file"
+                accept="application/pdf,image/jpeg,image/png"
+                required
+                className={inputClass}
+              />
+            </label>
+            <label className="space-y-2 text-sm text-slate-600">
+              <span>ATTESTATION DE BONNE VIE ET MŒURS</span>
+              <input
+                name="goodConductCertificate"
+                type="file"
+                accept="application/pdf,image/jpeg,image/png"
+                required
+                className={inputClass}
+              />
+            </label>
+          </div>
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              disabled={documentApplications.length === 0}
+              className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              Téléverser les documents
             </button>
           </div>
         </form>

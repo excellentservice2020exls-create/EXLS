@@ -5,11 +5,11 @@ import Link from "next/link";
 type AgentTab = "active" | "all" | "new" | "search" | "inactive";
 
 const tabs: { id: AgentTab; label: string; href: string }[] = [
-  { id: "active", label: "AGENT ACTIF", href: "/employees?tab=active" },
-  { id: "all", label: "LISTE AGENT", href: "/employees?tab=all" },
-  { id: "new", label: "NOUVEAU AGENT", href: "/employees/new" },
-  { id: "search", label: "RECHERCHE AGENT", href: "/employees?tab=search" },
-  { id: "inactive", label: "AGENT NON-ACTIF", href: "/employees?tab=inactive" },
+  { id: "active", label: "AGENT ACTIF", href: "/admin/employees?tab=active" },
+  { id: "all", label: "LISTE AGENT", href: "/admin/employees?tab=all" },
+  { id: "new", label: "NOUVEAU AGENT", href: "/admin/employees/new" },
+  { id: "search", label: "RECHERCHE AGENT", href: "/admin/employees?tab=search" },
+  { id: "inactive", label: "AGENT NON-ACTIF", href: "/admin/employees?tab=inactive" },
 ];
 
 export function AgentTabs({ active }: { active: AgentTab }) {

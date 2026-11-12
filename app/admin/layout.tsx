@@ -2,6 +2,7 @@ import Link from "next/link";
 import { requireRole } from "@/lib/erp-auth";
 import { SessionExpiry } from "@/components/auth/session-expiry";
 import { adminModuleTitle } from "@/components/admin/admin-module";
+import { AdminNavigation } from "@/components/admin/admin-navigation";
 
 export default async function AdminLayout({
   children,
@@ -29,29 +30,12 @@ export default async function AdminLayout({
           </Link>
         </div>
 
-        <nav className="flex flex-wrap gap-2 px-4 py-4 md:flex-1 md:flex-col md:gap-1 md:py-6">
-          <Link
-            href="/admin"
-            className="rounded-xl px-3 py-2 text-sm font-medium text-slate-300 transition hover:bg-slate-800 hover:text-white"
-          >
-            Accueil admin
-          </Link>
-                 
-          {adminModuleTitle()
-            .filter(
-              ({ title }) =>
-                title !== "Sécurité" || user.roles.includes("SUPER_ADMIN"),
-            )
-            .map(({ title, href }) => (
-              <Link
-                key={href}
-                href={href}
-                className="rounded-xl px-3 py-2 text-sm font-medium text-slate-300 transition hover:bg-slate-800 hover:text-white"
-              >
-                {title}
-              </Link>
-            ))}
-        </nav>
+        <AdminNavigation
+          modules={adminModuleTitle().filter(
+            ({ title }) =>
+              title !== "Sécurité" || user.roles.includes("SUPER_ADMIN"),
+          )}
+        />
 
         <div className="hidden border-t border-slate-800 px-4 py-4 text-sm text-slate-300 md:block">
           <p className="font-medium text-white">{user.name}</p>

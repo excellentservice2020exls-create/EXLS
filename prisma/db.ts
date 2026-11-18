@@ -6,8 +6,23 @@ import contractJson from './contract.json' with { type: 'json' };
 
 export const contract = contractFromJson<Contract>(contractJson);
 
-export const db = postgres({
-  contract,
-  url: process.env['DATABASE_URL']!,
-});
+type PrismaPostgresClient = ReturnType<typeof postgres>;
 
+const globalForPrisma = globalThis as unknown as {
+  prismaDb?: PrismaPostgresClient;
+};
+
+export const db: PrismaPostgresClient =
+  globalForPrisma.prismaDb ??
+  postgres({
+    contract,
+    url: process.env['DATABASE_URL']!,
+    poolOptions: {
+      connectionTimeoutMillis: 30_000,
+      idleTimeoutMillis: 30_000,
+    },
+  });
+
+if (process.env.NODE_ENV !== 'production') {
+  globalForPrisma.prismaDb = db;
+}

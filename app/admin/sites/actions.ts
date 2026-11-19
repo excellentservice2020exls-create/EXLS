@@ -18,16 +18,27 @@ type SiteInput = {
   isActive: boolean;
 };
 
-function readSiteInput(formData: FormData): SiteInput | null {
+function readSiteInput(
+  formData: FormData,
+  includeSiteSettings: boolean,
+): SiteInput | null {
   const name = String(formData.get("name") ?? "").trim();
   const code = String(formData.get("code") ?? "").trim().toUpperCase();
   const clientId = String(formData.get("clientId") ?? "");
   const address = String(formData.get("address") ?? "").trim();
   const city = String(formData.get("city") ?? "").trim();
-  const postalCode = String(formData.get("postalCode") ?? "").trim();
-  const latitudeValue = String(formData.get("latitude") ?? "").trim();
-  const longitudeValue = String(formData.get("longitude") ?? "").trim();
-  const geofenceRadius = Number(formData.get("geofenceRadius"));
+  const postalCode = includeSiteSettings
+    ? String(formData.get("postalCode") ?? "").trim()
+    : "";
+  const latitudeValue = includeSiteSettings
+    ? String(formData.get("latitude") ?? "").trim()
+    : "";
+  const longitudeValue = includeSiteSettings
+    ? String(formData.get("longitude") ?? "").trim()
+    : "";
+  const geofenceRadius = includeSiteSettings
+    ? Number(formData.get("geofenceRadius"))
+    : 100;
   const latitude = latitudeValue === "" ? null : Number(latitudeValue);
   const longitude = longitudeValue === "" ? null : Number(longitudeValue);
 
@@ -37,7 +48,7 @@ function readSiteInput(formData: FormData): SiteInput | null {
     !isUuidV7(clientId) ||
     address.length < 2 || address.length > 240 ||
     city.length < 2 || city.length > 100 ||
-    postalCode.length < 1 || postalCode.length > 20 ||
+    (includeSiteSettings && (postalCode.length < 1 || postalCode.length > 20)) ||
     !Number.isInteger(geofenceRadius) || geofenceRadius < 10 || geofenceRadius > 5000 ||
     (latitude === null) !== (longitude === null) ||
     (latitude !== null && (!Number.isFinite(latitude) || latitude < -90 || latitude > 90)) ||
@@ -78,25 +89,25 @@ async function validateSiteReferences(input: SiteInput, currentSiteId?: string) 
 
 export async function createSite(formData: FormData) {
   await requirePermission("sites:create");
-  const input = readSiteInput(formData);
+  const input = readSiteInput(formData, false);
   if (!input) {
-    redirect("/sites/new?error=invalid");
+    redirect("/admin/sites/new?error=invalid");
   }
 
   const referenceError = await validateSiteReferences(input);
   if (referenceError) {
-    redirect(`/sites/new?error=${referenceError}`);
+    redirect(`/admin/sites/new?error=${referenceError}`);
   }
 
   await db.orm.public.Site.create(input);
-  redirect("/sites?status=created");
+  redirect("/admin/sites?status=created");
 }
 
 export async function updateSite(siteId: string, formData: FormData) {
   await requirePermission("sites:update");
   const parsedSiteId = siteId;
   if (!isUuidV7(parsedSiteId)) {
-    redirect("/sites?error=not-found");
+    redirect("/admin/sites?error=not-found");
   }
 
   const existingSite = await db.orm.public.Site
@@ -104,19 +115,19 @@ export async function updateSite(siteId: string, formData: FormData) {
     .select("id")
     .first();
   if (!existingSite) {
-    redirect("/sites?error=not-found");
+    redirect("/admin/sites?error=not-found");
   }
 
-  const input = readSiteInput(formData);
+  const input = readSiteInput(formData, true);
   if (!input) {
-    redirect(`/sites/${parsedSiteId}/edit?error=invalid`);
+    redirect(`/admin/sites/${parsedSiteId}/edit?error=invalid`);
   }
 
   const referenceError = await validateSiteReferences(input, parsedSiteId);
   if (referenceError) {
-    redirect(`/sites/${parsedSiteId}/edit?error=${referenceError}`);
+    redirect(`/admin/sites/${parsedSiteId}/edit?error=${referenceError}`);
   }
 
   await db.orm.public.Site.where({ id: parsedSiteId }).update(input);
-  redirect("/sites?status=updated");
+  redirect("/admin/sites?status=updated");
 }

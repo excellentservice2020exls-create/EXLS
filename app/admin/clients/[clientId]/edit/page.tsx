@@ -9,7 +9,7 @@ import { updateClient } from "../../actions";
 export default async function EditClientPage({
   params,
   searchParams,
-}: PageProps<"/clients/[clientId]/edit">) {
+}: PageProps<"/admin/clients/[clientId]/edit">) {
   const user = await requirePermission("clients:update");
   const [{ clientId }, { error }] = await Promise.all([params, searchParams]);
   const id = clientId;
@@ -87,7 +87,7 @@ export default async function EditClientPage({
           Client actif
         </label>
         <div className="flex justify-end gap-3 pt-2">
-          <Link href="/clients" className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700">Annuler</Link>
+          <Link href="/admin/clients" className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700">Annuler</Link>
           <button type="submit" className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-500">Enregistrer</button>
         </div>
       </form>

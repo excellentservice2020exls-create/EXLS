@@ -4,7 +4,7 @@ import { ClientTabs } from "@/components/erp/client-tabs";
 
 export default async function NewClientPage({
   searchParams,
-}: PageProps<"/clients/new">) {
+}: PageProps<"/admin/clients/new">) {
   const user = await requirePermission("clients:create");
   const { error } = await searchParams;
   const createdAt = new Date();

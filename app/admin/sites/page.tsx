@@ -35,7 +35,7 @@ export default async function SitesPage({
           <p className="mt-2 text-sm text-slate-600">{sites.length} site{sites.length === 1 ? "" : "s"} enregistré{sites.length === 1 ? "" : "s"}</p>
         </div>
         {hasPermission(user, "sites:create") && (
-          <Link href="/sites/new" className="shrink-0 rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-500">
+          <Link href="/admin/sites/new" className="shrink-0 rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-500">
             + Nouveau site
           </Link>
         )}
@@ -93,7 +93,7 @@ export default async function SitesPage({
                       </td>
                       <td className="px-4 py-4 text-right">
                         {hasPermission(user, "sites:update") && (
-                          <Link href={`/sites/${site.id}/edit`} className="font-medium text-emerald-700 hover:text-emerald-600">
+                          <Link href={`/admin/sites/${site.id}/edit`} className="font-medium text-emerald-700 hover:text-emerald-600">
                             Modifier
                           </Link>
                         )}

@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 
 export default async function ClientsPage({
   searchParams,
-}: PageProps<"/clients">) {
+}: PageProps<"/admin/clients">) {
   const user = await requirePermission("clients:read");
   noStore();
   const [{ status }, clients] = await Promise.all([searchParams, getClients()]);
@@ -29,7 +29,7 @@ export default async function ClientsPage({
           <h1 className="mt-2 text-3xl font-bold text-slate-900">Abonnés / Clients</h1>
         </div>
         {hasPermission(user, "clients:create") && (
-          <Link href="/clients/new" className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-500">
+          <Link href="/admin/clients/new" className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-500">
             + Nouveau client
           </Link>
         )}
@@ -73,7 +73,7 @@ export default async function ClientsPage({
               {(hasPermission(user, "clients:update") || hasPermission(user, "clients:archive")) && (
                 <div className="mt-5 flex justify-end gap-2 border-t border-slate-100 pt-4">
                   {hasPermission(user, "clients:update") && (
-                    <Link href={`/clients/${client.id}/edit`} className="cursor-pointer rounded-lg border border-amber-200 px-3 py-2 text-sm font-medium text-amber-800 hover:bg-amber-100">
+                    <Link href={`/admin/clients/${client.id}/edit`} className="cursor-pointer rounded-lg border border-amber-200 px-3 py-2 text-sm font-medium text-amber-800 hover:bg-amber-100">
                       Modifier
                     </Link>
                   )}

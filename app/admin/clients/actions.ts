@@ -16,7 +16,7 @@ export async function createClient(formData: FormData) {
   const postalCode = String(formData.get("postalCode") ?? "").trim();
 
   if (!name || !contactName) {
-    redirect("/clients/new?error=required-fields");
+    redirect("/admin/clients/new?error=required-fields");
   }
 
   const existingClients = await db.orm.public.Client.select("id").all();
@@ -38,20 +38,20 @@ export async function createClient(formData: FormData) {
     createdByName: user.name,
   });
 
-  redirect("/clients");
+  redirect("/admin/clients");
 }
 
 export async function updateClient(clientId: string, formData: FormData) {
   await requirePermission("clients:update");
   const id = clientId;
   if (!isUuidV7(id)) {
-    redirect("/clients");
+    redirect("/admin/clients");
   }
 
   const name = String(formData.get("name") ?? "").trim();
   const contactName = String(formData.get("contactName") ?? "").trim();
   if (!name || !contactName) {
-    redirect(`/clients/${id}/edit?error=required-fields`);
+    redirect(`/admin/clients/${id}/edit?error=required-fields`);
   }
 
   const client = await db.orm.public.Client
@@ -60,7 +60,7 @@ export async function updateClient(clientId: string, formData: FormData) {
     .select("id")
     .first();
   if (!client) {
-    redirect("/clients");
+    redirect("/admin/clients");
   }
 
   await db.orm.public.Client
@@ -78,14 +78,14 @@ export async function updateClient(clientId: string, formData: FormData) {
       updatedAt: new Date(),
     });
 
-  redirect("/clients?status=updated");
+  redirect("/admin/clients?status=updated");
 }
 
 export async function archiveClient(clientId: string) {
   await requirePermission("clients:archive");
   const id = clientId;
   if (!isUuidV7(id)) {
-    redirect("/clients");
+    redirect("/admin/clients");
   }
 
   const client = await db.orm.public.Client
@@ -94,7 +94,7 @@ export async function archiveClient(clientId: string) {
     .select("id")
     .first();
   if (!client) {
-    redirect("/clients");
+    redirect("/admin/clients");
   }
 
   await db.orm.public.Client
@@ -102,14 +102,14 @@ export async function archiveClient(clientId: string) {
     .where((currentClient) => currentClient.deletedAt.isNull())
     .update({ deletedAt: new Date() });
 
-  redirect("/clients?status=archived");
+  redirect("/admin/clients?status=archived");
 }
 
 export async function restoreClient(clientId: string) {
   await requirePermission("clients:restore");
   const id = clientId;
   if (!isUuidV7(id)) {
-    redirect("/clients/archives");
+    redirect("/admin/clients/archives");
   }
 
   const client = await db.orm.public.Client
@@ -118,7 +118,7 @@ export async function restoreClient(clientId: string) {
     .select("id")
     .first();
   if (!client) {
-    redirect("/clients/archives");
+    redirect("/admin/clients/archives");
   }
 
   await db.orm.public.Client
@@ -126,5 +126,5 @@ export async function restoreClient(clientId: string) {
     .where((currentClient) => currentClient.deletedAt.isNotNull())
     .update({ deletedAt: null });
 
-  redirect("/clients?status=restored");
+  redirect("/admin/clients?status=restored");
 }

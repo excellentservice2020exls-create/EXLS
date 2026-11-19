@@ -17,7 +17,7 @@ export default async function NewSitePage({
       <header>
         <p className="text-sm font-medium uppercase tracking-[0.2em] text-emerald-700">Implantations</p>
         <h1 className="mt-2 text-3xl font-bold text-slate-900">Nouveau site</h1>
-        <p className="mt-2 text-sm text-slate-600">Rattachez le site à un client et configurez son périmètre de géolocalisation.</p>
+        <p className="mt-2 text-sm text-slate-600">Rattachez le site à un client et renseignez son adresse.</p>
       </header>
       {clients.length === 0 && (
         <p className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">

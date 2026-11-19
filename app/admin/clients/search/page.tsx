@@ -13,7 +13,7 @@ function normalizeSearchValue(value: string) {
 
 export default async function ClientSearchPage({
   searchParams,
-}: PageProps<"/clients/search">) {
+}: PageProps<"/admin/clients/search">) {
   const user = await requirePermission("clients:read");
   const [{ q }, clients] = await Promise.all([searchParams, getClients()]);
   const query = typeof q === "string" ? q.trim() : "";
@@ -45,7 +45,7 @@ export default async function ClientSearchPage({
         canRead
       />
 
-      <form action="/clients/search" method="get" className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:flex-row">
+      <form action="/admin/clients/search" method="get" className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:flex-row">
         <label htmlFor="client-search" className="sr-only">Rechercher un client</label>
         <input
           id="client-search"

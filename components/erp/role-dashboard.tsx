@@ -18,8 +18,8 @@ const ROLE_CONTENT: Record<ErpRole, { title: string; intro: string }> = {
 const MODULES: { label: string; href: string; permission: Permission; description: string }[] = [
   { label: "Tableau de bord", href: "/dashboard", permission: "dashboard:read", description: "Indicateurs globaux et activité récente." },
   { label: "Équipe et agents", href: "/employees", permission: "employees:read", description: "Consulter les agents et les dossiers autorisés." },
-  { label: "Clients", href: "/clients", permission: "clients:read", description: "Gérer les comptes clients et leurs sites." },
-  { label: "Sites", href: "/sites", permission: "sites:read", description: "Consulter les sites opérationnels." },
+  { label: "Clients", href: "/admin/clients", permission: "clients:read", description: "Gérer les comptes clients et leurs sites." },
+  { label: "Sites", href: "/admin/sites", permission: "sites:read", description: "Consulter les sites opérationnels." },
   { label: "Missions", href: "/missions", permission: "missions:read", description: "Consulter les missions de votre périmètre." },
   { label: "Présences", href: "/attendance", permission: "attendance:read", description: "Enregistrer ou vérifier les pointages selon votre rôle." },
   { label: "Rapports", href: "/reports/day", permission: "reports:read", description: "Consulter les rapports du périmètre autorisé." },

@@ -575,6 +575,17 @@ namespace public {
     @@map("app_auth_sessions")
   }
 
+  model AuthSignInRateLimit {
+    keyHash         String                 @id(map: "auth_sign_in_rate_limits_pkey")
+    windowStartedAt DateTime(precision: 6)
+    requestCount    Int
+
+    @@index([windowStartedAt], map: "auth_sign_in_rate_limits_windowStartedAt_idx")
+    @@check(expression: sql`("requestCount" > 0)`, map: "auth_sign_in_rate_limits_requestCount_check")
+    @@rls
+    @@map("auth_sign_in_rate_limits")
+  }
+
   model SiteEquipment {
     id          Uuid      @id(map: "site_equipments_pkey") @onCreate(uuid(7))
     createdAt   DateTime  @default(now())

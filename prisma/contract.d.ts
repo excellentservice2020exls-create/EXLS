@@ -23,7 +23,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'b6791ba92248d0201c5c2952fbb3a559a4ecd1f485d653064924a21c0f9a0177'>;
+  StorageHashBase<'22871b24f6858f4540462468a3d9aade0f51c62ad602634ef0e26dd19d80a22b'>;
 export type ExecutionHash =
   ExecutionHashBase<'208d9314964e36a4a0c6ad187ffa612cde34f8666ed4075275f6d48d14c354ff'>;
 export type ProfileHash =
@@ -407,6 +407,12 @@ export namespace Models {
     shift: public_Shift;
     verifiedBy: public_User | null;
     readonly [RelationKeys]?: 'agent' | 'shift' | 'verifiedBy';
+  };
+  export type public_AuthSignInRateLimit = {
+    keyHash: FieldOutputTypes['public']['AuthSignInRateLimit']['keyHash'];
+    requestCount: FieldOutputTypes['public']['AuthSignInRateLimit']['requestCount'];
+    windowStartedAt: FieldOutputTypes['public']['AuthSignInRateLimit']['windowStartedAt'];
+    readonly [RelationKeys]?: never;
   };
   export type public_Checkpoint = {
     code: FieldOutputTypes['public']['Checkpoint']['code'];
@@ -845,6 +851,7 @@ export declare const models: {
     AgentIdentity: Models.public_AgentIdentity;
     AppAuthSession: Models.public_AppAuthSession;
     Attendance: Models.public_Attendance;
+    AuthSignInRateLimit: Models.public_AuthSignInRateLimit;
     Checkpoint: Models.public_Checkpoint;
     Client: Models.public_Client;
     ClientContract: Models.public_ClientContract;
@@ -1423,6 +1430,42 @@ type ContractBase = Omit<
                   readonly name: 'attendances_verifiedById_fkey';
                 },
               ];
+            };
+            readonly auth_sign_in_rate_limits: {
+              columns: {
+                readonly keyHash: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly requestCount: {
+                  readonly dataType: 'pg/int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly windowStartedAt: {
+                  readonly dataType: 'pg/timestamptz';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly precision: 6 };
+                  readonly many: false;
+                };
+              };
+              primaryKey: {
+                readonly columns: readonly ['keyHash'];
+                readonly name: 'auth_sign_in_rate_limits_pkey';
+              };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'auth_sign_in_rate_limits_windowStartedAt_idx';
+                  readonly columns: readonly ['windowStartedAt'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [];
             };
             readonly checkpoints: {
               columns: {
@@ -4154,7 +4197,6 @@ type ContractBase = Omit<
                 'SUPER_ADMIN',
                 'ADMIN',
                 'MANAGER',
-                'DIRECTOR',
                 'SUPERVISOR',
                 'TEAM_LEADER',
                 'AGENT',
@@ -4228,6 +4270,10 @@ type ContractBase = Omit<
     readonly attendances: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'Attendance';
+    };
+    readonly auth_sign_in_rate_limits: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'AuthSignInRateLimit';
     };
     readonly checkpoints: {
       readonly namespace: 'public' & NamespaceId;
@@ -4742,6 +4788,36 @@ type ContractBase = Omit<
                 readonly updatedAt: { readonly column: 'updatedAt' };
                 readonly verificationNotes: { readonly column: 'verificationNotes' };
                 readonly verifiedById: { readonly column: 'verifiedById' };
+              };
+            };
+          };
+          readonly AuthSignInRateLimit: {
+            readonly fields: {
+              readonly keyHash: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly requestCount: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly windowStartedAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly typeParams: { readonly precision: 6 };
+                };
+              };
+            };
+            readonly relations: Record<string, never>;
+            readonly storage: {
+              readonly table: 'auth_sign_in_rate_limits';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly keyHash: { readonly column: 'keyHash' };
+                readonly requestCount: { readonly column: 'requestCount' };
+                readonly windowStartedAt: { readonly column: 'windowStartedAt' };
               };
             };
           };

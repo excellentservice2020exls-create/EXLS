@@ -20,6 +20,10 @@
       "model": "Attendance",
       "namespace": "public"
     },
+    "auth_sign_in_rate_limits": {
+      "model": "AuthSignInRateLimit",
+      "namespace": "public"
+    },
     "checkpoints": {
       "model": "Checkpoint",
       "namespace": "public"
@@ -885,6 +889,50 @@
               },
               "namespaceId": "public",
               "table": "attendances"
+            }
+          },
+          "AuthSignInRateLimit": {
+            "fields": {
+              "keyHash": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "requestCount": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "windowStartedAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 6
+                  }
+                }
+              }
+            },
+            "relations": {},
+            "storage": {
+              "fields": {
+                "keyHash": {
+                  "column": "keyHash"
+                },
+                "requestCount": {
+                  "column": "requestCount"
+                },
+                "windowStartedAt": {
+                  "column": "windowStartedAt"
+                }
+              },
+              "namespaceId": "public",
+              "table": "auth_sign_in_rate_limits"
             }
           },
           "Checkpoint": {
@@ -5074,7 +5122,6 @@
                 "SUPER_ADMIN",
                 "ADMIN",
                 "MANAGER",
-                "DIRECTOR",
                 "SUPERVISOR",
                 "TEAM_LEADER",
                 "AGENT",
@@ -5147,6 +5194,11 @@
               "kind": "rls",
               "namespaceId": "public",
               "tableName": "attendances"
+            },
+            "auth_sign_in_rate_limits": {
+              "kind": "rls",
+              "namespaceId": "public",
+              "tableName": "auth_sign_in_rate_limits"
             },
             "checkpoints": {
               "kind": "rls",
@@ -5835,6 +5887,51 @@
                   "name": "attendances_shiftId_key"
                 }
               ]
+            },
+            "auth_sign_in_rate_limits": {
+              "checks": [
+                {
+                  "expression": "(\"requestCount\" > 0)",
+                  "name": "auth_sign_in_rate_limits_requestCount_check"
+                }
+              ],
+              "columns": {
+                "keyHash": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "requestCount": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "nullable": false
+                },
+                "windowStartedAt": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 6
+                  }
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [
+                {
+                  "columns": [
+                    "windowStartedAt"
+                  ],
+                  "name": "auth_sign_in_rate_limits_windowStartedAt_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "keyHash"
+                ],
+                "name": "auth_sign_in_rate_limits_pkey"
+              },
+              "uniques": []
             },
             "checkpoints": {
               "columns": {
@@ -9181,7 +9278,6 @@
                 "SUPER_ADMIN",
                 "ADMIN",
                 "MANAGER",
-                "DIRECTOR",
                 "SUPERVISOR",
                 "TEAM_LEADER",
                 "AGENT",
@@ -9247,7 +9343,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "b6791ba92248d0201c5c2952fbb3a559a4ecd1f485d653064924a21c0f9a0177"
+    "storageHash": "22871b24f6858f4540462468a3d9aade0f51c62ad602634ef0e26dd19d80a22b"
   },
   "execution": {
     "executionHash": "208d9314964e36a4a0c6ad187ffa612cde34f8666ed4075275f6d48d14c354ff",

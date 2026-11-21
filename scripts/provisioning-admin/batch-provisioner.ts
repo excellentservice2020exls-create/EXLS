@@ -1,7 +1,7 @@
 import { createHash, randomBytes } from "node:crypto";
-import { getBaseConfig, UserRole } from "./config";
+import { getBaseConfig } from "./config";
 import { isValidEmail } from "./validation";
-import { listAllUsers, requestAdminApi, SupabaseUser } from "./supabase-admin";
+import { getSupabaseUser, listAllUsers, requestAdminApi, SupabaseUser } from "./supabase-admin";
 import { getDatabaseClient, acquireAdvisoryLock, releaseAdvisoryLock } from "./database";
 
 function parseName(fullName: string) {
@@ -21,7 +21,7 @@ export async function runProvisioning() {
     console.log("🔒 Verrou exclusif de base de données acquis.");
 
     // Récupération unique de la photographie globale de Supabase Auth
-    let users = await listAllUsers(env.supabaseUrl, env.serviceRoleKey);
+    const users = await listAllUsers(env.supabaseUrl, env.serviceRoleKey);
     const userMap = new Map<string, SupabaseUser>();
     for (const u of users) {
       if (u.email) userMap.set(u.email.toLowerCase(), u);
@@ -43,7 +43,7 @@ export async function runProvisioning() {
         .select("id", "email", "role", "adminLock")
         .all();
 
-      if (existingSuperAdmins.some((u: any) => u.email?.trim().toLowerCase() !== superAdminEmail)) {
+      if (existingSuperAdmins.some((u) => String(u.email ?? "").trim().toLowerCase() !== superAdminEmail)) {
         throw new Error("Un autre SUPER_ADMIN existe déjà dans PostgreSQL.");
       }
 
@@ -55,7 +55,7 @@ export async function runProvisioning() {
       let superAdminUser = userMap.get(superAdminEmail);
       if (!superAdminUser) {
         const endpoint = new URL("/auth/v1/admin/users", env.supabaseUrl);
-        const result = await requestAdminApi<any>(endpoint, env.serviceRoleKey, {
+        const result = await requestAdminApi<unknown>(endpoint, env.serviceRoleKey, {
           method: "POST",
           body: JSON.stringify({
             email: superAdminEmail,
@@ -66,7 +66,7 @@ export async function runProvisioning() {
           }),
         });
 
-        const created = result?.user ?? result;
+        const created = getSupabaseUser(result);
         if (!created || created.email?.toLowerCase() !== superAdminEmail || created.app_metadata?.role !== "SUPER_ADMIN") {
           throw new Error("Supabase n'a pas confirmé la création du SUPER_ADMIN.");
         }
@@ -76,7 +76,7 @@ export async function runProvisioning() {
       // Sync Postgres
       const escapedEmail = superAdminEmail.replace(/[\\%_]/g, "\\$&");
       const profiles = await db.orm.public.User
-        .where((user: any) => user.email.ilike(escapedEmail))
+        .where({ email: escapedEmail })
         .select("id", "email", "role", "adminLock", "status")
         .limit(2)
         .all();
@@ -126,14 +126,14 @@ export async function runProvisioning() {
         .select("id", "email")
         .all();
 
-      if (otherAdmins.some((u: any) => u.email?.trim().toLowerCase() !== adminEmail)) {
+      if (otherAdmins.some((u) => String(u.email ?? "").trim().toLowerCase() !== adminEmail)) {
         throw new Error("Un autre ADMIN existe déjà dans PostgreSQL.");
       }
 
       let adminUser = userMap.get(adminEmail);
       if (!adminUser) {
         const endpoint = new URL("/auth/v1/admin/users", env.supabaseUrl);
-        const result = await requestAdminApi<any>(endpoint, env.serviceRoleKey, {
+        const result = await requestAdminApi<unknown>(endpoint, env.serviceRoleKey, {
           method: "POST",
           body: JSON.stringify({
             email: adminEmail,
@@ -143,12 +143,12 @@ export async function runProvisioning() {
             app_metadata: { role: "ADMIN" },
           }),
         });
-        adminUser = result?.user ?? result;
+        adminUser = getSupabaseUser(result) ?? undefined;
       }
 
       const escapedEmail = adminEmail.replace(/[\\%_]/g, "\\$&");
       const profiles = await db.orm.public.User
-        .where((user: any) => user.email.ilike(escapedEmail))
+        .where({ email: escapedEmail })
         .select("id", "email", "role", "adminLock")
         .limit(2)
         .all();

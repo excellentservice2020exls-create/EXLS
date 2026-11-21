@@ -40,9 +40,10 @@ export function parseBatchEnvJson(envVarName: string): BatchUserAccount[] {
       throw new Error(`Élément invalide détecté dans ${envVarName}.`);
     }
 
-    const email = typeof (item as any).email === "string" ? (item as any).email.trim().toLowerCase() : "";
-    const name = typeof (item as any).name === "string" ? (item as any).name.trim() : "";
-    const password = (item as any).password;
+    const record = item as Record<string, unknown>;
+    const email = typeof record.email === "string" ? record.email.trim().toLowerCase() : "";
+    const name = typeof record.name === "string" ? record.name.trim() : "";
+    const password = typeof record.password === "string" ? record.password : "";
 
     if (!isValidEmail(email)) {
       throw new Error(`Email invalide détecté dans ${envVarName} : "${email}"`);

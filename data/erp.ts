@@ -50,9 +50,9 @@ export const clients: Client[] = [
 ];
 
 export const missions: Mission[] = [
-  { id: "", clientId: "", date: "", plannedStartAt: "", status: "", assignedEmployees: ["", ""] },
-  { id: "", clientId: "", date: "", plannedStartAt: "", status: "", assignedEmployees: ["", ""] },
-  { id: "", clientId: "", date: "", plannedStartAt: "", status: "", assignedEmployees: ["", ""] },
+  { id: "", clientId: "", date: "", plannedStartAt: "", status: "PLANNED", assignedEmployees: ["", ""] },
+  { id: "", clientId: "", date: "", plannedStartAt: "", status: "PLANNED", assignedEmployees: ["", ""] },
+  { id: "", clientId: "", date: "", plannedStartAt: "", status: "PLANNED", assignedEmployees: ["", ""] },
 ];
 
 export const attendanceRecords: AttendanceRecord[] = [

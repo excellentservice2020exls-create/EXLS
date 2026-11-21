@@ -1,7 +1,7 @@
 import { createHash, randomBytes } from "node:crypto";
 import { getBaseConfig, UserRole } from "@/scripts/provisioning-admin/config";
-import { parseBatchEnvJson, BatchUserAccount, isValidEmail, validatePassword } from "@/scripts/provisioning-admin/validation";
-import { listAllUsers, requestAdminApi, SupabaseUser } from "@/scripts/provisioning-admin/supabase-admin";
+import { parseBatchEnvJson, isValidEmail, validatePassword } from "@/scripts/provisioning-admin/validation";
+import { getSupabaseUser, listAllUsers, requestAdminApi, SupabaseUser } from "@/scripts/provisioning-admin/supabase-admin";
 import { getDatabaseClient, acquireAdvisoryLock, releaseAdvisoryLock } from "@/scripts/provisioning-admin/database";
 
 type OperationalRole = Extract<UserRole, "MANAGER" | "SUPERVISOR" | "TEAM_LEADER" | "AGENT">;
@@ -114,7 +114,7 @@ export async function runStaffProvisioning() {
             }
 
             const dbProfiles = await db.orm.public.User
-                .where((user: any) => user.email.eq(acc.email))
+                .where({ email: acc.email })
                 .select("id", "email", "role", "adminLock")
                 .limit(1)
                 .all();
@@ -141,7 +141,7 @@ export async function runStaffProvisioning() {
             // 2.1 Mutation Supabase Auth
             if (!authUser) {
                 const createEndpoint = new URL("/auth/v1/admin/users", env.supabaseUrl);
-                const createResult = await requestAdminApi<any>(createEndpoint, env.serviceRoleKey, {
+                const createResult = await requestAdminApi<unknown>(createEndpoint, env.serviceRoleKey, {
                     method: "POST",
                     body: JSON.stringify({
                         email: acc.email,
@@ -152,16 +152,16 @@ export async function runStaffProvisioning() {
                     }),
                 });
 
-                const created = createResult?.user ?? createResult;
+                const created = getSupabaseUser(createResult);
                 if (!created || typeof created.id !== "string" || created.email?.toLowerCase() !== acc.email) {
                     throw new Error(`Réponse invalide de l'API Supabase Auth.`);
                 }
                 authUser = created;
-                authUserMap.set(acc.email, authUser);
+                authUserMap.set(acc.email, created);
                 console.log(`  ✓ [Auth] Compte créé avec succès.`);
             } else {
                 const updateEndpoint = new URL(`/auth/v1/admin/users/${authUser.id}`, env.supabaseUrl);
-                const updateResult = await requestAdminApi<any>(updateEndpoint, env.serviceRoleKey, {
+                const updateResult = await requestAdminApi<unknown>(updateEndpoint, env.serviceRoleKey, {
                     method: "PUT",
                     body: JSON.stringify({
                         app_metadata: { ...authUser.app_metadata, role: acc.role },
@@ -169,7 +169,7 @@ export async function runStaffProvisioning() {
                     }),
                 });
 
-                const updated = updateResult?.user ?? updateResult;
+                const updated = getSupabaseUser(updateResult);
                 if (!updated || updated.id !== authUser.id || updated.app_metadata?.role !== acc.role) {
                     throw new Error(`Échec de confirmation PUT pour la mise à jour Auth.`);
                 }
@@ -181,7 +181,7 @@ export async function runStaffProvisioning() {
 
             // Re-vérification atomique de l'état du profil juste avant l'écriture en base (protection anti-concurrence)
             const currentDbProfiles = await db.orm.public.User
-                .where((user: any) => user.email.eq(acc.email))
+                .where({ email: acc.email })
                 .select("id", "role", "adminLock")
                 .limit(1)
                 .all();
@@ -222,9 +222,10 @@ export async function runStaffProvisioning() {
                         });
                         createdInDb = true;
                         console.log(`  ✓ [DB] Profil créé avec succès.`);
-                    } catch (dbErr: any) {
-                        const errCode = dbErr?.code || dbErr?.original?.code;
-                        const constraintName = dbErr?.constraint || dbErr?.constraint_name || dbErr?.detail || "";
+                    } catch (dbErr: unknown) {
+                        const dbError = dbErr as { code?: string; original?: { code?: string }; constraint?: string; constraint_name?: string; detail?: string };
+                        const errCode = dbError.code || dbError.original?.code;
+                        const constraintName = dbError.constraint || dbError.constraint_name || dbError.detail || "";
 
                         // Analyse fine : Est-ce une violation d'unicité (23505) ?
                         const isUniqueViolation = errCode === "23505";
@@ -260,14 +261,14 @@ export async function runStaffProvisioning() {
                 await releaseAdvisoryLock(db);
                 console.log("🔓 Verrou de base de données libéré.");
             }
-        } catch (lockErr: unknown) {
+        } catch {
             console.error(`⚠️ Avertissement : échec lors de la libération du verrou.`);
         }
 
         try {
             await db.close();
             console.log("🔌 Connexion base de données fermée.");
-        } catch (closeErr: unknown) {
+        } catch {
             console.error(`⚠️ Avertissement : échec lors de la fermeture de la connexion.`);
         }
     }

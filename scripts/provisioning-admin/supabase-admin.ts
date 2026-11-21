@@ -13,6 +13,13 @@ export interface SupabaseUser {
   };
 }
 
+export function getSupabaseUser(value: unknown): SupabaseUser | null {
+  if (typeof value !== "object" || value === null) return null;
+  const candidate = "user" in value ? value.user : value;
+  if (typeof candidate !== "object" || candidate === null || !("id" in candidate)) return null;
+  return typeof candidate.id === "string" ? (candidate as SupabaseUser) : null;
+}
+
 export async function requestAdminApi<T = unknown>(
   endpoint: URL,
   serviceRoleKey: string,
@@ -52,7 +59,7 @@ export async function listAllUsers(supabaseUrl: URL, serviceRoleKey: string): Pr
       typeof result !== "object" ||
       result === null ||
       !("users" in result) ||
-      !Array.isArray((result as any).users)
+      !Array.isArray(result.users)
     ) {
       throw new Error("Réponse invalide de Supabase : liste des utilisateurs indisponible ou corrompue.");
     }
@@ -64,7 +71,7 @@ export async function listAllUsers(supabaseUrl: URL, serviceRoleKey: string): Pr
         typeof user !== "object" ||
         user === null ||
         !("id" in user) ||
-        typeof (user as any).id !== "string"
+        typeof user.id !== "string"
       ) {
         throw new Error("Un utilisateur retourné par Supabase possède une structure invalide.");
       }

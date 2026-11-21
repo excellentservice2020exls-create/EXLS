@@ -4,8 +4,24 @@
   "target": "postgres",
   "profileHash": "3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2",
   "roots": {
+    "agent_applications": {
+      "model": "AgentApplication",
+      "namespace": "public"
+    },
+    "agent_identities": {
+      "model": "AgentIdentity",
+      "namespace": "public"
+    },
+    "app_auth_sessions": {
+      "model": "AppAuthSession",
+      "namespace": "public"
+    },
     "attendances": {
       "model": "Attendance",
+      "namespace": "public"
+    },
+    "auth_sign_in_rate_limits": {
+      "model": "AuthSignInRateLimit",
       "namespace": "public"
     },
     "checkpoints": {
@@ -72,6 +88,10 @@
       "model": "RoleAssignment",
       "namespace": "public"
     },
+    "security_access_requests": {
+      "model": "SecurityAccessRequest",
+      "namespace": "public"
+    },
     "shifts": {
       "model": "Shift",
       "namespace": "public"
@@ -97,6 +117,548 @@
     "namespaces": {
       "public": {
         "models": {
+          "AgentApplication": {
+            "fields": {
+              "birthDate": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/date-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "birthPlace": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "createdAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "educationLevel": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "firstName": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "gender": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/uuid@1",
+                  "kind": "scalar"
+                }
+              },
+              "lastName": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "nationality": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "phone": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "phone2": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "postName": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "residentialAddress": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "residentialAddress2": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "status": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "updatedAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              }
+            },
+            "relations": {
+              "identity": {
+                "cardinality": "1:1",
+                "nullable": true,
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "agentApplicationId"
+                  ]
+                },
+                "to": {
+                  "model": "AgentIdentity",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "birthDate": {
+                  "column": "birthDate"
+                },
+                "birthPlace": {
+                  "column": "birthPlace"
+                },
+                "createdAt": {
+                  "column": "createdAt"
+                },
+                "educationLevel": {
+                  "column": "educationLevel"
+                },
+                "firstName": {
+                  "column": "firstName"
+                },
+                "gender": {
+                  "column": "gender"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "lastName": {
+                  "column": "lastName"
+                },
+                "nationality": {
+                  "column": "nationality"
+                },
+                "phone": {
+                  "column": "phone"
+                },
+                "phone2": {
+                  "column": "phone2"
+                },
+                "postName": {
+                  "column": "postName"
+                },
+                "residentialAddress": {
+                  "column": "residentialAddress"
+                },
+                "residentialAddress2": {
+                  "column": "residentialAddress2"
+                },
+                "status": {
+                  "column": "status"
+                },
+                "updatedAt": {
+                  "column": "updatedAt"
+                }
+              },
+              "namespaceId": "public",
+              "table": "agent_applications"
+            }
+          },
+          "AgentIdentity": {
+            "fields": {
+              "additionalTrainings": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "agentApplicationId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/uuid@1",
+                  "kind": "scalar"
+                }
+              },
+              "birthDate": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/date-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "birthPlace": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "createdAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "district": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "fatherName": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "firstName": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "gender": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/uuid@1",
+                  "kind": "scalar"
+                }
+              },
+              "lastName": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "maritalStatus": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "motherName": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "nationality": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "phone": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "phone2": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "postName": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "professionalExperiences": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "province": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "residentialAddress": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "residentialAddress2": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "sector": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "spokenLanguages": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "studies": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "territory": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "agentApplication": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "agentApplicationId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "AgentApplication",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "additionalTrainings": {
+                  "column": "additionalTrainings"
+                },
+                "agentApplicationId": {
+                  "column": "agentApplicationId"
+                },
+                "birthDate": {
+                  "column": "birthDate"
+                },
+                "birthPlace": {
+                  "column": "birthPlace"
+                },
+                "createdAt": {
+                  "column": "createdAt"
+                },
+                "district": {
+                  "column": "district"
+                },
+                "fatherName": {
+                  "column": "fatherName"
+                },
+                "firstName": {
+                  "column": "firstName"
+                },
+                "gender": {
+                  "column": "gender"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "lastName": {
+                  "column": "lastName"
+                },
+                "maritalStatus": {
+                  "column": "maritalStatus"
+                },
+                "motherName": {
+                  "column": "motherName"
+                },
+                "nationality": {
+                  "column": "nationality"
+                },
+                "phone": {
+                  "column": "phone"
+                },
+                "phone2": {
+                  "column": "phone2"
+                },
+                "postName": {
+                  "column": "postName"
+                },
+                "professionalExperiences": {
+                  "column": "professionalExperiences"
+                },
+                "province": {
+                  "column": "province"
+                },
+                "residentialAddress": {
+                  "column": "residentialAddress"
+                },
+                "residentialAddress2": {
+                  "column": "residentialAddress2"
+                },
+                "sector": {
+                  "column": "sector"
+                },
+                "spokenLanguages": {
+                  "column": "spokenLanguages"
+                },
+                "studies": {
+                  "column": "studies"
+                },
+                "territory": {
+                  "column": "territory"
+                }
+              },
+              "namespaceId": "public",
+              "table": "agent_identities"
+            }
+          },
+          "AppAuthSession": {
+            "fields": {
+              "authUserId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/uuid@1",
+                  "kind": "scalar"
+                }
+              },
+              "createdAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "expiresAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/uuid@1",
+                  "kind": "scalar"
+                }
+              },
+              "sessionId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {},
+            "storage": {
+              "fields": {
+                "authUserId": {
+                  "column": "authUserId"
+                },
+                "createdAt": {
+                  "column": "createdAt"
+                },
+                "expiresAt": {
+                  "column": "expiresAt"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "sessionId": {
+                  "column": "sessionId"
+                }
+              },
+              "namespaceId": "public",
+              "table": "app_auth_sessions"
+            }
+          },
           "Attendance": {
             "fields": {
               "agentId": {
@@ -327,6 +889,50 @@
               },
               "namespaceId": "public",
               "table": "attendances"
+            }
+          },
+          "AuthSignInRateLimit": {
+            "fields": {
+              "keyHash": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "requestCount": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "windowStartedAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 6
+                  }
+                }
+              }
+            },
+            "relations": {},
+            "storage": {
+              "fields": {
+                "keyHash": {
+                  "column": "keyHash"
+                },
+                "requestCount": {
+                  "column": "requestCount"
+                },
+                "windowStartedAt": {
+                  "column": "windowStartedAt"
+                }
+              },
+              "namespaceId": "public",
+              "table": "auth_sign_in_rate_limits"
             }
           },
           "Checkpoint": {
@@ -2730,6 +3336,126 @@
               "table": "role_assignments"
             }
           },
+          "SecurityAccessRequest": {
+            "fields": {
+              "decidedAt": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "decidedById": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/uuid@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/uuid@1",
+                  "kind": "scalar"
+                }
+              },
+              "requestedAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "sessionId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "status": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "userId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/uuid@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "decidedBy": {
+                "cardinality": "N:1",
+                "nullable": true,
+                "on": {
+                  "localFields": [
+                    "decidedById"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "User",
+                  "namespace": "public"
+                }
+              },
+              "user": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "userId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "User",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "decidedAt": {
+                  "column": "decidedAt"
+                },
+                "decidedById": {
+                  "column": "decidedById"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "requestedAt": {
+                  "column": "requestedAt"
+                },
+                "sessionId": {
+                  "column": "sessionId"
+                },
+                "status": {
+                  "column": "status"
+                },
+                "userId": {
+                  "column": "userId"
+                }
+              },
+              "namespaceId": "public",
+              "table": "security_access_requests"
+            }
+          },
           "Shift": {
             "fields": {
               "agentId": {
@@ -3650,6 +4376,23 @@
                   "kind": "scalar"
                 }
               },
+              "birthDate": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "birthPlace": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "cnapsExpiration": {
                 "nullable": true,
                 "type": {
@@ -3675,6 +4418,13 @@
                   "typeParams": {
                     "precision": 3
                   }
+                }
+              },
+              "educationLevel": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
                 }
               },
               "email": {
@@ -3733,6 +4483,34 @@
                   "kind": "scalar"
                 }
               },
+              "phone2": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "postName": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "residentialAddress": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "residentialAddress2": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "role": {
                 "nullable": false,
                 "type": {
@@ -3742,6 +4520,13 @@
               },
               "status": {
                 "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "studies": {
+                "nullable": true,
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
@@ -3773,6 +4558,21 @@
               }
             },
             "relations": {
+              "accessRequests": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "userId"
+                  ]
+                },
+                "to": {
+                  "model": "SecurityAccessRequest",
+                  "namespace": "public"
+                }
+              },
               "attendances": {
                 "cardinality": "1:N",
                 "on": {
@@ -3800,6 +4600,21 @@
                 },
                 "to": {
                   "model": "Attendance",
+                  "namespace": "public"
+                }
+              },
+              "decidedAccessRequests": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "decidedById"
+                  ]
+                },
+                "to": {
+                  "model": "SecurityAccessRequest",
                   "namespace": "public"
                 }
               },
@@ -4081,6 +4896,12 @@
                 "adminLock": {
                   "column": "adminLock"
                 },
+                "birthDate": {
+                  "column": "birthDate"
+                },
+                "birthPlace": {
+                  "column": "birthPlace"
+                },
                 "cnapsExpiration": {
                   "column": "cnapsExpiration"
                 },
@@ -4089,6 +4910,9 @@
                 },
                 "createdAt": {
                   "column": "createdAt"
+                },
+                "educationLevel": {
+                  "column": "educationLevel"
                 },
                 "email": {
                   "column": "email"
@@ -4114,11 +4938,26 @@
                 "phone": {
                   "column": "phone"
                 },
+                "phone2": {
+                  "column": "phone2"
+                },
+                "postName": {
+                  "column": "postName"
+                },
+                "residentialAddress": {
+                  "column": "residentialAddress"
+                },
+                "residentialAddress2": {
+                  "column": "residentialAddress2"
+                },
                 "role": {
                   "column": "role"
                 },
                 "status": {
                   "column": "status"
+                },
+                "studies": {
+                  "column": "studies"
                 },
                 "supervisorId": {
                   "column": "supervisorId"
@@ -4336,10 +5175,30 @@
             }
           },
           "rls": {
+            "agent_applications": {
+              "kind": "rls",
+              "namespaceId": "public",
+              "tableName": "agent_applications"
+            },
+            "agent_identities": {
+              "kind": "rls",
+              "namespaceId": "public",
+              "tableName": "agent_identities"
+            },
+            "app_auth_sessions": {
+              "kind": "rls",
+              "namespaceId": "public",
+              "tableName": "app_auth_sessions"
+            },
             "attendances": {
               "kind": "rls",
               "namespaceId": "public",
               "tableName": "attendances"
+            },
+            "auth_sign_in_rate_limits": {
+              "kind": "rls",
+              "namespaceId": "public",
+              "tableName": "auth_sign_in_rate_limits"
             },
             "checkpoints": {
               "kind": "rls",
@@ -4421,6 +5280,11 @@
               "namespaceId": "public",
               "tableName": "role_assignments"
             },
+            "security_access_requests": {
+              "kind": "rls",
+              "namespaceId": "public",
+              "tableName": "security_access_requests"
+            },
             "shifts": {
               "kind": "rls",
               "namespaceId": "public",
@@ -4448,6 +5312,359 @@
             }
           },
           "table": {
+            "agent_applications": {
+              "columns": {
+                "birthDate": {
+                  "codecId": "pg/date-string@1",
+                  "dataType": "pg/date",
+                  "nullable": false
+                },
+                "birthPlace": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "createdAt": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "educationLevel": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "firstName": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "gender": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/uuid@1",
+                  "dataType": "pg/uuid",
+                  "nullable": false
+                },
+                "lastName": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "nationality": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "phone": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "phone2": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                },
+                "postName": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "residentialAddress": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "residentialAddress2": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                },
+                "status": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "default": {
+                    "kind": "literal",
+                    "value": "ACTIVE"
+                  },
+                  "nullable": false
+                },
+                "updatedAt": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ],
+                "name": "agent_applications_pkey"
+              },
+              "uniques": []
+            },
+            "agent_identities": {
+              "columns": {
+                "additionalTrainings": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                },
+                "agentApplicationId": {
+                  "codecId": "pg/uuid@1",
+                  "dataType": "pg/uuid",
+                  "nullable": false
+                },
+                "birthDate": {
+                  "codecId": "pg/date-string@1",
+                  "dataType": "pg/date",
+                  "nullable": false
+                },
+                "birthPlace": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "createdAt": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "district": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "fatherName": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "firstName": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "gender": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/uuid@1",
+                  "dataType": "pg/uuid",
+                  "nullable": false
+                },
+                "lastName": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "maritalStatus": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "motherName": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "nationality": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "phone": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "phone2": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                },
+                "postName": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "professionalExperiences": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                },
+                "province": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "residentialAddress": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "residentialAddress2": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                },
+                "sector": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "spokenLanguages": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                },
+                "studies": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                },
+                "territory": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "index": {
+                    "unique": [
+                      "agentApplicationId"
+                    ]
+                  },
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "agentApplicationId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "agent_identities"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "agent_applications"
+                  }
+                }
+              ],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ],
+                "name": "agent_identities_pkey"
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "agentApplicationId"
+                  ],
+                  "name": "agent_identities_agentApplicationId_key"
+                }
+              ]
+            },
+            "app_auth_sessions": {
+              "checks": [
+                {
+                  "expression": "expiresAt > createdAt",
+                  "name": "app_auth_sessions_expiration_de2b345a",
+                  "prefix": "app_auth_sessions_expiration"
+                }
+              ],
+              "columns": {
+                "authUserId": {
+                  "codecId": "pg/uuid@1",
+                  "dataType": "pg/uuid",
+                  "nullable": false
+                },
+                "createdAt": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "expiresAt": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "id": {
+                  "codecId": "pg/uuid@1",
+                  "dataType": "pg/uuid",
+                  "nullable": false
+                },
+                "sessionId": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [
+                {
+                  "columns": [
+                    "expiresAt"
+                  ],
+                  "name": "app_auth_sessions_expiresAt_idx_6b6b8c10",
+                  "prefix": "app_auth_sessions_expiresAt_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ],
+                "name": "app_auth_sessions_pkey"
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "sessionId"
+                  ],
+                  "name": "app_auth_sessions_sessionId_key"
+                }
+              ]
+            },
             "attendances": {
               "checks": [
                 {
@@ -4670,6 +5887,51 @@
                   "name": "attendances_shiftId_key"
                 }
               ]
+            },
+            "auth_sign_in_rate_limits": {
+              "checks": [
+                {
+                  "expression": "(\"requestCount\" > 0)",
+                  "name": "auth_sign_in_rate_limits_requestCount_check"
+                }
+              ],
+              "columns": {
+                "keyHash": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "requestCount": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "nullable": false
+                },
+                "windowStartedAt": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 6
+                  }
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [
+                {
+                  "columns": [
+                    "windowStartedAt"
+                  ],
+                  "name": "auth_sign_in_rate_limits_windowStartedAt_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "keyHash"
+                ],
+                "name": "auth_sign_in_rate_limits_pkey"
+              },
+              "uniques": []
             },
             "checkpoints": {
               "columns": {
@@ -6656,7 +7918,7 @@
             "role_assignments": {
               "checks": [
                 {
-                  "expression": "(role = ANY (ARRAY['ADMIN'::text, 'MANAGER'::text, 'DIRECTOR'::text, 'SUPERVISOR'::text, 'AGENT'::text]))",
+                  "expression": "(role = ANY (ARRAY['ADMIN'::text, 'MANAGER'::text, 'DIRECTOR'::text, 'SUPERVISOR'::text, 'TEAM_LEADER'::text, 'AGENT'::text]))",
                   "name": "role_assignments_role_check_3b8a4a49"
                 }
               ],
@@ -6753,6 +8015,151 @@
                 "name": "role_assignments_pkey"
               },
               "uniques": []
+            },
+            "security_access_requests": {
+              "checks": [
+                {
+                  "expression": "(status = ANY (ARRAY['PENDING'::text, 'APPROVED'::text, 'REJECTED'::text]))",
+                  "name": "security_access_requests_status_7ebbec5c",
+                  "prefix": "security_access_requests_status"
+                }
+              ],
+              "columns": {
+                "decidedAt": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "nullable": true,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "decidedById": {
+                  "codecId": "pg/uuid@1",
+                  "dataType": "pg/uuid",
+                  "nullable": true
+                },
+                "id": {
+                  "codecId": "pg/uuid@1",
+                  "dataType": "pg/uuid",
+                  "nullable": false
+                },
+                "requestedAt": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "sessionId": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "status": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "default": {
+                    "kind": "literal",
+                    "value": "PENDING"
+                  },
+                  "nullable": false
+                },
+                "userId": {
+                  "codecId": "pg/uuid@1",
+                  "dataType": "pg/uuid",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "index": {
+                    "name": "security_access_requests_userId_idx_a489d58a"
+                  },
+                  "name": "security_access_requests_userId_fkey",
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "userId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "security_access_requests"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "users"
+                  }
+                },
+                {
+                  "index": {
+                    "name": "security_access_requests_decidedById_idx_8194d55f"
+                  },
+                  "name": "security_access_requests_decidedById_fkey",
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
+                      "decidedById"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "security_access_requests"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "users"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "decidedById"
+                  ],
+                  "name": "security_access_requests_decidedById_idx_8194d55f",
+                  "prefix": "security_access_requests_decidedById_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "status",
+                    "requestedAt"
+                  ],
+                  "name": "security_access_requests_status_requestedAt_idx_27ce3e29",
+                  "prefix": "security_access_requests_status_requestedAt_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "userId"
+                  ],
+                  "name": "security_access_requests_userId_idx_a489d58a",
+                  "prefix": "security_access_requests_userId_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ],
+                "name": "security_access_requests_pkey"
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "sessionId"
+                  ],
+                  "name": "security_access_requests_sessionId_key"
+                }
+              ]
             },
             "shifts": {
               "checks": [
@@ -7525,6 +8932,19 @@
                   "dataType": "pg/text",
                   "nullable": true
                 },
+                "birthDate": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "nullable": true,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "birthPlace": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                },
                 "cnapsExpiration": {
                   "codecId": "pg/timestamptz-date@1",
                   "dataType": "pg/timestamptz",
@@ -7549,6 +8969,11 @@
                   "typeParams": {
                     "precision": 3
                   }
+                },
+                "educationLevel": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
                 },
                 "email": {
                   "codecId": "pg/text@1",
@@ -7594,6 +9019,26 @@
                   "dataType": "pg/text",
                   "nullable": true
                 },
+                "phone2": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                },
+                "postName": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                },
+                "residentialAddress": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                },
+                "residentialAddress2": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
+                },
                 "role": {
                   "codecId": "pg/text@1",
                   "dataType": "pg/text",
@@ -7607,6 +9052,11 @@
                     "value": "ACTIVE"
                   },
                   "nullable": false
+                },
+                "studies": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": true
                 },
                 "supervisorId": {
                   "codecId": "pg/uuid@1",
@@ -7893,12 +9343,45 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "a1acb21fd19abc1d0ead33c46cac404089ffe1c4854a93e4c40c3cb0ffc63086"
+    "storageHash": "22871b24f6858f4540462468a3d9aade0f51c62ad602634ef0e26dd19d80a22b"
   },
   "execution": {
-    "executionHash": "a639c8ae18a88650d63df97c212e242441e3d2b8c43a7fa41bd5b17e3606fd41",
+    "executionHash": "208d9314964e36a4a0c6ad187ffa612cde34f8666ed4075275f6d48d14c354ff",
     "mutations": {
       "defaults": [
+        {
+          "onCreate": {
+            "id": "uuidv7",
+            "kind": "generator"
+          },
+          "ref": {
+            "entry": "agent_applications",
+            "field": "id",
+            "namespace": "public"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "uuidv7",
+            "kind": "generator"
+          },
+          "ref": {
+            "entry": "agent_identities",
+            "field": "id",
+            "namespace": "public"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "uuidv7",
+            "kind": "generator"
+          },
+          "ref": {
+            "entry": "app_auth_sessions",
+            "field": "id",
+            "namespace": "public"
+          }
+        },
         {
           "onCreate": {
             "id": "uuidv7",
@@ -8082,6 +9565,17 @@
           },
           "ref": {
             "entry": "role_assignments",
+            "field": "id",
+            "namespace": "public"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "uuidv7",
+            "kind": "generator"
+          },
+          "ref": {
+            "entry": "security_access_requests",
             "field": "id",
             "namespace": "public"
           }

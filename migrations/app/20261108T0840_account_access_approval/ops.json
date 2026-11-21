@@ -1,0 +1,281 @@
+[
+  {
+    "id": "table.security_access_requests",
+    "label": "Create table \"security_access_requests\"",
+    "summary": "Creates table \"security_access_requests\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "security_access_requests"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"security_access_requests\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"security_access_requests\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "table \"security_access_requests\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"security_access_requests\"",
+        "sql": "CREATE TABLE \"public\".\"security_access_requests\" (\n  \"id\" uuid NOT NULL,\n  \"userId\" uuid NOT NULL,\n  \"sessionId\" text NOT NULL,\n  \"status\" text DEFAULT 'PENDING' NOT NULL,\n  \"requestedAt\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"decidedAt\" timestamptz(3),\n  \"decidedById\" uuid,\n  CONSTRAINT \"security_access_requests_pkey\" PRIMARY KEY (\"id\"),\n  CONSTRAINT \"security_access_requests_sessionId_key\" UNIQUE (\"sessionId\"),\n  CONSTRAINT \"security_access_requests_userId_fkey\" FOREIGN KEY (\"userId\") REFERENCES \"users\" (\"id\") ON DELETE CASCADE,\n  CONSTRAINT \"security_access_requests_decidedById_fkey\" FOREIGN KEY (\"decidedById\") REFERENCES \"users\" (\"id\") ON DELETE SET NULL\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"security_access_requests\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3))) AS \"result\"",
+        "params": [
+          "\"public\".\"security_access_requests\"",
+          "r",
+          "p"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "table \"security_access_requests\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.security_access_requests.security_access_requests_status_7ebbec5c",
+    "label": "Add check constraint \"security_access_requests_status_7ebbec5c\" on \"security_access_requests\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "security_access_requests_status_7ebbec5c",
+        "table": "security_access_requests"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"security_access_requests_status_7ebbec5c\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "security_access_requests_status_7ebbec5c",
+          "public",
+          "\"public\".\"security_access_requests\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"security_access_requests_status_7ebbec5c\" on \"security_access_requests\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"security_access_requests_status_7ebbec5c\"",
+        "sql": "ALTER TABLE \"public\".\"security_access_requests\" ADD CONSTRAINT \"security_access_requests_status_7ebbec5c\" CHECK ((status = ANY (ARRAY['PENDING'::text, 'APPROVED'::text, 'REJECTED'::text])))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify check constraint \"security_access_requests_status_7ebbec5c\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4)) AS \"result\"",
+        "params": [
+          "security_access_requests_status_7ebbec5c",
+          "public",
+          "\"public\".\"security_access_requests\"",
+          "c"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.security_access_requests.security_access_requests_status_requestedAt_idx_27ce3e29",
+    "label": "Create index \"security_access_requests_status_requestedAt_idx_27ce3e29\" on \"security_access_requests\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "security_access_requests_status_requestedAt_idx_27ce3e29",
+        "table": "security_access_requests"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"security_access_requests_status_requestedAt_idx_27ce3e29\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"security_access_requests_status_requestedAt_idx_27ce3e29\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "index \"security_access_requests_status_requestedAt_idx_27ce3e29\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"security_access_requests_status_requestedAt_idx_27ce3e29\"",
+        "sql": "CREATE INDEX \"security_access_requests_status_requestedAt_idx_27ce3e29\" ON \"public\".\"security_access_requests\" (\"status\", \"requestedAt\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"security_access_requests_status_requestedAt_idx_27ce3e29\" exists on \"security_access_requests\" with the planned definition",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_index\" AS \"i\" ON \"i\".\"indexrelid\" = \"c\".\"oid\" INNER JOIN \"pg_am\" AS \"m\" ON \"m\".\"oid\" = \"c\".\"relam\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3) AND \"i\".\"indrelid\" = to_regclass($4) AND NOT (\"i\".\"indisunique\") AND \"m\".\"amname\" = $5 AND (\"i\".\"indexprs\" IS NULL AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"i\".\"indkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"i\".\"indrelid\" AND key_attribute.attnum = key_column.attnum) = ($6)::jsonb) AND \"i\".\"indpred\" IS NULL)) AS \"result\"",
+        "params": [
+          "\"public\".\"security_access_requests_status_requestedAt_idx_27ce3e29\"",
+          "i",
+          "I",
+          "\"public\".\"security_access_requests\"",
+          "btree",
+          "[\"status\",\"requestedAt\"]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.security_access_requests.security_access_requests_userId_idx_a489d58a",
+    "label": "Create index \"security_access_requests_userId_idx_a489d58a\" on \"security_access_requests\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "security_access_requests_userId_idx_a489d58a",
+        "table": "security_access_requests"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"security_access_requests_userId_idx_a489d58a\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"security_access_requests_userId_idx_a489d58a\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "index \"security_access_requests_userId_idx_a489d58a\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"security_access_requests_userId_idx_a489d58a\"",
+        "sql": "CREATE INDEX \"security_access_requests_userId_idx_a489d58a\" ON \"public\".\"security_access_requests\" (\"userId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"security_access_requests_userId_idx_a489d58a\" exists on \"security_access_requests\" with the planned definition",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_index\" AS \"i\" ON \"i\".\"indexrelid\" = \"c\".\"oid\" INNER JOIN \"pg_am\" AS \"m\" ON \"m\".\"oid\" = \"c\".\"relam\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3) AND \"i\".\"indrelid\" = to_regclass($4) AND NOT (\"i\".\"indisunique\") AND \"m\".\"amname\" = $5 AND (\"i\".\"indexprs\" IS NULL AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"i\".\"indkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"i\".\"indrelid\" AND key_attribute.attnum = key_column.attnum) = ($6)::jsonb) AND \"i\".\"indpred\" IS NULL)) AS \"result\"",
+        "params": [
+          "\"public\".\"security_access_requests_userId_idx_a489d58a\"",
+          "i",
+          "I",
+          "\"public\".\"security_access_requests\"",
+          "btree",
+          "[\"userId\"]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.security_access_requests.security_access_requests_decidedById_idx_8194d55f",
+    "label": "Create index \"security_access_requests_decidedById_idx_8194d55f\" on \"security_access_requests\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "security_access_requests_decidedById_idx_8194d55f",
+        "table": "security_access_requests"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"security_access_requests_decidedById_idx_8194d55f\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"security_access_requests_decidedById_idx_8194d55f\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "index \"security_access_requests_decidedById_idx_8194d55f\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"security_access_requests_decidedById_idx_8194d55f\"",
+        "sql": "CREATE INDEX \"security_access_requests_decidedById_idx_8194d55f\" ON \"public\".\"security_access_requests\" (\"decidedById\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"security_access_requests_decidedById_idx_8194d55f\" exists on \"security_access_requests\" with the planned definition",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_index\" AS \"i\" ON \"i\".\"indexrelid\" = \"c\".\"oid\" INNER JOIN \"pg_am\" AS \"m\" ON \"m\".\"oid\" = \"c\".\"relam\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3) AND \"i\".\"indrelid\" = to_regclass($4) AND NOT (\"i\".\"indisunique\") AND \"m\".\"amname\" = $5 AND (\"i\".\"indexprs\" IS NULL AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"i\".\"indkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"i\".\"indrelid\" AND key_attribute.attnum = key_column.attnum) = ($6)::jsonb) AND \"i\".\"indpred\" IS NULL)) AS \"result\"",
+        "params": [
+          "\"public\".\"security_access_requests_decidedById_idx_8194d55f\"",
+          "i",
+          "I",
+          "\"public\".\"security_access_requests\"",
+          "btree",
+          "[\"decidedById\"]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rowLevelSecurity.public.security_access_requests",
+    "label": "Enable row-level security on \"security_access_requests\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "rowLevelSecurity",
+        "name": "security_access_requests"
+      }
+    },
+    "precheck": [
+      {
+        "description": "check RLS is not already enabled on \"security_access_requests\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND NOT (\"c\".\"relrowsecurity\"))) AS \"result\"",
+        "params": [
+          "public",
+          "security_access_requests"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "enable row-level security on \"security_access_requests\"",
+        "sql": "ALTER TABLE \"public\".\"security_access_requests\" ENABLE ROW LEVEL SECURITY"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify row-level security is enabled on \"security_access_requests\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"c\".\"relrowsecurity\")) AS \"result\"",
+        "params": [
+          "public",
+          "security_access_requests"
+        ]
+      }
+    ]
+  }
+]

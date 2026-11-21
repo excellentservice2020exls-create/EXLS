@@ -1,3 +1,5 @@
+// components/auth/sign-out-button.tsx
+
 "use client";
 
 import { useState } from "react";

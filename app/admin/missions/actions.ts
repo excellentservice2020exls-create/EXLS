@@ -1,0 +1,62 @@
+"use server";
+
+import { redirect } from "next/navigation";
+import { db } from "@/prisma/db";
+import { getEffectiveRoles, requirePermission } from "@/lib/erp-auth";
+import { isUuidV7 } from "@/lib/utils";
+
+export async function createShift(formData: FormData) {
+  await requirePermission("missions:create");
+  const title = String(formData.get("title") ?? "").trim();
+  const date = String(formData.get("date") ?? "");
+  const startTime = String(formData.get("startTime") ?? "");
+  const siteId = String(formData.get("siteId") ?? "");
+  const agentId = String(formData.get("agentId") ?? "");
+
+  if (
+    !isUuidV7(siteId) ||
+    !isUuidV7(agentId) ||
+    title.length > 120 ||
+    !/^\d{4}-\d{2}-\d{2}$/.test(date) ||
+    !/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(startTime)
+  ) {
+    return;
+  }
+
+  const start = new Date(`${date}T${startTime}:00`);
+  const [year, month, day] = date.split("-").map(Number);
+  if (
+    Number.isNaN(start.getTime()) ||
+    start.getFullYear() !== year ||
+    start.getMonth() !== month - 1 ||
+    start.getDate() !== day
+  ) {
+    return;
+  }
+  const end = new Date(start.getTime() + 8 * 60 * 60 * 1000);
+
+  const [site, agent] = await Promise.all([
+    db.orm.public.Site.where({ id: siteId }).select("id", "name", "isActive").first(),
+    db.orm.public.User.where({ id: agentId }).select("id", "role", "status").first(),
+  ]);
+  if (!site || !agent || String(site.isActive) !== "true" || String(agent.status) !== "ACTIVE") {
+    return;
+  }
+
+  const agentRoles = await getEffectiveRoles(agent.id, String(agent.role));
+  if (!agentRoles.includes("AGENT")) {
+    return;
+  }
+
+  await db.orm.public.Shift.create({
+    siteId: site.id,
+    agentId: agent.id,
+    title: title || `Mission ${site.name}`,
+    shiftType: "DAY",
+    startTime: start,
+    endTime: end,
+    status: "SCHEDULED",
+  });
+
+  redirect("/admin/missions");
+}

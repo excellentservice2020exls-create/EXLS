@@ -40,18 +40,26 @@ namespace public {
   model User {
     id                     Uuid                   @id(map: "users_pkey") @onCreate(uuid(7))
     adminLock              String?                @unique(map: "users_adminLock_key")
+    birthDate              DateTime?
+    birthPlace              String?
     cnapsExpiration        DateTime?
     cnapsNumber            String?
     createdAt              DateTime               @default(now())
     email                  String                 @unique(map: "users_email_key")
+    educationLevel         String?
     firstName              String
     lastName               String
     matricule              String                 @unique(map: "users_matricule_key")
     mustChangePassword     Boolean                @default(false)
     passwordHash           String
     phone                  String?
+    phone2                 String?
+    postName               String?
+    residentialAddress     String?
+    residentialAddress2    String?
     role                   String
     status                 String                 @default("ACTIVE")
+    studies                String?
     supervisorId           Uuid?
     teamLeaderId           Uuid?
     updatedAt              DateTime               @default(now())
@@ -61,6 +69,8 @@ namespace public {
     patrolScans            PatrolScan[]
     patrols                Patrol[]
     roleAssignments        RoleAssignment[]
+    accessRequests         SecurityAccessRequest[] @relation(name: "security_access_requests_userId_fkey")
+    decidedAccessRequests SecurityAccessRequest[] @relation(name: "security_access_requests_decidedById_fkey")
     siteInstructions       SiteInstruction[]
     attendances            Attendance[]          @relation(name: "attendances_agentId_fkey")
     attendancesAttendances Attendance[]          @relation(name: "attendances_verifiedById_fkey")
@@ -82,6 +92,61 @@ namespace public {
     @@check(expression: sql`(status = ANY (ARRAY['ACTIVE'::text, 'SUSPENDED'::text, 'ARCHIVED'::text]))`, map: "users_status_check_0f44f6b1")
     @@rls
     @@map("users")
+  }
+
+  model AgentApplication {
+    id                  Uuid            @id(map: "agent_applications_pkey") @onCreate(uuid(7))
+    birthDate           Date
+    birthPlace          String
+    createdAt           DateTime        @default(now())
+    educationLevel      String
+    firstName           String
+    gender              String
+    lastName            String
+    nationality         String
+    phone               String
+    phone2              String?
+    postName            String
+    residentialAddress  String
+    residentialAddress2 String?
+    status              String          @default("ACTIVE")
+    updatedAt           DateTime        @default(now())
+    identity            AgentIdentity?
+
+    @@rls
+    @@map("agent_applications")
+  }
+
+  model AgentIdentity {
+    id                    Uuid            @id(map: "agent_identities_pkey") @onCreate(uuid(7))
+    agentApplicationId    Uuid            @unique(map: "agent_identities_agentApplicationId_key")
+    birthDate             Date
+    birthPlace            String
+    createdAt             DateTime        @default(now())
+    district              String
+    fatherName            String
+    firstName             String
+    gender                String
+    lastName              String
+    maritalStatus         String
+    motherName            String
+    nationality           String
+    phone                 String
+    phone2                String?
+    postName              String
+    professionalExperiences String?
+    province              String
+    residentialAddress    String
+    residentialAddress2   String?
+    sector                String
+    studies               String?
+    territory             String
+    additionalTrainings   String?
+    spokenLanguages       String?
+    agentApplication      AgentApplication @relation(fields: [agentApplicationId], references: [id], onDelete: Cascade)
+
+    @@rls
+    @@map("agent_identities")
   }
 
   model Site {
@@ -474,9 +539,51 @@ namespace public {
     user       User    @relation(fields: [userId], references: [id], onDelete: Cascade, map: "role_assignments_userId_fkey")
 
     @@index([userId], name: "role_assignments_userId_idx")
-    @@check(expression: sql`(role = ANY (ARRAY['ADMIN'::text, 'MANAGER'::text, 'DIRECTOR'::text, 'SUPERVISOR'::text, 'AGENT'::text]))`, map: "role_assignments_role_check_3b8a4a49")
+    @@check(expression: sql`(role = ANY (ARRAY['ADMIN'::text, 'MANAGER'::text, 'DIRECTOR'::text, 'SUPERVISOR'::text, 'TEAM_LEADER'::text, 'AGENT'::text]))`, map: "role_assignments_role_check_3b8a4a49")
     @@rls
     @@map("role_assignments")
+  }
+
+  model SecurityAccessRequest {
+    id          Uuid      @id(map: "security_access_requests_pkey") @onCreate(uuid(7))
+    userId      Uuid
+    sessionId   String    @unique(map: "security_access_requests_sessionId_key")
+    status      String    @default("PENDING")
+    requestedAt DateTime  @default(now())
+    decidedAt   DateTime?
+    decidedById Uuid?
+    user        User      @relation(name: "security_access_requests_userId_fkey", fields: [userId], references: [id], onDelete: Cascade, map: "security_access_requests_userId_fkey")
+    decidedBy   User?     @relation(name: "security_access_requests_decidedById_fkey", fields: [decidedById], references: [id], onDelete: SetNull, map: "security_access_requests_decidedById_fkey")
+
+    @@index([status, requestedAt], name: "security_access_requests_status_requestedAt_idx")
+    @@index([userId], name: "security_access_requests_userId_idx")
+    @@check(expression: sql`(status = ANY (ARRAY['PENDING'::text, 'APPROVED'::text, 'REJECTED'::text]))`, name: "security_access_requests_status")
+    @@rls
+    @@map("security_access_requests")
+  }
+
+  model AppAuthSession {
+    id         Uuid     @id(map: "app_auth_sessions_pkey") @onCreate(uuid(7))
+    authUserId Uuid
+    sessionId  String   @unique(map: "app_auth_sessions_sessionId_key")
+    createdAt  DateTime
+    expiresAt  DateTime
+
+    @@index([expiresAt], name: "app_auth_sessions_expiresAt_idx")
+    @@check(expression: sql`expiresAt > createdAt`, name: "app_auth_sessions_expiration")
+    @@rls
+    @@map("app_auth_sessions")
+  }
+
+  model AuthSignInRateLimit {
+    keyHash         String                 @id(map: "auth_sign_in_rate_limits_pkey")
+    windowStartedAt DateTime(precision: 6)
+    requestCount    Int
+
+    @@index([windowStartedAt], map: "auth_sign_in_rate_limits_windowStartedAt_idx")
+    @@check(expression: sql`("requestCount" > 0)`, map: "auth_sign_in_rate_limits_requestCount_check")
+    @@rls
+    @@map("auth_sign_in_rate_limits")
   }
 
   model SiteEquipment {

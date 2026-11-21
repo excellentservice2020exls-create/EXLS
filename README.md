@@ -32,9 +32,15 @@ For a new database, run `supabase/migrations/20261031130000_create_erp_tables.sq
 
 Before running `npm run provision`, apply `supabase/migrations/20261104125600_allow_provisioning_user_roles.sql` in the Supabase SQL Editor. This updates the `users.role` constraint to include all roles allowed by the Prisma contract, including `SUPER_ADMIN`.
 
+To enable editing the additional personal details in **Mon profil**, apply `supabase/migrations/20261106140000_add_user_profile_details.sql` in the Supabase SQL Editor.
+
+The agent dossier tables used by **Gestion des agents** are created by `supabase/migrations/20261107162100_add_agent_dossiers.sql`. Apply it once in the Supabase SQL Editor if `public.agent_applications` is missing. It also creates `public.agent_identities` and enables RLS on both tables.
+
 Prisma 8 stores these enums as text columns and enforces their allowed values with database `CHECK` constraints (not native PostgreSQL `CREATE TYPE` enums). RLS denies direct `anon`/`authenticated` API access until appropriate policies are added; the application accesses ERP data through its server-side Prisma connection. Do not put a Supabase secret or service-role key in a `NEXT_PUBLIC_` variable. Define policies for any table or Storage bucket that should be exposed through the publishable key.
 
 Email/password authentication is available at `/auth/sign-in`. Public sign-up is disabled in the application; configure Supabase Auth to disable new public sign-ups as well, so accounts are created only when an EXLS manager creates a profile. Profile creation sends an invitation through the Supabase Auth Admin API and requires `SUPABASE_SERVICE_ROLE_KEY` on the server. Configure the Supabase Auth email redirect allowlist to include your application's `/auth/callback` URL and enable email/password sign-in. Email confirmation, password recovery, and account password changes are supported. Users can optionally enable TOTP in `/account`; enabled factors are challenged after sign-in and protected account access requires the second factor. Enforce any additional MFA requirements for database access in Supabase RLS policies as well.
+
+The application sign-in endpoint uses a database-backed rate limit: 10 attempts per account and 60 per client IP in a 15-minute window. Apply `supabase/migrations/20261109110000_add_auth_sign_in_rate_limits.sql` in the Supabase SQL Editor before deploying this change. The IP limit reads `x-forwarded-for`, so only deploy behind a trusted proxy that sets this header. Supabase Auth endpoints are also directly reachable with the public key; configure the provider's own limits in [Supabase Authentication > Rate Limits](https://supabase.com/dashboard/project/_/auth/rate-limits), and keep public sign-ups disabled there as well.
 
 ## Learn More
 

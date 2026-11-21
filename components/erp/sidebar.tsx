@@ -19,9 +19,9 @@ export function Sidebar({
   const navigationItems: { href: string; label: string; permission: Permission }[] = [
     { href: "/dashboard", label: "Tableau de bord", permission: "dashboard:read" },
     { href: "/profile", label: "Mon profil", permission: "profile:read:self" },
-    { href: "/employees", label: "Personnel", permission: "employees:read" },
-    { href: "/clients", label: "Abonnés / Clients", permission: "clients:read" },
-    { href: "/sites", label: "Sites", permission: "sites:read" },
+    { href: "/employees", label: "AGENT", permission: "employees:read" },
+    { href: "/admin/clients", label: "Abonnés / Clients", permission: "clients:read" },
+    { href: "/admin/sites", label: "Sites", permission: "sites:read" },
     { href: "/missions", label: "Missions", permission: "missions:read" },
     { href: "/attendance", label: "Présences", permission: "attendance:read" },
     { href: "/reports/day", label: "Rapports", permission: "reports:read" },
@@ -39,6 +39,20 @@ export function Sidebar({
       </div>
 
       <nav className="flex-1 space-y-2 px-4 py-6">
+        {[
+          { role: "MANAGER", href: "/manager", label: "Espace manager" },
+          { role: "SUPERVISOR", href: "/supervisor", label: "Espace superviseur" },
+          { role: "TEAM_LEADER", href: "/teamleader", label: "Espace chef d’équipe" },
+          { role: "AGENT", href: "/agent", label: "Espace agent" },
+        ].filter((item) => roles.includes(item.role)).map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className="block rounded-xl border border-emerald-400/30 bg-emerald-400/10 px-3 py-2 text-sm font-semibold text-emerald-200 transition hover:bg-emerald-400/20"
+          >
+            {item.label}
+          </Link>
+        ))}
         {items.map((item) => (
           <Link
             key={item.href}
@@ -48,6 +62,14 @@ export function Sidebar({
             {item.label}
           </Link>
         ))}
+        {roles.includes("SUPER_ADMIN") && (
+          <Link
+            href="/security"
+            className="block rounded-xl border border-transparent px-3 py-2 text-sm font-medium text-slate-200 transition hover:border-emerald-400/40 hover:bg-slate-800 hover:text-white"
+          >
+            Validation des accès
+          </Link>
+        )}
       </nav>
 
       <div className="border-t border-slate-800 px-4 py-4 text-sm text-slate-300">

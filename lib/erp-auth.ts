@@ -3,78 +3,28 @@ import "server-only";
 import { notFound, redirect } from "next/navigation";
 import { db } from "@/prisma/db";
 import { getAuthenticatedUser } from "@/lib/supabase/auth";
+import {
+ 
+  ROLE_LEVELS,
+  ROLE_PERMISSIONS,
+  hasPermission,
+  hasRole,
+  toErpRole,
+} from "@/lib/rbac";
+import type { AppUser, ErpRole, Permission } from "@/lib/rbac";
 
-export const ERP_ROLES = [
-  "ADMIN",
-  "DIRECTOR",
-  "MANAGER",
-  "SUPERVISOR",
-  "AGENT",
-] as const;
-
-export type ErpRole = (typeof ERP_ROLES)[number];
-
-export const ROLE_LEVELS: Readonly<Record<ErpRole, number>> = {
-  ADMIN: 100,
-  DIRECTOR: 80,
-  MANAGER: 60,
-  SUPERVISOR: 40,
-  AGENT: 20,
-};
-
-export const MANAGEMENT_ROLES = ["ADMIN", "DIRECTOR", "MANAGER"] as const;
-export const SUPERVISOR_ROLES = [...MANAGEMENT_ROLES, "SUPERVISOR"] as const;
-
-export const PERMISSIONS = [
-  "dashboard:read",
-  "profile:read:self",
-  "employees:read",
-  "employees:create",
-  "clients:read",
-  "clients:create",
-  "clients:update",
-  "clients:archive",
-  "clients:restore",
-  "sites:read",
-  "sites:create",
-  "sites:update",
-  "missions:read",
-  "missions:create",
-  "attendance:read",
-  "attendance:create:self",
-  "attendance:create:team",
-  "attendance:verify",
-  "reports:read",
-  "settings:read",
-] as const;
-
-export type Permission = (typeof PERMISSIONS)[number];
-
-export const ROLE_PERMISSIONS: Readonly<Record<ErpRole, readonly Permission[]>> = {
-  ADMIN: PERMISSIONS,
-  DIRECTOR: PERMISSIONS,
-  MANAGER: PERMISSIONS,
-  SUPERVISOR: [
-    "profile:read:self",
-    "missions:read",
-    "attendance:read",
-    "attendance:create:team",
-    "attendance:verify",
-    "reports:read",
-  ],
-  AGENT: ["profile:read:self", "attendance:read", "attendance:create:self"],
-};
-
-export type AppUser = {
-  id: string;
-  email: string;
-  name: string;
-  role: ErpRole;
-  status: string;
-  roles: ErpRole[];
-  level: number;
-  permissions: Permission[];
-};
+export {
+  ERP_ROLES,
+  PERMISSIONS,
+  ROLE_LEVELS,
+  ROLE_PERMISSIONS,
+  
+  canAssignRole,
+  hasPermission,
+  hasRole,
+  isErpRole,
+} from "@/lib/rbac";
+export type { AppUser, ErpRole, Permission } from "@/lib/rbac";
 
 export type AppDataScope = {
   organizationWide: boolean;
@@ -82,28 +32,9 @@ export type AppDataScope = {
   siteIds: ReadonlySet<string>;
 };
 
-export function isErpRole(value: string): value is ErpRole {
-  return (ERP_ROLES as readonly string[]).includes(value);
-}
-
-function toErpRole(value: string): ErpRole | null {
-  if (isErpRole(value)) {
-    return value;
-  }
-
-  if (value === "SUPER_ADMIN") {
-    return "ADMIN";
-  }
-  if (value === "TEAM_LEADER") {
-    return "SUPERVISOR";
-  }
-
-  return null;
-}
-
 export async function getEffectiveRoles(userId: string, primaryRole: string) {
   const effectivePrimaryRole = toErpRole(primaryRole);
-  if (!effectivePrimaryRole) {
+  if (effectivePrimaryRole === null) {
     throw new Error(`The EXLS user ${userId} has an unsupported primary role.`);
   }
 
@@ -120,6 +51,7 @@ export async function getEffectiveRoles(userId: string, primaryRole: string) {
   const validAssignedRoles = assignedRoleValues.filter(
     (role): role is ErpRole => role !== null,
   );
+
   if (effectivePrimaryRole !== "ADMIN" && validAssignedRoles.includes("ADMIN")) {
     throw new Error(`The EXLS user ${userId} has an invalid ADMIN role assignment.`);
   }
@@ -127,22 +59,10 @@ export async function getEffectiveRoles(userId: string, primaryRole: string) {
   return [...new Set<ErpRole>([effectivePrimaryRole, ...validAssignedRoles])];
 }
 
-export function hasRole(user: AppUser, roles: readonly string[]) {
-  return user.roles.some((role) => roles.includes(role));
-}
-
-export function hasPermission(user: AppUser, permission: Permission) {
-  return user.permissions.includes(permission);
-}
-
-export function canAssignRole(actor: AppUser, role: ErpRole) {
-  return role !== "ADMIN" && actor.level > ROLE_LEVELS[role];
-}
-
-export async function requireAppUser(): Promise<AppUser> {
+async function loadAppUser(requireApprovedSession: boolean): Promise<AppUser> {
   const authUser = await getAuthenticatedUser();
   if (!authUser?.email) {
-    redirect("/auth/sign-in");
+    redirect("/auth/session/expired");
   }
 
   const email = authUser.email.trim();
@@ -163,9 +83,25 @@ export async function requireAppUser(): Promise<AppUser> {
   }
 
   const primaryRole = toErpRole(String(user.role));
-  if (!primaryRole) {
+  if (primaryRole === null) {
     redirect("/account?erpAccess=role-required");
   }
+  if (requireApprovedSession && primaryRole !== "SUPER_ADMIN") {
+    if (!authUser.sessionId) {
+      redirect("/account?erpAccess=session-required");
+    }
+
+    const accessRequest = await db.orm.public.SecurityAccessRequest
+      .where({ userId: user.id, sessionId: authUser.sessionId })
+      .select("status")
+      .first();
+    if (String(accessRequest?.status) !== "APPROVED") {
+      redirect(
+        `/account?erpAccess=${accessRequest?.status === "REJECTED" ? "approval-rejected" : accessRequest ? "approval-pending" : "approval-required"}`,
+      );
+    }
+  }
+
   const effectiveRoles = await getEffectiveRoles(user.id, String(user.role));
 
   const permissions = new Set<Permission>();
@@ -181,10 +117,19 @@ export async function requireAppUser(): Promise<AppUser> {
     name: `${user.firstName} ${user.lastName}`,
     role: primaryRole,
     status: String(user.status),
+    sessionExpiresAt: authUser.expiresAt,
     roles: effectiveRoles,
-    level: Math.max(...effectiveRoles.map((role) => ROLE_LEVELS[role])),
+    level: Math.min(...effectiveRoles.map((role) => ROLE_LEVELS[role])),
     permissions: [...permissions],
   };
+}
+
+export async function requireAppUser(): Promise<AppUser> {
+  return loadAppUser(true);
+}
+
+export async function getPostLoginRoleLevel(): Promise<number> {
+  return (await loadAppUser(false)).level;
 }
 
 export async function requirePermission(permission: Permission) {
@@ -206,7 +151,7 @@ export async function requireRole(allowedRoles: readonly string[]) {
 }
 
 export async function getAppDataScope(user: AppUser): Promise<AppDataScope> {
-  const organizationWide = hasRole(user, MANAGEMENT_ROLES);
+  const organizationWide = hasRole(user, ["SUPER_ADMIN", "ADMIN", "MANAGER"]);
   if (organizationWide) {
     return {
       organizationWide: true,
@@ -238,6 +183,16 @@ export async function getAppDataScope(user: AppUser): Promise<AppDataScope> {
     }
   }
 
+  if (user.roles.includes("TEAM_LEADER")) {
+    const [teamMembers, ledShifts] = await Promise.all([
+      db.orm.public.User.where({ teamLeaderId: user.id }).select("id").all(),
+      db.orm.public.Shift.where({ teamLeaderId: user.id }).select("siteId").all(),
+    ]);
+    userIds.add(user.id);
+    for (const member of teamMembers) userIds.add(member.id);
+    for (const shift of ledShifts) siteIds.add(shift.siteId);
+  }
+
   return { organizationWide: false, userIds, siteIds };
 }
 
@@ -253,6 +208,9 @@ export function canAccessShiftInScope(
       shift.teamLeaderId === user.id ||
       scope.userIds.has(shift.agentId) ||
       scope.siteIds.has(shift.siteId)
+    )) ||
+    (user.roles.includes("TEAM_LEADER") && (
+      shift.teamLeaderId === user.id || scope.userIds.has(shift.agentId)
     ));
 }
 

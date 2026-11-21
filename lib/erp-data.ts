@@ -4,24 +4,35 @@ import { canAccessShiftInScope, getAppDataScope, type AppUser } from "@/lib/erp-
 
 export async function getDashboardStats() {
   noStore();
-  const [clients, users, sites, shifts, attendanceRecords] = await Promise.all([
+  const [clients, users, applications, sites, shifts, attendanceRecords] = await Promise.all([
     db.orm.public.Client
       .where((client) => client.deletedAt.isNull())
       .select("id")
       .all(),
-    db.orm.public.User.select("id", "status").all(),
+    db.orm.public.User.select("id", "role", "status").all(),
+    db.orm.public.AgentApplication.select("id").all(),
     db.orm.public.Site.select("id").all(),
     db.orm.public.Shift.select("id", "status", "startTime").all(),
     db.orm.public.Attendance.select("id", "status").all(),
   ]);
 
-  const activeUsers = users.filter((user) => String(user.status) === "ACTIVE").length;
-  const activeShifts = shifts.filter((shift) => String(shift.status) !== "COMPLETED").length;
-  const verifiedAttendances = attendanceRecords.filter((record) => String(record.status) === "VERIFIED").length;
+  const activeUsers = users.filter(
+    (user) => String(user.status) === "ACTIVE",
+  ).length;
+  const agents =
+    users.filter((user) => String(user.role) === "AGENT").length +
+    applications.length;
+  const activeShifts = shifts.filter(
+    (shift) => String(shift.status) !== "COMPLETED",
+  ).length;
+  const verifiedAttendances = attendanceRecords.filter(
+    (record) => String(record.status) === "VERIFIED",
+  ).length;
 
   return {
     clients: clients.length,
     users: users.length,
+    agents,
     sites: sites.length,
     activeUsers,
     activeShifts,
@@ -35,6 +46,67 @@ export async function getEmployees() {
     .select("id", "firstName", "lastName", "phone", "role", "status", "matricule")
     .orderBy((user) => user.firstName.asc())
     .all();
+}
+
+export async function getRegisteredAgents() {
+  noStore();
+  return db.orm.public.User
+    .where({ role: "AGENT" })
+    .select(
+      "id",
+      "firstName",
+      "postName",
+      "lastName",
+      "birthDate",
+      "birthPlace",
+      "phone",
+      "educationLevel",
+      "status",
+    )
+    .orderBy((agent) => agent.lastName.asc())
+    .all();
+}
+
+export async function getAgentApplications() {
+  noStore();
+  return db.orm.public.AgentApplication
+    .select(
+      "id",
+      "firstName",
+      "lastName",
+      "postName",
+      "birthDate",
+      "birthPlace",
+      "gender",
+      "nationality",
+      "phone",
+      "educationLevel",
+      "status",
+      "createdAt",
+    )
+    .orderBy((agent) => agent.lastName.asc())
+    .all();
+}
+
+export async function getAgentIdentityFiles() {
+  noStore();
+  return db.orm.public.AgentIdentity
+    .select("id", "agentApplicationId")
+    .all();
+}
+
+export async function getAgentApplicationsWithoutIdentity() {
+  noStore();
+  const [applications, identities] = await Promise.all([
+    getAgentApplications(),
+    getAgentIdentityFiles(),
+  ]);
+  const linkedApplicationIds = new Set(
+    identities.map((identity) => String(identity.agentApplicationId)),
+  );
+  return applications.filter(
+    (application) => !linkedApplicationIds.has(String(application.id)),
+  );
 }
 
 export async function getClients() {

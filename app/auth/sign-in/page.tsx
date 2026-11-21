@@ -4,6 +4,8 @@ import { AuthShell } from "@/components/auth/auth-shell";
 const messages: Record<string, string> = {
   confirmed: "Votre adresse e-mail est confirmée. Vous pouvez maintenant vous connecter.",
   callback: "Le lien n’a pas pu être vérifié ou a expiré. Demandez-en un nouveau.",
+  session: "La session de connexion est invalide ou a déjà expiré. Veuillez vous reconnecter.",
+  "session-expired": "Votre session a expiré après une heure. Veuillez vous reconnecter.",
 };
 
 export const dynamic = "force-dynamic";

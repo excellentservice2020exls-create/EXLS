@@ -1,0 +1,482 @@
+[
+  {
+    "id": "column.public.users.birthDate",
+    "label": "Add column \"birthDate\" to \"users\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "birthDate",
+        "table": "users"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"birthDate\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "users",
+          "birthDate"
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "column \"birthDate\" on \"users\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"birthDate\"",
+        "sql": "ALTER TABLE \"public\".\"users\" ADD COLUMN \"birthDate\" timestamptz(3)"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"birthDate\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "users",
+          "birthDate"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"birthDate\" on \"users\""
+        }
+      },
+      {
+        "description": "verify column \"birthDate\" has type \"timestamp(3) with time zone\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_attribute\" AS \"a\" INNER JOIN \"pg_class\" AS \"c\" ON \"c\".\"oid\" = \"a\".\"attrelid\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"a\".\"attname\" = $3 AND (format_type(\"a\".\"atttypid\", \"a\".\"atttypmod\")) = $4 AND NOT (\"a\".\"attisdropped\"))) AS \"result\"",
+        "params": [
+          "public",
+          "users",
+          "birthDate",
+          "timestamp(3) with time zone"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.users.birthPlace",
+    "label": "Add column \"birthPlace\" to \"users\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "birthPlace",
+        "table": "users"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"birthPlace\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "users",
+          "birthPlace"
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "column \"birthPlace\" on \"users\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"birthPlace\"",
+        "sql": "ALTER TABLE \"public\".\"users\" ADD COLUMN \"birthPlace\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"birthPlace\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "users",
+          "birthPlace"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"birthPlace\" on \"users\""
+        }
+      },
+      {
+        "description": "verify column \"birthPlace\" has type \"text\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_attribute\" AS \"a\" INNER JOIN \"pg_class\" AS \"c\" ON \"c\".\"oid\" = \"a\".\"attrelid\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"a\".\"attname\" = $3 AND (format_type(\"a\".\"atttypid\", \"a\".\"atttypmod\")) = $4 AND NOT (\"a\".\"attisdropped\"))) AS \"result\"",
+        "params": [
+          "public",
+          "users",
+          "birthPlace",
+          "text"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.users.educationLevel",
+    "label": "Add column \"educationLevel\" to \"users\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "educationLevel",
+        "table": "users"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"educationLevel\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "users",
+          "educationLevel"
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "column \"educationLevel\" on \"users\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"educationLevel\"",
+        "sql": "ALTER TABLE \"public\".\"users\" ADD COLUMN \"educationLevel\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"educationLevel\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "users",
+          "educationLevel"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"educationLevel\" on \"users\""
+        }
+      },
+      {
+        "description": "verify column \"educationLevel\" has type \"text\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_attribute\" AS \"a\" INNER JOIN \"pg_class\" AS \"c\" ON \"c\".\"oid\" = \"a\".\"attrelid\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"a\".\"attname\" = $3 AND (format_type(\"a\".\"atttypid\", \"a\".\"atttypmod\")) = $4 AND NOT (\"a\".\"attisdropped\"))) AS \"result\"",
+        "params": [
+          "public",
+          "users",
+          "educationLevel",
+          "text"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.users.phone2",
+    "label": "Add column \"phone2\" to \"users\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "phone2",
+        "table": "users"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"phone2\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "users",
+          "phone2"
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "column \"phone2\" on \"users\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"phone2\"",
+        "sql": "ALTER TABLE \"public\".\"users\" ADD COLUMN \"phone2\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"phone2\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "users",
+          "phone2"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"phone2\" on \"users\""
+        }
+      },
+      {
+        "description": "verify column \"phone2\" has type \"text\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_attribute\" AS \"a\" INNER JOIN \"pg_class\" AS \"c\" ON \"c\".\"oid\" = \"a\".\"attrelid\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"a\".\"attname\" = $3 AND (format_type(\"a\".\"atttypid\", \"a\".\"atttypmod\")) = $4 AND NOT (\"a\".\"attisdropped\"))) AS \"result\"",
+        "params": [
+          "public",
+          "users",
+          "phone2",
+          "text"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.users.postName",
+    "label": "Add column \"postName\" to \"users\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "postName",
+        "table": "users"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"postName\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "users",
+          "postName"
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "column \"postName\" on \"users\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"postName\"",
+        "sql": "ALTER TABLE \"public\".\"users\" ADD COLUMN \"postName\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"postName\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "users",
+          "postName"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"postName\" on \"users\""
+        }
+      },
+      {
+        "description": "verify column \"postName\" has type \"text\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_attribute\" AS \"a\" INNER JOIN \"pg_class\" AS \"c\" ON \"c\".\"oid\" = \"a\".\"attrelid\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"a\".\"attname\" = $3 AND (format_type(\"a\".\"atttypid\", \"a\".\"atttypmod\")) = $4 AND NOT (\"a\".\"attisdropped\"))) AS \"result\"",
+        "params": [
+          "public",
+          "users",
+          "postName",
+          "text"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.users.residentialAddress",
+    "label": "Add column \"residentialAddress\" to \"users\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "residentialAddress",
+        "table": "users"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"residentialAddress\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "users",
+          "residentialAddress"
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "column \"residentialAddress\" on \"users\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"residentialAddress\"",
+        "sql": "ALTER TABLE \"public\".\"users\" ADD COLUMN \"residentialAddress\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"residentialAddress\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "users",
+          "residentialAddress"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"residentialAddress\" on \"users\""
+        }
+      },
+      {
+        "description": "verify column \"residentialAddress\" has type \"text\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_attribute\" AS \"a\" INNER JOIN \"pg_class\" AS \"c\" ON \"c\".\"oid\" = \"a\".\"attrelid\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"a\".\"attname\" = $3 AND (format_type(\"a\".\"atttypid\", \"a\".\"atttypmod\")) = $4 AND NOT (\"a\".\"attisdropped\"))) AS \"result\"",
+        "params": [
+          "public",
+          "users",
+          "residentialAddress",
+          "text"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.users.residentialAddress2",
+    "label": "Add column \"residentialAddress2\" to \"users\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "residentialAddress2",
+        "table": "users"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"residentialAddress2\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "users",
+          "residentialAddress2"
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "column \"residentialAddress2\" on \"users\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"residentialAddress2\"",
+        "sql": "ALTER TABLE \"public\".\"users\" ADD COLUMN \"residentialAddress2\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"residentialAddress2\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "users",
+          "residentialAddress2"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"residentialAddress2\" on \"users\""
+        }
+      },
+      {
+        "description": "verify column \"residentialAddress2\" has type \"text\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_attribute\" AS \"a\" INNER JOIN \"pg_class\" AS \"c\" ON \"c\".\"oid\" = \"a\".\"attrelid\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"a\".\"attname\" = $3 AND (format_type(\"a\".\"atttypid\", \"a\".\"atttypmod\")) = $4 AND NOT (\"a\".\"attisdropped\"))) AS \"result\"",
+        "params": [
+          "public",
+          "users",
+          "residentialAddress2",
+          "text"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.users.studies",
+    "label": "Add column \"studies\" to \"users\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "studies",
+        "table": "users"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"studies\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "users",
+          "studies"
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "column \"studies\" on \"users\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"studies\"",
+        "sql": "ALTER TABLE \"public\".\"users\" ADD COLUMN \"studies\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"studies\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "users",
+          "studies"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"studies\" on \"users\""
+        }
+      },
+      {
+        "description": "verify column \"studies\" has type \"text\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_attribute\" AS \"a\" INNER JOIN \"pg_class\" AS \"c\" ON \"c\".\"oid\" = \"a\".\"attrelid\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"a\".\"attname\" = $3 AND (format_type(\"a\".\"atttypid\", \"a\".\"atttypmod\")) = $4 AND NOT (\"a\".\"attisdropped\"))) AS \"result\"",
+        "params": [
+          "public",
+          "users",
+          "studies",
+          "text"
+        ]
+      }
+    ]
+  }
+]

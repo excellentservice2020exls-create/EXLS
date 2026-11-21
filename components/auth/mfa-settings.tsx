@@ -1,3 +1,5 @@
+// components/auth/mfa-settings.tsx
+
 "use client";
 
 import Image from "next/image";

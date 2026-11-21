@@ -1,0 +1,178 @@
+[
+  {
+    "id": "table.agent_applications",
+    "label": "Create table \"agent_applications\"",
+    "summary": "Creates table \"agent_applications\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "agent_applications"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"agent_applications\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"agent_applications\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "table \"agent_applications\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"agent_applications\"",
+        "sql": "CREATE TABLE \"public\".\"agent_applications\" (\n  \"id\" uuid NOT NULL,\n  \"birthDate\" date NOT NULL,\n  \"birthPlace\" text NOT NULL,\n  \"createdAt\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"educationLevel\" text NOT NULL,\n  \"firstName\" text NOT NULL,\n  \"gender\" text NOT NULL,\n  \"lastName\" text NOT NULL,\n  \"nationality\" text NOT NULL,\n  \"phone\" text NOT NULL,\n  \"phone2\" text,\n  \"postName\" text NOT NULL,\n  \"residentialAddress\" text NOT NULL,\n  \"residentialAddress2\" text,\n  \"status\" text DEFAULT 'ACTIVE' NOT NULL,\n  \"updatedAt\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  CONSTRAINT \"agent_applications_pkey\" PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"agent_applications\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3))) AS \"result\"",
+        "params": [
+          "\"public\".\"agent_applications\"",
+          "r",
+          "p"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "table \"agent_applications\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "table.agent_identities",
+    "label": "Create table \"agent_identities\"",
+    "summary": "Creates table \"agent_identities\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "agent_identities"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"agent_identities\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"agent_identities\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "table \"agent_identities\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"agent_identities\"",
+        "sql": "CREATE TABLE \"public\".\"agent_identities\" (\n  \"id\" uuid NOT NULL,\n  \"agentApplicationId\" uuid NOT NULL,\n  \"birthDate\" date NOT NULL,\n  \"birthPlace\" text NOT NULL,\n  \"createdAt\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"district\" text NOT NULL,\n  \"fatherName\" text NOT NULL,\n  \"firstName\" text NOT NULL,\n  \"gender\" text NOT NULL,\n  \"lastName\" text NOT NULL,\n  \"maritalStatus\" text NOT NULL,\n  \"motherName\" text NOT NULL,\n  \"nationality\" text NOT NULL,\n  \"phone\" text NOT NULL,\n  \"phone2\" text,\n  \"postName\" text NOT NULL,\n  \"professionalExperiences\" text,\n  \"province\" text NOT NULL,\n  \"residentialAddress\" text NOT NULL,\n  \"residentialAddress2\" text,\n  \"sector\" text NOT NULL,\n  \"studies\" text,\n  \"territory\" text NOT NULL,\n  \"additionalTrainings\" text,\n  \"spokenLanguages\" text,\n  CONSTRAINT \"agent_identities_pkey\" PRIMARY KEY (\"id\"),\n  CONSTRAINT \"agent_identities_agentApplicationId_key\" UNIQUE (\"agentApplicationId\"),\n  CONSTRAINT \"agent_identities_agentApplicationId_fkey\" FOREIGN KEY (\"agentApplicationId\") REFERENCES \"agent_applications\" (\"id\") ON DELETE CASCADE\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"agent_identities\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3))) AS \"result\"",
+        "params": [
+          "\"public\".\"agent_identities\"",
+          "r",
+          "p"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "table \"agent_identities\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "rowLevelSecurity.public.agent_applications",
+    "label": "Enable row-level security on \"agent_applications\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "rowLevelSecurity",
+        "name": "agent_applications"
+      }
+    },
+    "precheck": [
+      {
+        "description": "check RLS is not already enabled on \"agent_applications\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND NOT (\"c\".\"relrowsecurity\"))) AS \"result\"",
+        "params": [
+          "public",
+          "agent_applications"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "enable row-level security on \"agent_applications\"",
+        "sql": "ALTER TABLE \"public\".\"agent_applications\" ENABLE ROW LEVEL SECURITY"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify row-level security is enabled on \"agent_applications\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"c\".\"relrowsecurity\")) AS \"result\"",
+        "params": [
+          "public",
+          "agent_applications"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rowLevelSecurity.public.agent_identities",
+    "label": "Enable row-level security on \"agent_identities\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "rowLevelSecurity",
+        "name": "agent_identities"
+      }
+    },
+    "precheck": [
+      {
+        "description": "check RLS is not already enabled on \"agent_identities\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND NOT (\"c\".\"relrowsecurity\"))) AS \"result\"",
+        "params": [
+          "public",
+          "agent_identities"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "enable row-level security on \"agent_identities\"",
+        "sql": "ALTER TABLE \"public\".\"agent_identities\" ENABLE ROW LEVEL SECURITY"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify row-level security is enabled on \"agent_identities\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"c\".\"relrowsecurity\")) AS \"result\"",
+        "params": [
+          "public",
+          "agent_identities"
+        ]
+      }
+    ]
+  }
+]

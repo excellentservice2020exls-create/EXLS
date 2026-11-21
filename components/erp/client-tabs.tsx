@@ -1,3 +1,5 @@
+// components/erp/client-tabs.tsx
+
 import Link from "next/link";
 
 type ClientTabsProps = {
@@ -24,7 +26,7 @@ export function ClientTabs({
     <nav aria-label="Navigation clients" className="flex gap-6 border-b border-slate-200">
       {canRead && (
         <Link
-          href="/clients"
+          href="/admin/clients"
           aria-current={active === "list" ? "page" : undefined}
           className={linkClass(active === "list")}
         >
@@ -33,7 +35,7 @@ export function ClientTabs({
       )}
       {canRead && (
         <Link
-          href="/clients/search"
+          href="/admin/clients/search"
           aria-current={active === "search" ? "page" : undefined}
           className={linkClass(active === "search")}
         >
@@ -42,7 +44,7 @@ export function ClientTabs({
       )}
       {canArchive && (
         <Link
-          href="/clients/archives"
+          href="/admin/clients/archives"
           aria-current={active === "archives" ? "page" : undefined}
           className={linkClass(active === "archives")}
         >
@@ -51,7 +53,7 @@ export function ClientTabs({
       )}
       {canCreate && (
         <Link
-          href="/clients/new"
+          href="/admin/clients/new"
           aria-current={active === "new" ? "page" : undefined}
           className={linkClass(active === "new")}
         >

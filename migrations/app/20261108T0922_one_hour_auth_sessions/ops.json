@@ -1,0 +1,185 @@
+[
+  {
+    "id": "table.app_auth_sessions",
+    "label": "Create table \"app_auth_sessions\"",
+    "summary": "Creates table \"app_auth_sessions\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "app_auth_sessions"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"app_auth_sessions\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"app_auth_sessions\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "table \"app_auth_sessions\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"app_auth_sessions\"",
+        "sql": "CREATE TABLE \"public\".\"app_auth_sessions\" (\n  \"id\" uuid NOT NULL,\n  \"authUserId\" uuid NOT NULL,\n  \"sessionId\" text NOT NULL,\n  \"createdAt\" timestamptz(3) NOT NULL,\n  \"expiresAt\" timestamptz(3) NOT NULL,\n  CONSTRAINT \"app_auth_sessions_pkey\" PRIMARY KEY (\"id\"),\n  CONSTRAINT \"app_auth_sessions_sessionId_key\" UNIQUE (\"sessionId\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"app_auth_sessions\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3))) AS \"result\"",
+        "params": [
+          "\"public\".\"app_auth_sessions\"",
+          "r",
+          "p"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "table \"app_auth_sessions\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.app_auth_sessions.app_auth_sessions_expiration_de2b345a",
+    "label": "Add check constraint \"app_auth_sessions_expiration_de2b345a\" on \"app_auth_sessions\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "app_auth_sessions_expiration_de2b345a",
+        "table": "app_auth_sessions"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"app_auth_sessions_expiration_de2b345a\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "app_auth_sessions_expiration_de2b345a",
+          "public",
+          "\"public\".\"app_auth_sessions\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"app_auth_sessions_expiration_de2b345a\" on \"app_auth_sessions\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"app_auth_sessions_expiration_de2b345a\"",
+        "sql": "ALTER TABLE \"public\".\"app_auth_sessions\" ADD CONSTRAINT \"app_auth_sessions_expiration_de2b345a\" CHECK (\"expiresAt\" > \"createdAt\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify check constraint \"app_auth_sessions_expiration_de2b345a\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4)) AS \"result\"",
+        "params": [
+          "app_auth_sessions_expiration_de2b345a",
+          "public",
+          "\"public\".\"app_auth_sessions\"",
+          "c"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.app_auth_sessions.app_auth_sessions_expiresAt_idx_6b6b8c10",
+    "label": "Create index \"app_auth_sessions_expiresAt_idx_6b6b8c10\" on \"app_auth_sessions\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "app_auth_sessions_expiresAt_idx_6b6b8c10",
+        "table": "app_auth_sessions"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"app_auth_sessions_expiresAt_idx_6b6b8c10\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"app_auth_sessions_expiresAt_idx_6b6b8c10\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "index \"app_auth_sessions_expiresAt_idx_6b6b8c10\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"app_auth_sessions_expiresAt_idx_6b6b8c10\"",
+        "sql": "CREATE INDEX \"app_auth_sessions_expiresAt_idx_6b6b8c10\" ON \"public\".\"app_auth_sessions\" (\"expiresAt\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"app_auth_sessions_expiresAt_idx_6b6b8c10\" exists on \"app_auth_sessions\" with the planned definition",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_index\" AS \"i\" ON \"i\".\"indexrelid\" = \"c\".\"oid\" INNER JOIN \"pg_am\" AS \"m\" ON \"m\".\"oid\" = \"c\".\"relam\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3) AND \"i\".\"indrelid\" = to_regclass($4) AND NOT (\"i\".\"indisunique\") AND \"m\".\"amname\" = $5 AND (\"i\".\"indexprs\" IS NULL AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"i\".\"indkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"i\".\"indrelid\" AND key_attribute.attnum = key_column.attnum) = ($6)::jsonb) AND \"i\".\"indpred\" IS NULL)) AS \"result\"",
+        "params": [
+          "\"public\".\"app_auth_sessions_expiresAt_idx_6b6b8c10\"",
+          "i",
+          "I",
+          "\"public\".\"app_auth_sessions\"",
+          "btree",
+          "[\"expiresAt\"]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rowLevelSecurity.public.app_auth_sessions",
+    "label": "Enable row-level security on \"app_auth_sessions\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "rowLevelSecurity",
+        "name": "app_auth_sessions"
+      }
+    },
+    "precheck": [
+      {
+        "description": "check RLS is not already enabled on \"app_auth_sessions\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND NOT (\"c\".\"relrowsecurity\"))) AS \"result\"",
+        "params": [
+          "public",
+          "app_auth_sessions"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "enable row-level security on \"app_auth_sessions\"",
+        "sql": "ALTER TABLE \"public\".\"app_auth_sessions\" ENABLE ROW LEVEL SECURITY"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify row-level security is enabled on \"app_auth_sessions\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"c\".\"relrowsecurity\")) AS \"result\"",
+        "params": [
+          "public",
+          "app_auth_sessions"
+        ]
+      }
+    ]
+  }
+]

@@ -23,9 +23,9 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'22871b24f6858f4540462468a3d9aade0f51c62ad602634ef0e26dd19d80a22b'>;
+  StorageHashBase<'8d3b71f0c63a80445dab0f57264461ffe8c9460b112057761c13578a2434e665'>;
 export type ExecutionHash =
-  ExecutionHashBase<'208d9314964e36a4a0c6ad187ffa612cde34f8666ed4075275f6d48d14c354ff'>;
+  ExecutionHashBase<'0d4624a1a3a2d64fdcd1b06f309fa1ad1a7c5a62d8dafb0e30436f6cd8a7441e'>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
 
@@ -377,6 +377,16 @@ export namespace Models {
     territory: FieldOutputTypes['public']['AgentIdentity']['territory'];
     agentApplication: public_AgentApplication;
     readonly [RelationKeys]?: 'agentApplication';
+  };
+  export type public_AgentTraining = {
+    agentId: FieldOutputTypes['public']['AgentTraining']['agentId'];
+    createdAt: FieldOutputTypes['public']['AgentTraining']['createdAt'];
+    id: FieldOutputTypes['public']['AgentTraining']['id'];
+    subject: FieldOutputTypes['public']['AgentTraining']['subject'];
+    trainer: FieldOutputTypes['public']['AgentTraining']['trainer'];
+    trainingDate: FieldOutputTypes['public']['AgentTraining']['trainingDate'];
+    agent: public_User;
+    readonly [RelationKeys]?: 'agent';
   };
   export type public_AppAuthSession = {
     authUserId: FieldOutputTypes['public']['AppAuthSession']['authUserId'];
@@ -817,6 +827,7 @@ export namespace Models {
     sitesSites: public_Site[];
     supervisor: public_User | null;
     teamLeader: public_User | null;
+    trainings: public_AgentTraining[];
     users: public_User[];
     usersUsers: public_User[];
     readonly [RelationKeys]?:
@@ -840,6 +851,7 @@ export namespace Models {
       | 'sitesSites'
       | 'supervisor'
       | 'teamLeader'
+      | 'trainings'
       | 'users'
       | 'usersUsers';
   };
@@ -849,6 +861,7 @@ export declare const models: {
   public: {
     AgentApplication: Models.public_AgentApplication;
     AgentIdentity: Models.public_AgentIdentity;
+    AgentTraining: Models.public_AgentTraining;
     AppAuthSession: Models.public_AppAuthSession;
     Attendance: Models.public_Attendance;
     AuthSignInRateLimit: Models.public_AuthSignInRateLimit;
@@ -1191,6 +1204,81 @@ type ContractBase = Omit<
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
                     readonly tableName: 'agent_applications';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
+            readonly agent_trainings: {
+              columns: {
+                readonly agentId: {
+                  readonly dataType: 'pg/uuid';
+                  readonly codecId: 'pg/uuid@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly createdAt: {
+                  readonly dataType: 'pg/timestamptz';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                  readonly typeParams: { readonly precision: 3 };
+                  readonly many: false;
+                };
+                readonly id: {
+                  readonly dataType: 'pg/uuid';
+                  readonly codecId: 'pg/uuid@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly subject: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly trainer: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly trainingDate: {
+                  readonly dataType: 'pg/date';
+                  readonly codecId: 'pg/date-string@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+              };
+              primaryKey: {
+                readonly columns: readonly ['id'];
+                readonly name: 'agent_trainings_pkey';
+              };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'agent_trainings_agentId_idx_8d0ba4f0';
+                  readonly prefix: 'agent_trainings_agentId_idx';
+                  readonly columns: readonly ['agentId'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'agent_trainings_trainingDate_idx_8a2fa075';
+                  readonly prefix: 'agent_trainings_trainingDate_idx';
+                  readonly columns: readonly ['trainingDate'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'agent_trainings';
+                    readonly columns: readonly ['agentId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'users';
                     readonly columns: readonly ['id'];
                   };
                 },
@@ -4263,6 +4351,10 @@ type ContractBase = Omit<
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'AgentIdentity';
     };
+    readonly agent_trainings: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'AgentTraining';
+    };
     readonly app_auth_sessions: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'AppAuthSession';
@@ -4606,6 +4698,61 @@ type ContractBase = Omit<
                 readonly spokenLanguages: { readonly column: 'spokenLanguages' };
                 readonly studies: { readonly column: 'studies' };
                 readonly territory: { readonly column: 'territory' };
+              };
+            };
+          };
+          readonly AgentTraining: {
+            readonly fields: {
+              readonly agentId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
+              };
+              readonly createdAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly typeParams: { readonly precision: 3 };
+                };
+              };
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
+              };
+              readonly subject: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly trainer: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly trainingDate: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/date-string@1' };
+              };
+            };
+            readonly relations: {
+              readonly agent: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
+                readonly cardinality: 'N:1';
+                readonly nullable: false;
+                readonly on: {
+                  readonly localFields: readonly ['agentId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'agent_trainings';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly agentId: { readonly column: 'agentId' };
+                readonly createdAt: { readonly column: 'createdAt' };
+                readonly id: { readonly column: 'id' };
+                readonly subject: { readonly column: 'subject' };
+                readonly trainer: { readonly column: 'trainer' };
+                readonly trainingDate: { readonly column: 'trainingDate' };
               };
             };
           };
@@ -7276,6 +7423,17 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['id'];
                 };
               };
+              readonly trainings: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'AgentTraining';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['agentId'];
+                };
+              };
               readonly users: {
                 readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
                 readonly cardinality: '1:N';
@@ -7373,6 +7531,14 @@ type ContractBase = Omit<
           readonly onCreate: { readonly id: 'uuidv7'; readonly kind: 'generator' };
           readonly ref: {
             readonly entry: 'agent_identities';
+            readonly field: 'id';
+            readonly namespace: 'public';
+          };
+        },
+        {
+          readonly onCreate: { readonly id: 'uuidv7'; readonly kind: 'generator' };
+          readonly ref: {
+            readonly entry: 'agent_trainings';
             readonly field: 'id';
             readonly namespace: 'public';
           };

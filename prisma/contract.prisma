@@ -1,5 +1,4 @@
 // use prisma-8
-// Contract inferred from the live database schema. Edit as needed, then run `prisma contract emit`.
 
 namespace extensions {
   extension pg_stat_statements {
@@ -85,6 +84,7 @@ namespace public {
     users                  User[]                @relation(name: "users_supervisorId_fkey")
     teamLeader             User?                 @relation(name: "users_teamLeaderId_fkey", fields: [teamLeaderId], references: [id], map: "users_teamLeaderId_fkey")
     usersUsers             User[]                @relation(name: "users_teamLeaderId_fkey")
+    trainings              AgentTraining[]
 
     @@index([supervisorId], name: "users_supervisorId_idx")
     @@index([teamLeaderId], name: "users_teamLeaderId_idx")
@@ -92,6 +92,21 @@ namespace public {
     @@check(expression: sql`(status = ANY (ARRAY['ACTIVE'::text, 'SUSPENDED'::text, 'ARCHIVED'::text]))`, map: "users_status_check_0f44f6b1")
     @@rls
     @@map("users")
+  }
+
+  model AgentTraining {
+    id           Uuid     @id(map: "agent_trainings_pkey") @onCreate(uuid(7))
+    agentId      Uuid
+    trainingDate Date
+    subject      String
+    trainer      String
+    createdAt    DateTime @default(now())
+    agent        User     @relation(fields: [agentId], references: [id], onDelete: Cascade)
+
+    @@index([agentId], name: "agent_trainings_agentId_idx")
+    @@index([trainingDate], name: "agent_trainings_trainingDate_idx")
+    @@rls
+    @@map("agent_trainings")
   }
 
   model AgentApplication {

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-type AgentTab = "active" | "all" | "new" | "search" | "inactive";
+export type AgentTab = "active" | "all" | "new" | "search" | "inactive" | "formation";
 
 const tabs: { id: AgentTab; label: string; href: string }[] = [
   { id: "active", label: "AGENT ACTIF", href: "/admin/employees?tab=active" },
@@ -10,6 +10,7 @@ const tabs: { id: AgentTab; label: string; href: string }[] = [
   { id: "new", label: "NOUVEAU AGENT", href: "/admin/employees/new" },
   { id: "search", label: "RECHERCHE AGENT", href: "/admin/employees?tab=search" },
   { id: "inactive", label: "AGENT NON-ACTIF", href: "/admin/employees?tab=inactive" },
+  { id: "formation", label: "FORMATION", href: "/admin/agent" },
 ];
 
 export function AgentTabs({ active }: { active: AgentTab }) {

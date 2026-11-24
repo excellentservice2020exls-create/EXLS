@@ -1,0 +1,186 @@
+[
+  {
+    "id": "table.agent_trainings",
+    "label": "Create table \"agent_trainings\"",
+    "summary": "Creates table \"agent_trainings\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "agent_trainings"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"agent_trainings\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"agent_trainings\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "table \"agent_trainings\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"agent_trainings\"",
+        "sql": "CREATE TABLE \"public\".\"agent_trainings\" (\n  \"id\" uuid NOT NULL,\n  \"agentId\" uuid NOT NULL,\n  \"trainingDate\" date NOT NULL,\n  \"subject\" text NOT NULL,\n  \"trainer\" text NOT NULL,\n  \"createdAt\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  CONSTRAINT \"agent_trainings_pkey\" PRIMARY KEY (\"id\"),\n  CONSTRAINT \"agent_trainings_agentId_fkey\" FOREIGN KEY (\"agentId\") REFERENCES \"users\" (\"id\") ON DELETE CASCADE\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"agent_trainings\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3))) AS \"result\"",
+        "params": [
+          "\"public\".\"agent_trainings\"",
+          "r",
+          "p"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "table \"agent_trainings\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "index.agent_trainings.agent_trainings_agentId_idx_8d0ba4f0",
+    "label": "Create index \"agent_trainings_agentId_idx_8d0ba4f0\" on \"agent_trainings\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "agent_trainings_agentId_idx_8d0ba4f0",
+        "table": "agent_trainings"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"agent_trainings_agentId_idx_8d0ba4f0\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"agent_trainings_agentId_idx_8d0ba4f0\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "index \"agent_trainings_agentId_idx_8d0ba4f0\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"agent_trainings_agentId_idx_8d0ba4f0\"",
+        "sql": "CREATE INDEX \"agent_trainings_agentId_idx_8d0ba4f0\" ON \"public\".\"agent_trainings\" (\"agentId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"agent_trainings_agentId_idx_8d0ba4f0\" exists on \"agent_trainings\" with the planned definition",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_index\" AS \"i\" ON \"i\".\"indexrelid\" = \"c\".\"oid\" INNER JOIN \"pg_am\" AS \"m\" ON \"m\".\"oid\" = \"c\".\"relam\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3) AND \"i\".\"indrelid\" = to_regclass($4) AND NOT (\"i\".\"indisunique\") AND \"m\".\"amname\" = $5 AND (\"i\".\"indexprs\" IS NULL AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"i\".\"indkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"i\".\"indrelid\" AND key_attribute.attnum = key_column.attnum) = ($6)::jsonb) AND \"i\".\"indpred\" IS NULL)) AS \"result\"",
+        "params": [
+          "\"public\".\"agent_trainings_agentId_idx_8d0ba4f0\"",
+          "i",
+          "I",
+          "\"public\".\"agent_trainings\"",
+          "btree",
+          "[\"agentId\"]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.agent_trainings.agent_trainings_trainingDate_idx_8a2fa075",
+    "label": "Create index \"agent_trainings_trainingDate_idx_8a2fa075\" on \"agent_trainings\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "agent_trainings_trainingDate_idx_8a2fa075",
+        "table": "agent_trainings"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"agent_trainings_trainingDate_idx_8a2fa075\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"agent_trainings_trainingDate_idx_8a2fa075\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "index \"agent_trainings_trainingDate_idx_8a2fa075\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"agent_trainings_trainingDate_idx_8a2fa075\"",
+        "sql": "CREATE INDEX \"agent_trainings_trainingDate_idx_8a2fa075\" ON \"public\".\"agent_trainings\" (\"trainingDate\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"agent_trainings_trainingDate_idx_8a2fa075\" exists on \"agent_trainings\" with the planned definition",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_index\" AS \"i\" ON \"i\".\"indexrelid\" = \"c\".\"oid\" INNER JOIN \"pg_am\" AS \"m\" ON \"m\".\"oid\" = \"c\".\"relam\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3) AND \"i\".\"indrelid\" = to_regclass($4) AND NOT (\"i\".\"indisunique\") AND \"m\".\"amname\" = $5 AND (\"i\".\"indexprs\" IS NULL AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"i\".\"indkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"i\".\"indrelid\" AND key_attribute.attnum = key_column.attnum) = ($6)::jsonb) AND \"i\".\"indpred\" IS NULL)) AS \"result\"",
+        "params": [
+          "\"public\".\"agent_trainings_trainingDate_idx_8a2fa075\"",
+          "i",
+          "I",
+          "\"public\".\"agent_trainings\"",
+          "btree",
+          "[\"trainingDate\"]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rowLevelSecurity.public.agent_trainings",
+    "label": "Enable row-level security on \"agent_trainings\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "rowLevelSecurity",
+        "name": "agent_trainings"
+      }
+    },
+    "precheck": [
+      {
+        "description": "check RLS is not already enabled on \"agent_trainings\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND NOT (\"c\".\"relrowsecurity\"))) AS \"result\"",
+        "params": [
+          "public",
+          "agent_trainings"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "enable row-level security on \"agent_trainings\"",
+        "sql": "ALTER TABLE \"public\".\"agent_trainings\" ENABLE ROW LEVEL SECURITY"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify row-level security is enabled on \"agent_trainings\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"c\".\"relrowsecurity\")) AS \"result\"",
+        "params": [
+          "public",
+          "agent_trainings"
+        ]
+      }
+    ]
+  }
+]

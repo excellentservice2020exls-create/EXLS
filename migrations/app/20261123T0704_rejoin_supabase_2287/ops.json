@@ -1,0 +1,282 @@
+[
+  {
+    "id": "dropCheckConstraint.role_assignments.role_assignments_role_check_3b8a4a49",
+    "label": "Drop check constraint \"role_assignments_role_check_3b8a4a49\" on \"role_assignments\"",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "role_assignments_role_check_3b8a4a49",
+        "table": "role_assignments"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"role_assignments_role_check_3b8a4a49\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "role_assignments_role_check_3b8a4a49",
+          "public",
+          "\"public\".\"role_assignments\""
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "constraint \"role_assignments_role_check_3b8a4a49\" on \"role_assignments\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop check constraint \"role_assignments_role_check_3b8a4a49\"",
+        "sql": "ALTER TABLE \"public\".\"role_assignments\" DROP CONSTRAINT \"role_assignments_role_check_3b8a4a49\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"role_assignments_role_check_3b8a4a49\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "role_assignments_role_check_3b8a4a49",
+          "public",
+          "\"public\".\"role_assignments\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"role_assignments_role_check_3b8a4a49\" on \"role_assignments\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.role_assignments.role_assignments_role_check_3b8a4a49",
+    "label": "Add check constraint \"role_assignments_role_check_3b8a4a49\" on \"role_assignments\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "role_assignments_role_check_3b8a4a49",
+        "table": "role_assignments"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"role_assignments_role_check_3b8a4a49\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "role_assignments_role_check_3b8a4a49",
+          "public",
+          "\"public\".\"role_assignments\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"role_assignments_role_check_3b8a4a49\" on \"role_assignments\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"role_assignments_role_check_3b8a4a49\"",
+        "sql": "ALTER TABLE \"public\".\"role_assignments\" ADD CONSTRAINT \"role_assignments_role_check_3b8a4a49\" CHECK (\"role\" IN ('ADMIN', 'MANAGER', 'DIRECTOR', 'SUPERVISOR', 'TEAM_LEADER', 'AGENT'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify check constraint \"role_assignments_role_check_3b8a4a49\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4)) AS \"result\"",
+        "params": [
+          "role_assignments_role_check_3b8a4a49",
+          "public",
+          "\"public\".\"role_assignments\"",
+          "c"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.auth_sign_in_rate_limits",
+    "label": "Create table \"auth_sign_in_rate_limits\"",
+    "summary": "Creates table \"auth_sign_in_rate_limits\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "auth_sign_in_rate_limits"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"auth_sign_in_rate_limits\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"auth_sign_in_rate_limits\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "table \"auth_sign_in_rate_limits\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"auth_sign_in_rate_limits\"",
+        "sql": "CREATE TABLE \"public\".\"auth_sign_in_rate_limits\" (\n  \"keyHash\" text NOT NULL,\n  \"windowStartedAt\" timestamptz(6) NOT NULL,\n  \"requestCount\" int4 NOT NULL,\n  CONSTRAINT \"auth_sign_in_rate_limits_pkey\" PRIMARY KEY (\"keyHash\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"auth_sign_in_rate_limits\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3))) AS \"result\"",
+        "params": [
+          "\"public\".\"auth_sign_in_rate_limits\"",
+          "r",
+          "p"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "table \"auth_sign_in_rate_limits\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.auth_sign_in_rate_limits.auth_sign_in_rate_limits_requestCount_check",
+    "label": "Add check constraint \"auth_sign_in_rate_limits_requestCount_check\" on \"auth_sign_in_rate_limits\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "auth_sign_in_rate_limits_requestCount_check",
+        "table": "auth_sign_in_rate_limits"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"auth_sign_in_rate_limits_requestCount_check\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "auth_sign_in_rate_limits_requestCount_check",
+          "public",
+          "\"public\".\"auth_sign_in_rate_limits\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"auth_sign_in_rate_limits_requestCount_check\" on \"auth_sign_in_rate_limits\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"auth_sign_in_rate_limits_requestCount_check\"",
+        "sql": "ALTER TABLE \"public\".\"auth_sign_in_rate_limits\" ADD CONSTRAINT \"auth_sign_in_rate_limits_requestCount_check\" CHECK (\"requestCount\" > 0)"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify check constraint \"auth_sign_in_rate_limits_requestCount_check\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4)) AS \"result\"",
+        "params": [
+          "auth_sign_in_rate_limits_requestCount_check",
+          "public",
+          "\"public\".\"auth_sign_in_rate_limits\"",
+          "c"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.auth_sign_in_rate_limits.auth_sign_in_rate_limits_windowStartedAt_idx",
+    "label": "Create index \"auth_sign_in_rate_limits_windowStartedAt_idx\" on \"auth_sign_in_rate_limits\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "auth_sign_in_rate_limits_windowStartedAt_idx",
+        "table": "auth_sign_in_rate_limits"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"auth_sign_in_rate_limits_windowStartedAt_idx\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"auth_sign_in_rate_limits_windowStartedAt_idx\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "index \"auth_sign_in_rate_limits_windowStartedAt_idx\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"auth_sign_in_rate_limits_windowStartedAt_idx\"",
+        "sql": "CREATE INDEX \"auth_sign_in_rate_limits_windowStartedAt_idx\" ON \"public\".\"auth_sign_in_rate_limits\" (\"windowStartedAt\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"auth_sign_in_rate_limits_windowStartedAt_idx\" exists on \"auth_sign_in_rate_limits\" with the planned definition",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_index\" AS \"i\" ON \"i\".\"indexrelid\" = \"c\".\"oid\" INNER JOIN \"pg_am\" AS \"m\" ON \"m\".\"oid\" = \"c\".\"relam\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3) AND \"i\".\"indrelid\" = to_regclass($4) AND NOT (\"i\".\"indisunique\") AND \"m\".\"amname\" = $5 AND (\"i\".\"indexprs\" IS NULL AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"i\".\"indkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"i\".\"indrelid\" AND key_attribute.attnum = key_column.attnum) = ($6)::jsonb) AND \"i\".\"indpred\" IS NULL)) AS \"result\"",
+        "params": [
+          "\"public\".\"auth_sign_in_rate_limits_windowStartedAt_idx\"",
+          "i",
+          "I",
+          "\"public\".\"auth_sign_in_rate_limits\"",
+          "btree",
+          "[\"windowStartedAt\"]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rowLevelSecurity.public.auth_sign_in_rate_limits",
+    "label": "Enable row-level security on \"auth_sign_in_rate_limits\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "rowLevelSecurity",
+        "name": "auth_sign_in_rate_limits"
+      }
+    },
+    "precheck": [
+      {
+        "description": "check RLS is not already enabled on \"auth_sign_in_rate_limits\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND NOT (\"c\".\"relrowsecurity\"))) AS \"result\"",
+        "params": [
+          "public",
+          "auth_sign_in_rate_limits"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "enable row-level security on \"auth_sign_in_rate_limits\"",
+        "sql": "ALTER TABLE \"public\".\"auth_sign_in_rate_limits\" ENABLE ROW LEVEL SECURITY"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify row-level security is enabled on \"auth_sign_in_rate_limits\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"c\".\"relrowsecurity\")) AS \"result\"",
+        "params": [
+          "public",
+          "auth_sign_in_rate_limits"
+        ]
+      }
+    ]
+  }
+]

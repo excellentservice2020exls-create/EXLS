@@ -6,6 +6,10 @@ import contractJson from './contract.json' with { type: 'json' };
 
 export const contract = contractFromJson<Contract>(contractJson);
 
+const contractMarker = (contractJson as {
+  meta?: { storageHash?: string };
+}).meta?.storageHash ?? "unknown";
+
 function createDb() {
   return postgres({
     contract,
@@ -21,12 +25,15 @@ type PrismaPostgresClient = ReturnType<typeof createDb>;
 
 const globalForPrisma = globalThis as unknown as {
   prismaDb?: PrismaPostgresClient;
+  prismaContractMarker?: string;
 };
 
 export const db: PrismaPostgresClient =
-  globalForPrisma.prismaDb ??
-  createDb();
+  globalForPrisma.prismaDb && globalForPrisma.prismaContractMarker === contractMarker
+    ? globalForPrisma.prismaDb
+    : createDb();
 
 if (process.env.NODE_ENV !== 'production') {
   globalForPrisma.prismaDb = db;
+  globalForPrisma.prismaContractMarker = contractMarker;
 }
